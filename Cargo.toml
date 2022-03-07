@@ -3,7 +3,8 @@ name = "dbio_protocol"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-rocket = "0.5.0-rc.1"
+rocket = { version = "0.5.0-rc.1", features = ["secrets", "tls", "json"] }
+diesel = { version = "1.4.4", features = ["postgres"] }
+dotenv = "0.15.0"
+

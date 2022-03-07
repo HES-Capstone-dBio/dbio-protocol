@@ -6,9 +6,10 @@
     devshell.url = github:numtide/devshell;
     npmlock2nix.url = github:nix-community/npmlock2nix;
     npmlock2nix.flake = false;
+    sbt2Nix.url = github:zaninime/sbt-derivation
   };
 
-  outputs = { self, nixpkgs, utils, devshell, npmlock2nix }:
+  outputs = { self, nixpkgs, utils, devshell, npmlock2nix, sbt2Nix }:
     utils.lib.eachDefaultSystem (system:
 
       let
@@ -55,7 +56,7 @@
         defaultPackage = pkgs.hello;
         devShell = pkgs.devshell.mkShell {
           name = "dBio-protocol";
-          packages = with pkgs; [ cargo nodejs-16_x ];
+          packages = with pkgs; [ cargo nodejs-17_x aqua ];
           commands = [];
         };
       }
