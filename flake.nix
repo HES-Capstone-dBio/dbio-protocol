@@ -34,31 +34,28 @@
           ];
         };
 
-        aqua = npm.build {
+        aqua = pkgs.stdenv.mkDerivation {
           pname = "aqua";
           version = "0.0.0";
-          src = aquaSrc + "/npm";
+          src = aquaSrc;
+          buildInputs = with pkgs; [ cacert curl nodejs-17_x ];
           buildPhase = ''
-            cp -r npm $out
-            cp aqua.js $out/npm
             curl -o aqua.js https://github.com/fluencelabs/aqua/releases/download/0.6.3/aqua-0.6.3-282.js
-          '';
-          installPhase = ''
-            cp cli/.js/target/scala-3.1.0/cli-opt/main.js ./npm/aqua.js
+            cp aqua.js ./npm
             mkdir -p $out/npm/dist
-            mkdir $out/bin
             cp -r npm/* $out/npm/
             cd $out/npm
             npm install .
-            npm run build
+            #npm run build
           '';
+          installPhase = "";
         };
 
       in rec {
-        defaultPackage = aqua;
+        defaultPackage = pkgs.hello;
         devShell = pkgs.devshell.mkShell {
           name = "dBio-protocol";
-          packages = with pkgs; [ cargo nodejs-16_x aqua ];
+          packages = with pkgs; [ cargo nodejs-16_x ];
           commands = [];
         };
       }
