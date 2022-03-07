@@ -34,23 +34,15 @@
           ];
         };
 
-        #buildInputs = with pkgs; [ sbt nodejs-16_x nodePackages.typescript ];
-        #installPhase = ''
-          #cp cli/.js/target/scala-3.1.0/cli-opt/main.js ./npm/aqua.js
-          #mkdir -p $out/npm/dist
-          #mkdir $out/bin
-          #cp -r npm/* $out/npm/
-          #cd $out/npm
-          #npm install
-          #npm run build
-        #'';
-        aqua = pkgs.sbt.mkDerivation {
+        aqua = npm.build {
           pname = "aqua";
           version = "0.0.0";
-          depsSha256 = "sha256-E6ernqpEE7veLdJBn9BYnEyl4XOwnbckSUxNFpZCAUU=";
-          src = aquaSrc;
-          buildInputs = [ pkgs.nodejs-16_x ];
-          buildPhase = "sbt cliJS/fullLinkJS";
+          src = aquaSrc + "/npm";
+          buildPhase = ''
+            cp -r npm $out
+            cp aqua.js $out/npm
+            curl -o aqua.js https://github.com/fluencelabs/aqua/releases/download/0.6.3/aqua-0.6.3-282.js
+          '';
           installPhase = ''
             cp cli/.js/target/scala-3.1.0/cli-opt/main.js ./npm/aqua.js
             mkdir -p $out/npm/dist
