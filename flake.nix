@@ -46,8 +46,8 @@
             mkdir -p $out/npm/dist
             cp -r npm/* $out/npm/
             cd $out/npm
-            npm install .
-            #npm run build
+            npm install --prefix .
+            npm run build
           '';
           installPhase = "";
         };
