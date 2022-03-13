@@ -45,8 +45,21 @@ fn hello_post(data: Json<EncryptedData>)
     }
 }
 
+#[put("/hello/<resource_id>", data = "<data>")]
+fn hello_put(resource_id: u64,
+              data: Json<EncryptedData>)
+             -> Result<String, BadRequest<String>> {
+    if data.ciphertext == "Bob" {
+        Err(BadRequest(Some(String::from("Bob not welcome PUT"))))
+    } else if resource_id == 0 {
+        Err(BadRequest(Some(String::from("0 is not a valid id"))))
+    } else {
+        Ok(String::from("Success"))
+    }
+}
+
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .mount("/", routes![index, hello, hello_post])
+        .mount("/", routes![index, hello, hello_post, hello_put])
 }
