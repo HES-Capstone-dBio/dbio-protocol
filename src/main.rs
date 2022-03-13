@@ -1,41 +1,52 @@
 #[macro_use] extern crate rocket;
 
-use std::collections::HashMap;
-use rocket::serde::{Serialize, json::Json};
+use rocket::response::status::{NotFound, BadRequest};
+use rocket::serde::{Serialize, Deserialize, json::Json};
 
-#[derive(Serialize)]
-struct Greeting {
-    name: String,
-    age: u8,
+#[derive(Serialize, Deserialize)]
+struct EncryptedData {
+    ciphertext: String,
+    resource_id: u64,
+    resource_type: String,
 }
-
-let mut greetings = HashMap::new();
 
 #[get("/")]
-fn index() -> Json<Greeting> {
-    Json(Greeting {
-        name: String::from("world"),
-        age: 5
+fn index() -> Json<EncryptedData> {
+    Json(EncryptedData {
+        ciphertext: String::from("TestPatient123"),
+        resource_id: 1,
+        resource_type: String::from("patient"),
     })
 }
 
-#[get("/hello/<name>/<age>")]
-fn hello(name: String, age: u8) -> Json<Greeting> {
-    Json(Greeting {
-        name: name,
-        age: age
-    })
+#[get("/hello/<ciphertext>/<resource_id>/<resource_type>")]
+fn hello(ciphertext: String,
+         resource_id: u64,
+         resource_type: String)
+         -> Result<Json<EncryptedData>, NotFound<String>> {
+    if ciphertext == "Bob" {
+        Err(NotFound(String::from("Bob not welcome GET")))
+    } else {
+        Ok(Json(EncryptedData {
+            ciphertext: ciphertext,
+            resource_id: resource_id,
+            resource_type: resource_type,
+        }))
+    }
 }
 
-#[post("/hello/<name>/<age>", format = "json", data = "<data>")]
-fn helloPost(data: Json<Greeting>) -> std::io::Result<()> {
-
-    Ok(())
+#[post("/hello", data = "<data>")]
+fn hello_post(data: Json<EncryptedData>)
+             -> Result<String, BadRequest<String>> {
+    if data.ciphertext == "Bob" {
+        Err(BadRequest(Some(String::from("Bob not welcome POST"))))
+    } else {
+        Ok(String::from("Success"))
+    }
 }
 
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .mount("/", routes![index])
-        .mount("/", routes![hello])
+        .mount("/", routes![index, hello, hello_post])
 }
