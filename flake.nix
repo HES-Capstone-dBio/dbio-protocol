@@ -45,7 +45,6 @@
         devShell = pkgs.devshell.mkShell {
           name = "dBio-protocol";
           packages = with pkgs; [ cargo nodejs-17_x ];
-          commands = [];
         };
       }
   );
