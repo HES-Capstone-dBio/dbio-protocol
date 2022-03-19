@@ -44,7 +44,7 @@
         defaultPackage = pkgs.hello;
         devShell = pkgs.devshell.mkShell {
           name = "dBio-protocol";
-          packages = with pkgs; [ cargo nodejs-17_x ];
+          packages = with pkgs; [ rust-analyzer rustup nodejs-17_x ];
         };
       }
   );

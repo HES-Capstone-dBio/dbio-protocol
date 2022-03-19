@@ -1,12 +1,12 @@
 [package]
-name = "hello-rocket"
-version = "0.1.0"
+name = "dbio-protocol"
+version = "0.0.1"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 serde = "1.0.130"
+recrypt = "0.13.1"
+pad = "0.1.6"
 
 [dependencies.rocket]
 version = "0.5.0-rc.1"

@@ -28,9 +28,9 @@ fn hello(ciphertext: String,
         Err(NotFound(String::from("Bob not welcome GET")))
     } else {
         Ok(Json(EncryptedData {
-            ciphertext: ciphertext,
-            resource_id: resource_id,
-            resource_type: resource_type,
+            ciphertext,
+            resource_id,
+            resource_type,
         }))
     }
 }
