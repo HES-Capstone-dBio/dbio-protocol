@@ -5,6 +5,12 @@ use recrypt::api::{Plaintext, PrivateKey, PublicKey, RecryptErr};
 /* As required by Plaintext */
 static WIDTH: usize = 384;
 
+/**
+ * Given an Ethereum address and signed message, derive a keypair for the user.
+ *
+ * TODO: Currently does not validate the signature on the message.
+ * NB: This code is intended as a proof of concept and not for use in production.
+ */
 #[allow(dead_code)]
 fn derive_keypair(addr: &str, sig: &str) -> Result<(PrivateKey, PublicKey), RecryptErr> {
     let rc = Recrypt::new();
