@@ -24,10 +24,6 @@ fn derive_keypair(addr: &str, sig: &str) -> Result<(PrivateKey, PublicKey), Recr
 mod test {
     use super::*;
 
-    /*
-     * - How do we verify the incoming signed message?
-     */
-
     /* ETH wallet address and signed message used when generating keypair */
     static ADDR: &str =
         "0x2a3052ef570a031400BffD61438b2D19e0E8abef";
