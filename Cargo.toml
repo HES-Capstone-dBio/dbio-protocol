@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 serde = "1.0.130"
-recrypt = "0.13.1"
+umbral-pre = "0.5.2"
 pad = "0.1.6"
 
 [dependencies.rocket]
