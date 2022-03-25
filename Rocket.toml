@@ -1,0 +1,2 @@
+[global.databases]
+dbio_protocol_db = { url = "postgres:://localhost/dbio-protocol-db"}
