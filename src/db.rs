@@ -22,9 +22,9 @@ impl Db {
             EncryptedData,
             "INSERT INTO encrypteddata (resource_id, resource_type, ciphertext)
              VALUES ($1, $2, $3) RETURNING *",
-             data.resource_id,
-             data.resource_type,
-             data.ciphertext,
+            data.resource_id,
+            data.resource_type,
+            data.ciphertext,
         )
         .fetch_one(&self.pool)
         .await?;
@@ -54,9 +54,9 @@ impl Db {
             EncryptedData,
             "UPDATE encrypteddata SET resource_type = $1, ciphertext = $2
              WHERE resource_id = $3 RETURNING *",
-             data.resource_type,
-             data.ciphertext,
-             resource_id
+            data.resource_type,
+            data.ciphertext,
+            resource_id
         )
         .fetch_one(&self.pool)
         .await?;
