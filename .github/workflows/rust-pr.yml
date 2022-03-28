@@ -8,7 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  DATABASE_URL: postgres://localhost/dbio-protocol-db
+  DATABASE_URL: postgres://postgres:password@localhost/dbio-protocol-db
 
 jobs:
   build:
@@ -18,6 +18,10 @@ jobs:
     services:
       postgres:
         image: postgres:14.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: dbio-protocol-db
         ports:
           - 5432:5432
 
