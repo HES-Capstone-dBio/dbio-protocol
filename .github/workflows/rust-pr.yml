@@ -26,8 +26,9 @@ jobs:
     - name: Migrate database
       run: |
         sudo apt-get install pkg-config libssl-dev postgresql libpq-dev -y
-        cargo install --version=0.5.11 sqlx-cli
-        SKIP_DOCKER=true sqlx database create && sqlx migrate run
+        docker ps
+        # cargo install --version=0.5.11 sqlx-cli
+        # SKIP_DOCKER=true sqlx database create && sqlx migrate run
     - name: Build
       run: cargo build --verbose
     - name: Run tests
