@@ -27,7 +27,7 @@ jobs:
       run: |
         sudo apt-get install pkg-config libssl-dev postgresql libpq-dev -y
         cargo install --version=0.5.11 sqlx-cli
-        SKIP_DOCKER=true ./migrations/20220326182216_create_encrypted_data.sql
+        SKIP_DOCKER=true sqlx database create && sqlx migrate run
     - name: Build
       run: cargo build --verbose
     - name: Run tests
