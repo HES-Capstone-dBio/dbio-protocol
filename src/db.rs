@@ -10,11 +10,14 @@ pub struct Db {
 impl Db {
     pub async fn connect() -> Result<Self, StdErr> {
         let db_url = std::env::var("DATABASE_URL")?;
-        let pool = PgPoolOptions::new().connect(&db_url).await.unwrap();
+        let pool = PgPoolOptions::new()
+            .connect(&db_url)
+            .await
+            .unwrap();
         Ok(Db { pool })
     }
 
-    pub async fn create_encrypted_data(
+    pub async fn insert_encrypted_data(
         &self,
         data: EncryptedData
     ) -> Result<EncryptedData, StdErr> {

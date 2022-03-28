@@ -21,7 +21,7 @@ async fn create_encrypted_resource(
     db: Data<Db>,
     resource: Json<EncryptedData>,
 ) -> Result<Json<EncryptedData>, InternalError<StdErr>> {
-    db.create_encrypted_data(resource.into_inner())
+    db.insert_encrypted_data(resource.into_inner())
         .await
         .map(Json)
         .map_err(to_internal_error)
