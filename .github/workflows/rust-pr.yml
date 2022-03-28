@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Migrate database
       run: |
-        sudo apt-get install libpq-dev -y
+        sudo apt-get install pkg-config libssl-dev postgresql libpq-dev -y
         cargo install --version=0.5.11 sqlx-cli --no-default-features --features postgres
         SKIP_DOCKER=true ./migrations/20220326182216_create_encrypted_data.sql
     - name: Build
