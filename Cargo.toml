@@ -1,13 +1,16 @@
 [package]
-name = "hello-rocket"
+name = "dbio-protocol"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serde = "1.0.130"
-
-[dependencies.rocket]
-version = "0.5.0-rc.1"
-features = ["json"]
+actix-web = "3.3"
+chrono = { version = "0.4", features = ["serde"] }
+dotenv = "0.15"
+log = "0.4"
+fern = "0.6"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sqlx = { version = "0.4", features = ["runtime-actix-rustls", "chrono", "postgres"] }

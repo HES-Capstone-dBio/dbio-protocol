@@ -1,21 +1,36 @@
 name: Rust
 
 on:
-  push:
-    branches-ignore: [ trunk ]
   pull_request:
     branches: [ trunk ]
 
 env:
   CARGO_TERM_COLOR: always
+  DATABASE_URL: postgres://postgres:password@localhost/dbio-protocol-db
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: dbio-protocol-db
+        ports:
+          - 5432:5432
 
     steps:
     - uses: actions/checkout@v2
+    - name: Migrate database
+      run: |
+        sudo apt-get install pkg-config libssl-dev postgresql libpq-dev -y
+        docker ps
+        cargo install --version=0.5.11 sqlx-cli
+        SKIP_DOCKER=true sqlx database create && sqlx migrate run
     - name: Build
       run: cargo build --verbose
     - name: Run tests
