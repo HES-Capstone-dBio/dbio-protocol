@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
   eth_public_address CHAR(42) PRIMARY KEY,
-  ironcore_id VARCHAR NOT NULL,
   email VARCHAR(320) NOT NULL
 );
 
