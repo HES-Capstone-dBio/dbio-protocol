@@ -61,10 +61,22 @@ async fn delete_encrypted_resource(
         .map_err(to_internal_error)
 }
 
+#[actix_web::post("/users")]
+async fn add_user(
+    db: Data<Db>,
+    user: Json<User>,
+) -> Result<Json<User>, InternalError<StdErr>> {
+    db.insert_user(user.into_inner())
+        .await
+        .map(Json)
+        .map_err(to_internal_error)
+}
+
 pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/")
         .service(create_encrypted_resource)
         .service(get_encrypted_resource)
         .service(update_encrypted_resource)
         .service(delete_encrypted_resource)
+        .service(add_user)
 }
