@@ -1,3 +1,5 @@
+use std::fmt::Result;
+
 use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
 use crate::models::*;
 use crate::StdErr;
@@ -77,5 +79,21 @@ impl Db {
         .execute(&self.pool)
         .await?;
         Ok(())
+    }
+
+    pub async fn insert_user(
+        &self,
+        user: User,
+    ) -> Result<User, StdErr> {
+        let user = sqlx::query_as!(
+            User,
+            "INSERT INTO users (eth_public_address, email)
+             VALUES ($1, $2) RETURNING *",
+            user.eth_public_address,
+            user.email,
+        )
+        .fetch_one(&self.pool)
+        .await?;
+        Ok(user)
     }
 }
