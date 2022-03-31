@@ -93,6 +93,17 @@ async fn get_access_requests(
         .map_err(to_internal_error)
 }
 
+#[actix_web::post("/access_requests")]
+async fn add_access_request(
+    db: Data<Db>,
+    access_request_payload: Json<AccessRequestPayload>,
+) -> Result<Json<AccessRequest>, InternalError<StdErr>> {
+    db.insert_access_request(access_request_payload.into_inner())
+        .await
+        .map(Json)
+        .map_err(to_internal_error)
+}
+
 pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/")
         .service(create_encrypted_resource)
@@ -100,4 +111,6 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(update_encrypted_resource)
         .service(delete_encrypted_resource)
         .service(add_user)
+        .service(get_access_requests)
+        .service(add_access_request)
 }
