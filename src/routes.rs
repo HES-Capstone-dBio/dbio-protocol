@@ -3,10 +3,16 @@ use actix_web::error::InternalError;
 use actix_web::http::StatusCode;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::HttpResponse;
+use serde::Deserialize;
 
 use crate::StdErr;
 use crate::db::Db;
 use crate::models::*;
+
+#[derive(Debug, Deserialize)]
+pub struct FilterInfo {
+    filter: String,
+}
 
 fn to_internal_error(e: StdErr) -> InternalError<StdErr> {
     InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR)
@@ -68,6 +74,21 @@ async fn add_user(
 ) -> Result<Json<User>, InternalError<StdErr>> {
     db.insert_user(user.into_inner())
         .await
+        .map(Json)
+        .map_err(to_internal_error)
+}
+
+#[actix_web::get("/access_requests/{requestee_eth_address}")]
+async fn get_access_requests(
+    db: Data<Db>,
+    Path(requestee_eth_address): Path<String>,
+    filter_info: Query<FilterInfo>
+) -> Result<Json<Vec<AccessRequest>>, InternalError<StdErr>> {
+    let returned_future = match filter_info.filter.as_str() {
+        "open" => db.get_open_access_requests(requestee_eth_address).await,
+        _ => db.get_all_access_requests(requestee_eth_address).await,
+    };
+    returned_future
         .map(Json)
         .map_err(to_internal_error)
 }
