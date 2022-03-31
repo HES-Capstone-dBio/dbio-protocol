@@ -125,4 +125,21 @@ impl Db {
         .await?;
         Ok(access_requests)
     }
+
+    pub async fn insert_access_request(
+        &self,
+        access_request_payload: AccessRequestPayload,
+    ) -> Result<AccessRequest, StdErr> {
+        let access_request = sqlx::query_as!(
+            AccessRequest,
+            "INSERT INTO access_requests (requestor_eth_address,
+                                          requestee_eth_address)
+             VALUES ($1, $2) RETURNING *",
+            access_request_payload.requestor_eth_address,
+            access_request_payload.requestee_eth_address,
+        )
+        .fetch_one(&self.pool)
+        .await?;
+        Ok(access_request)
+    }
 }

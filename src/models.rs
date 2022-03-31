@@ -35,3 +35,8 @@ pub struct AccessRequest {
 }
 
 /* Request payloads */
+#[derive(Debug, Deserialize)]
+pub struct AccessRequestPayload {
+    pub requestor_eth_address: String,
+    pub requestee_eth_address: String,
+}
