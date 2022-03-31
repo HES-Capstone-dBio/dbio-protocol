@@ -94,4 +94,35 @@ impl Db {
         .await?;
         Ok(user)
     }
+
+    pub async fn get_all_access_requests(
+        &self,
+        requestee_eth_address : String,
+    ) -> Result<Vec<AccessRequest>, StdErr> {
+        let access_requests = sqlx::query_as!(
+            AccessRequest,
+            "SELECT * FROM access_requests
+             WHERE requestee_eth_address = $1",
+            requestee_eth_address,
+        )
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(access_requests)
+    }
+
+    pub async fn get_open_access_requests(
+        &self,
+        requestee_eth_address : String,
+    ) -> Result<Vec<AccessRequest>, StdErr> {
+        let access_requests = sqlx::query_as!(
+            AccessRequest,
+            "SELECT * FROM access_requests
+             WHERE requestee_eth_address = $1
+             AND request_open",
+            requestee_eth_address,
+        )
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(access_requests)
+    }
 }

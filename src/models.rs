@@ -12,7 +12,7 @@ pub struct EncryptedData {
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct User {
     pub eth_public_address: String,
-    pub email: String
+    pub email: String,
 }
 
 #[derive(Serialize, Deserialize, FromRow)]
@@ -22,7 +22,7 @@ pub struct Resource {
     pub creator_eth_address: String,
     pub resource_type: String,
     pub ownership_claimed: bool,
-    pub ipfs_cid: String
+    pub ipfs_cid: String,
 }
 
 #[derive(Serialize, Deserialize, FromRow)]
@@ -30,7 +30,8 @@ pub struct AccessRequest {
     pub id: i64,
     pub requestor_eth_address: String,
     pub requestee_eth_address: String,
-    pub request_approved: bool
+    pub request_approved: bool,
+    pub request_open: bool,
 }
 
 /* Request payloads */

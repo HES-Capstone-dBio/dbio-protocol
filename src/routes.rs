@@ -1,4 +1,4 @@
-use actix_web::web::{Data, Json, Path};
+use actix_web::web::{Data, Json, Path, Query};
 use actix_web::error::InternalError;
 use actix_web::http::StatusCode;
 use actix_web::dev::HttpServiceFactory;
