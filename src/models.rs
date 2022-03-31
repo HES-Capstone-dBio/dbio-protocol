@@ -8,6 +8,7 @@ pub struct EncryptedData {
     pub ciphertext: String,
 }
 
+/* Database rows */
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct User {
     pub eth_public_address: String,
@@ -32,3 +33,4 @@ pub struct AccessRequest {
     pub request_approved: bool
 }
 
+/* Request payloads */
