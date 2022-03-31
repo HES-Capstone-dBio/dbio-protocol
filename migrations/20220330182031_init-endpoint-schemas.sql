@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS access_requests (
   id BIGSERIAL PRIMARY KEY,
   requestor_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   requestee_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
-  request_approved BOOL NOT NULL DEFAULT false
+  request_approved BOOL NOT NULL DEFAULT false,
+  request_open BOOL NOT NULL DEFAULT true
 );
 
 CREATE INDEX IF NOT EXISTS access_requests_requestee ON access_requests (requestee_eth_address);
