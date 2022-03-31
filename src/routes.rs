@@ -14,6 +14,11 @@ pub struct FilterInfo {
     filter: String,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct ApproveInfo {
+    approve: String,
+}
+
 fn to_internal_error(e: StdErr) -> InternalError<StdErr> {
     InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR)
 }
@@ -104,6 +109,19 @@ async fn add_access_request(
         .map_err(to_internal_error)
 }
 
+#[actix_web::get("/access_requests/{id}")]
+async fn update_access_request(
+    db: Data<Db>,
+    Path(id): Path<i64>,
+    approve_info: Query<ApproveInfo>
+) -> Result<HttpResponse, InternalError<StdErr>> {
+    let approve = matches!(approve_info.approve.as_str(), "true");
+    db.respond_to_access_request(id, approve)
+        .await
+        .map(to_ok)
+        .map_err(to_internal_error)
+}
+
 pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/")
         .service(create_encrypted_resource)
@@ -113,4 +131,5 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(add_user)
         .service(get_access_requests)
         .service(add_access_request)
+        .service(update_access_request)
 }
