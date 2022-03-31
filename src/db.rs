@@ -1,5 +1,3 @@
-use std::fmt::Result;
-
 use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
 use crate::models::*;
 use crate::StdErr;
