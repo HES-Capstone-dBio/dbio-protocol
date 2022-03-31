@@ -142,4 +142,21 @@ impl Db {
         .await?;
         Ok(access_request)
     }
+
+    pub async fn respond_to_access_request(
+        &self,
+        id: i64,
+        approval: bool,
+    ) -> Result<(), StdErr> {
+        sqlx::query!(
+            "UPDATE access_requests
+             SET request_approved = $1, request_open = false
+             WHERE id = $2",
+            approval,
+            id,
+        )
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
 }
