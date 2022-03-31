@@ -109,7 +109,7 @@ async fn add_access_request(
         .map_err(to_internal_error)
 }
 
-#[actix_web::get("/access_requests/{id}")]
+#[actix_web::put("/access_requests/{id}")]
 async fn update_access_request(
     db: Data<Db>,
     Path(id): Path<i64>,
