@@ -1,5 +1,6 @@
 use actix_web::web::{Data, Json, Path, Query};
-use actix_web::error::InternalError;
+use actix_web::error;
+use actix_web::error::Error;
 use actix_web::http::StatusCode;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::HttpResponse;
@@ -19,10 +20,18 @@ pub struct ApproveInfo {
     approve: String,
 }
 
-fn to_internal_error(e: StdErr) -> InternalError<StdErr> {
-    InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR)
+fn to_internal_error(e: StdErr) -> Error {
+    error::ErrorInternalServerError(e)
 }
 
+fn to_conflict(e: StdErr) -> Error {
+    error::ErrorConflict(e)
+}
+
+fn to_not_found(e: StdErr) -> Error {
+    error::ErrorNotFound(e)
+}
+ 
 fn to_ok(_: ()) -> HttpResponse {
     HttpResponse::new(StatusCode::OK)
 }
@@ -31,7 +40,7 @@ fn to_ok(_: ()) -> HttpResponse {
 async fn create_encrypted_resource(
     db: Data<Db>,
     resource: Json<EncryptedData>,
-) -> Result<Json<EncryptedData>, InternalError<StdErr>> {
+) -> Result<Json<EncryptedData>, Error> {
     db.insert_encrypted_data(resource.into_inner())
         .await
         .map(Json)
@@ -42,11 +51,11 @@ async fn create_encrypted_resource(
 async fn get_encrypted_resource(
     db: Data<Db>,
     Path(resource_id): Path<i32>,
-) -> Result<Json<EncryptedData>, InternalError<StdErr>> {
+) -> Result<Json<EncryptedData>, Error> {
     db.get_encrypted_data(resource_id)
         .await
         .map(Json)
-        .map_err(to_internal_error)
+        .map_err(to_not_found)
 }
 
 #[actix_web::put("/api/{resource_id}")]
@@ -54,7 +63,7 @@ async fn update_encrypted_resource(
     db: Data<Db>,
     Path(resource_id): Path<i32>,
     resource: Json<EncryptedData>,
-) -> Result<Json<EncryptedData>, InternalError<StdErr>> {
+) -> Result<Json<EncryptedData>, Error> {
     db.update_encrypted_data(resource_id, resource.into_inner())
         .await
         .map(Json)
@@ -65,7 +74,7 @@ async fn update_encrypted_resource(
 async fn delete_encrypted_resource(
     db: Data<Db>,
     Path(resource_id): Path<i32>,
-) -> Result<HttpResponse, InternalError<StdErr>> {
+) -> Result<HttpResponse, Error> {
     db.delete_encrypted_data(resource_id)
         .await
         .map(to_ok)
@@ -76,11 +85,11 @@ async fn delete_encrypted_resource(
 async fn add_user(
     db: Data<Db>,
     user: Json<User>,
-) -> Result<Json<User>, InternalError<StdErr>> {
+) -> Result<Json<User>, Error> {
     db.insert_user(user.into_inner())
         .await
         .map(Json)
-        .map_err(to_internal_error)
+        .map_err(to_conflict)
 }
 
 #[actix_web::get("/access_requests/{requestee_eth_address}")]
@@ -88,25 +97,25 @@ async fn get_access_requests(
     db: Data<Db>,
     Path(requestee_eth_address): Path<String>,
     filter_info: Query<FilterInfo>
-) -> Result<Json<Vec<AccessRequest>>, InternalError<StdErr>> {
+) -> Result<Json<Vec<AccessRequest>>, Error> {
     let returned_future = match filter_info.filter.as_str() {
         "open" => db.get_open_access_requests(requestee_eth_address).await,
         _ => db.get_all_access_requests(requestee_eth_address).await,
     };
     returned_future
         .map(Json)
-        .map_err(to_internal_error)
+        .map_err(to_not_found)
 }
 
 #[actix_web::post("/access_requests")]
 async fn add_access_request(
     db: Data<Db>,
     access_request_payload: Json<AccessRequestPayload>,
-) -> Result<Json<AccessRequest>, InternalError<StdErr>> {
+) -> Result<Json<AccessRequest>, Error> {
     db.insert_access_request(access_request_payload.into_inner())
         .await
         .map(Json)
-        .map_err(to_internal_error)
+        .map_err(to_conflict)
 }
 
 #[actix_web::put("/access_requests/{id}")]
@@ -114,7 +123,7 @@ async fn update_access_request(
     db: Data<Db>,
     Path(id): Path<i64>,
     approve_info: Query<ApproveInfo>
-) -> Result<HttpResponse, InternalError<StdErr>> {
+) -> Result<HttpResponse, Error> {
     let approve = matches!(approve_info.approve.as_str(), "true");
     db.respond_to_access_request(id, approve)
         .await
