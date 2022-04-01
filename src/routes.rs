@@ -92,6 +92,28 @@ async fn add_user(
         .map_err(to_conflict)
 }
 
+#[actix_web::get("/users/eth/{eth_public_address}")]
+async fn get_user_from_eth(
+    db: Data<Db>,
+    Path(eth_public_address): Path<String>,
+) -> Result<Json<User>, Error> {
+    db.get_user_by_eth(eth_public_address)
+        .await
+        .map(Json)
+        .map_err(to_not_found)
+}
+
+#[actix_web::get("/users/email/{email}")]
+async fn get_user_from_email(
+    db: Data<Db>,
+    Path(email): Path<String>,
+) -> Result<Json<User>, Error> {
+    db.get_user_by_email(email)
+        .await
+        .map(Json)
+        .map_err(to_not_found)
+}
+
 #[actix_web::get("/access_requests/{requestee_eth_address}")]
 async fn get_access_requests(
     db: Data<Db>,
@@ -138,6 +160,8 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(update_encrypted_resource)
         .service(delete_encrypted_resource)
         .service(add_user)
+        .service(get_user_from_eth)
+        .service(get_user_from_email)
         .service(get_access_requests)
         .service(add_access_request)
         .service(update_access_request)

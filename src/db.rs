@@ -95,6 +95,34 @@ impl Db {
         Ok(user)
     }
 
+    pub async fn get_user_by_eth(
+        &self,
+        eth_public_address: String,
+    ) -> Result<User, StdErr> {
+        let user = sqlx::query_as!(
+            User,
+            "SELECT * FROM users WHERE eth_public_address = $1",
+            eth_public_address,
+        )
+        .fetch_one(&self.pool)
+        .await?;
+        Ok(user)
+    }
+
+    pub async fn get_user_by_email(
+        &self,
+        email: String,
+    ) -> Result<User, StdErr> {
+        let user = sqlx::query_as!(
+            User,
+            "SELECT * FROM users WHERE email = $1",
+            email,
+        )
+        .fetch_one(&self.pool)
+        .await?;
+        Ok(user)
+    }
+
     pub async fn get_all_access_requests(
         &self,
         requestee_eth_address : String,
