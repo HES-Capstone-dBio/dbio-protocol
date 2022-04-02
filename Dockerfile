@@ -1,11 +1,9 @@
 # Use Rust 1.59
-FROM rust:1.59.0-alpine
+FROM rust:1.59.0
 
-# Expose port 8080 for backend server
-EXPOSE 8080
+WORKDIR /usr/src/dbio-protocol
+COPY . .
 
-# Add the generated binary to the docker image
-ADD target /
+RUN cargo install --path .
 
-# Run the generated binary
-CMD ["/release/dbio-protocol"]
+CMD ["dbio-protocol"]
