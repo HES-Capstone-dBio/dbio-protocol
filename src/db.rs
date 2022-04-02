@@ -1,6 +1,8 @@
-use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
+use crate::errors::{ServerError, ServerError::DatabaseError};
 use crate::models::*;
 use crate::StdErr;
+use sqlx::{postgres::*, Pool, Postgres, Error};
+use std::future::Future;
 
 #[derive(Clone)]
 pub struct Db {
@@ -10,16 +12,13 @@ pub struct Db {
 impl Db {
     pub async fn connect() -> Result<Self, StdErr> {
         let db_url = std::env::var("DATABASE_URL")?;
-        let pool = PgPoolOptions::new()
-            .connect(&db_url)
-            .await
-            .unwrap();
+        let pool = PgPoolOptions::new().connect(&db_url).await.unwrap();
         Ok(Db { pool })
     }
 
     pub async fn insert_encrypted_data(
         &self,
-        data: EncryptedData
+        data: EncryptedData,
     ) -> Result<EncryptedData, StdErr> {
         let data = sqlx::query_as!(
             EncryptedData,
@@ -34,10 +33,7 @@ impl Db {
         Ok(data)
     }
 
-    pub async fn get_encrypted_data(
-        &self,
-        resource_id: i32
-    ) -> Result<EncryptedData, StdErr> {
+    pub async fn get_encrypted_data(&self, resource_id: i32) -> Result<EncryptedData, StdErr> {
         let data = sqlx::query_as!(
             EncryptedData,
             "SELECT * FROM encrypteddata WHERE resource_id = $1",
@@ -66,10 +62,7 @@ impl Db {
         Ok(data)
     }
 
-    pub async fn delete_encrypted_data(
-        &self,
-        resource_id: i32,
-    ) -> Result<(), StdErr> {
+    pub async fn delete_encrypted_data(&self, resource_id: i32) -> Result<(), StdErr> {
         sqlx::query!(
             "DELETE FROM encrypteddata WHERE resource_id = $1",
             resource_id,
@@ -79,10 +72,7 @@ impl Db {
         Ok(())
     }
 
-    pub async fn insert_user(
-        &self,
-        user: User,
-    ) -> Result<User, StdErr> {
+    pub async fn insert_user(&self, user: User) -> Result<User, StdErr> {
         let user = sqlx::query_as!(
             User,
             "INSERT INTO users (eth_public_address, email)
@@ -95,10 +85,7 @@ impl Db {
         Ok(user)
     }
 
-    pub async fn get_user_by_eth(
-        &self,
-        eth_public_address: String,
-    ) -> Result<User, StdErr> {
+    pub async fn get_user_by_eth(&self, eth_public_address: String) -> Result<User, StdErr> {
         let user = sqlx::query_as!(
             User,
             "SELECT * FROM users WHERE eth_public_address = $1",
@@ -109,23 +96,16 @@ impl Db {
         Ok(user)
     }
 
-    pub async fn get_user_by_email(
-        &self,
-        email: String,
-    ) -> Result<User, StdErr> {
-        let user = sqlx::query_as!(
-            User,
-            "SELECT * FROM users WHERE email = $1",
-            email,
-        )
-        .fetch_one(&self.pool)
-        .await?;
-        Ok(user)
+    pub async fn get_user_by_email(&self, email: String) -> Future<Output = Result<User, Error>> {
+        sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", email,)
+            .fetch_one(&self.pool)
+            //.await
+            //.map_err(DatabaseError)
     }
 
     pub async fn get_all_access_requests(
         &self,
-        requestee_eth_address : String,
+        requestee_eth_address: String,
     ) -> Result<Vec<AccessRequest>, StdErr> {
         let access_requests = sqlx::query_as!(
             AccessRequest,
@@ -140,7 +120,7 @@ impl Db {
 
     pub async fn get_open_access_requests(
         &self,
-        requestee_eth_address : String,
+        requestee_eth_address: String,
     ) -> Result<Vec<AccessRequest>, StdErr> {
         let access_requests = sqlx::query_as!(
             AccessRequest,
@@ -175,7 +155,7 @@ impl Db {
         &self,
         id: i64,
         approval: bool,
-    ) -> Result<(), StdErr> {
+    ) -> Result<(), ServerError> {
         sqlx::query!(
             "UPDATE access_requests
              SET request_approved = $1, request_open = false
@@ -184,7 +164,24 @@ impl Db {
             id,
         )
         .execute(&self.pool)
-        .await?;
-        Ok(())
+        .await
+        .map(|_| ())
+        .map_err(DatabaseError)
+    }
+
+    pub async fn insert_resource_data<'a>(
+        &self,
+        data: ResourceData<'a>,
+    ) -> Result<(), ServerError> {
+        sqlx::query!(
+            "INSERT INTO resource_store
+             VALUES ($1, $2)",
+            data.cid,
+            data.ciphertext
+        )
+        .execute(&self.pool)
+        .await
+        .map(|_| ())
+        .map_err(DatabaseError)
     }
 }
