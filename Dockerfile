@@ -8,4 +8,4 @@ EXPOSE 8080
 ADD target /
 
 # Run the generated binary
-CMD ["/target/release/dbio-protocol"]
+CMD ["/release/dbio-protocol"]
