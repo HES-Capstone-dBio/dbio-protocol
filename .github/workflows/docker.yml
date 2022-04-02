@@ -2,7 +2,7 @@ name: Docker Image Build & Release
 
 on:
   push:
-    branches: [ trunk ]
+    branches: [ trunk, docker-ci-cd ]
 
 env:
   IMAGE_NAME: dbio-protocol
@@ -32,10 +32,13 @@ jobs:
         docker ps
         cargo install --version=0.5.11 sqlx-cli
         SKIP_DOCKER=true sqlx database create && sqlx migrate run
-    - name: Build
+    - name: Build Crate Executable
       run: cargo build --release
-    - name: Build Docker image
-      run: docker build . --tag ${{ secrets.DOCKERHUB_USER }}/$IMAGE_NAME:$GITHUB_SHA --tag ${{ secrets.DOCKERHUB_USER }}/$IMAGE_NAME:latest
+    - name: Build Docker Image
+      run: |
+        docker build . \
+          --tag ${{ secrets.DOCKERHUB_USER }}/$IMAGE_NAME:$GITHUB_SHA \
+          --tag ${{ secrets.DOCKERHUB_USER }}/$IMAGE_NAME:latest
     - name: Login to Docker Hub
       uses: docker/login-action@v1
       with:
