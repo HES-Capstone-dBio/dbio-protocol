@@ -1,9 +1,6 @@
 # Use alpine unix image
 FROM alpine:3.15
 
-# Build for release
-RUN cargo build --release
-
 # Add the generated binary to the docker image
 ADD target/release/dbio-protocol .
 
