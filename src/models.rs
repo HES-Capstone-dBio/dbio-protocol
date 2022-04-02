@@ -25,6 +25,13 @@ pub struct Resource {
     pub ipfs_cid: String,
 }
 
+
+#[derive(Serialize, Deserialize, FromRow)]
+pub struct ResourceData<'a> {
+    pub cid: String,
+    pub ciphertext: &'a[u8]
+}
+
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct AccessRequest {
     pub id: i64,
@@ -39,4 +46,13 @@ pub struct AccessRequest {
 pub struct AccessRequestPayload {
     pub requestor_eth_address: String,
     pub requestee_eth_address: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ResourceDataPayload {
+    pub email: String,
+    pub submitter_eth_address: String,
+    pub resource_type: String,
+    pub resource_id: i32,
+    pub ciphertext: String
 }

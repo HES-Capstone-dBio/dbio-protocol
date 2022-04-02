@@ -2,6 +2,7 @@ mod db;
 mod logger;
 mod models;
 mod routes;
+mod errors;
 
 type StdErr = Box<dyn std::error::Error>;
 
