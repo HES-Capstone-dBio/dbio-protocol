@@ -1,5 +1,5 @@
-# Use alpine unix image
-FROM alpine:3.15
+# Use Rust 1.59
+FROM rust:1.59.0-alpine
 
 # Expose port 8080 for backend server
 EXPOSE 8080
