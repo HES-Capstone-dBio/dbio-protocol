@@ -5,7 +5,7 @@ FROM rust:1.59.0-alpine
 EXPOSE 8080
 
 # Add the generated binary to the docker image
-ADD target/release/dbio-protocol /
+ADD target /
 
 # Run the generated binary
-CMD ["dbio-protocol"]
+CMD ["/target/release/dbio-protocol"]
