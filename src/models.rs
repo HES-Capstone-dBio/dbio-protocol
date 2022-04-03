@@ -27,9 +27,9 @@ pub struct Resource {
 
 
 #[derive(Serialize, Deserialize, FromRow)]
-pub struct ResourceData<'a> {
+pub struct ResourceData {
     pub cid: String,
-    pub ciphertext: &'a[u8]
+    pub ciphertext: String
 }
 
 #[derive(Serialize, Deserialize, FromRow)]
@@ -51,8 +51,8 @@ pub struct AccessRequestPayload {
 #[derive(Debug, Deserialize)]
 pub struct ResourceDataPayload {
     pub email: String,
-    pub submitter_eth_address: String,
+    pub creator_eth_address: String,
     pub resource_type: String,
-    pub resource_id: i32,
+    pub resource_id: i64,
     pub ciphertext: String
 }
