@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS resources (
   resource_type VARCHAR(40) NOT NULL,
   ownership_claimed BOOL NOT NULL DEFAULT false,
   ipfs_cid VARCHAR(50) REFERENCES resource_store(cid) NOT NULL,
-  PRIMARY KEY (subject_eth_address, fhir_resource_id)
+  PRIMARY KEY (creator_eth_address, fhir_resource_id)
 );
 
 CREATE INDEX IF NOT EXISTS resources_subject_address ON resources (subject_eth_address);
