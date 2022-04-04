@@ -1,7 +1,6 @@
 use crate::models::*;
 use sqlx::{postgres::*, Pool, Postgres};
 use std::future::Future;
-use futures::FutureExt;
 
 /**
  * Module for interacting with PostgreSQL
