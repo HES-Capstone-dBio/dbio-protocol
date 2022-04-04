@@ -4,7 +4,6 @@ use std::fmt::Display;
 #[derive(Debug)]
 pub enum InternalError {
     PoolError(sqlx::Error),
-    DatabaseError(sqlx::Error)
 }
 
 impl Display for InternalError {

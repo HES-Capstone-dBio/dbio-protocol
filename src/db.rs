@@ -1,7 +1,7 @@
 use crate::errors::{InternalError, InternalError::*};
 use crate::models::*;
 use crate::StdErr;
-use sqlx::{postgres::*, Error, Pool, Postgres};
+use sqlx::{postgres::*, Pool, Postgres};
 use std::future::Future;
 
 #[derive(Clone)]
@@ -19,8 +19,11 @@ impl Db {
             .map(|pool| Db { pool })
     }
 
-    pub async fn insert_user(&self, user: User) -> Result<User, StdErr> {
-        let user = sqlx::query_as!(
+    pub fn insert_user<'a>(
+        &'a self,
+        user: User,
+    ) -> impl Future<Output = Result<User, sqlx::Error>> + 'a {
+        sqlx::query_as!(
             User,
             "INSERT INTO users (eth_public_address, email)
              VALUES ($1, $2) RETURNING *",
@@ -28,81 +31,63 @@ impl Db {
             user.email,
         )
         .fetch_one(&self.pool)
-        .await?;
-        Ok(user)
     }
 
-    pub async fn get_user_by_eth(&self, eth_public_address: String) -> Result<User, StdErr> {
-        let user = sqlx::query_as!(
+    pub fn select_user_by_eth<'a>(
+        &'a self,
+        eth_public_address: String,
+    ) -> impl Future<Output = Result<User, sqlx::Error>> + 'a {
+        sqlx::query_as!(
             User,
             "SELECT * FROM users WHERE eth_public_address = $1",
             eth_public_address,
         )
         .fetch_one(&self.pool)
-        .await?;
-        Ok(user)
     }
 
-    pub fn get_user_by_email<'a>(
+    pub fn select_user_by_email<'a>(
         &'a self,
         email: String,
     ) -> impl Future<Output = Result<User, sqlx::Error>> + 'a {
         sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", email,).fetch_one(&self.pool)
     }
 
-    pub async fn get_all_access_requests(
-        &self,
+    pub fn select_access_requests<'a>(
+        &'a self,
         requestee_eth_address: String,
-    ) -> Result<Vec<AccessRequest>, StdErr> {
-        let access_requests = sqlx::query_as!(
+        request_open: bool,
+    ) -> impl Future<Output = Result<Vec<AccessRequest>, sqlx::Error>> + 'a {
+        sqlx::query_as!(
             AccessRequest,
             "SELECT * FROM access_requests
-             WHERE requestee_eth_address = $1",
+             WHERE
+               requestee_eth_address = $1
+               AND request_open = $2",
             requestee_eth_address,
+            request_open
         )
         .fetch_all(&self.pool)
-        .await?;
-        Ok(access_requests)
     }
 
-    pub async fn get_open_access_requests(
-        &self,
-        requestee_eth_address: String,
-    ) -> Result<Vec<AccessRequest>, StdErr> {
-        let access_requests = sqlx::query_as!(
-            AccessRequest,
-            "SELECT * FROM access_requests
-             WHERE requestee_eth_address = $1
-             AND request_open",
-            requestee_eth_address,
-        )
-        .fetch_all(&self.pool)
-        .await?;
-        Ok(access_requests)
-    }
-
-    pub async fn insert_access_request(
-        &self,
+    pub fn insert_access_request<'a>(
+        &'a self,
         access_request_payload: AccessRequestPayload,
-    ) -> Result<AccessRequest, StdErr> {
-        let access_request = sqlx::query_as!(
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + 'a {
+        sqlx::query_as!(
             AccessRequest,
-            "INSERT INTO access_requests (requestor_eth_address,
-                                          requestee_eth_address)
+            "INSERT INTO access_requests (requestor_eth_address, requestee_eth_address)
              VALUES ($1, $2) RETURNING *",
             access_request_payload.requestor_eth_address,
             access_request_payload.requestee_eth_address,
         )
         .fetch_one(&self.pool)
-        .await?;
-        Ok(access_request)
     }
 
-    pub async fn respond_to_access_request(
-        &self,
+    pub fn update_access_request<'a>(
+        &'a self,
         id: i64,
         approval: bool,
-    ) -> Result<(), InternalError> {
+    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + 'a {
         sqlx::query!(
             "UPDATE access_requests
              SET request_approved = $1, request_open = false
@@ -111,9 +96,6 @@ impl Db {
             id,
         )
         .execute(&self.pool)
-        .await
-        .map(|_| ())
-        .map_err(DatabaseError)
     }
 
     pub fn insert_resource_data<'a>(
@@ -132,7 +114,7 @@ impl Db {
     pub fn insert_resource<'a>(
         &'a self,
         data: Resource,
-    ) -> impl Future<Output = Result<PgDone, Error>> + 'a {
+    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + 'a {
         sqlx::query!(
             "INSERT INTO resources
              VALUES ($1, $2, $3, $4, $5, $6)",
@@ -146,11 +128,11 @@ impl Db {
         .execute(&self.pool)
     }
 
-    pub fn get_resource_data<'a>(
+    pub fn select_resource_data<'a>(
         &'a self,
         subject_eth_address: String,
         resource_id: i64,
-    ) -> impl Future<Output = Result<Resource, Error>> + 'a {
+    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + 'a {
         sqlx::query_as!(
             Resource,
             "SELECT *
@@ -162,5 +144,38 @@ impl Db {
             resource_id
         )
         .fetch_one(&self.pool)
+    }
+
+    pub fn select_resource_metadata<'a>(
+        &'a self,
+        subject_eth_address: String,
+    ) -> impl Future<Output = Result<Vec<Resource>, sqlx::Error>> + 'a {
+        sqlx::query_as!(
+            Resource,
+            "SELECT *
+             FROM resources
+             WHERE subject_eth_address = $1",
+            subject_eth_address
+        )
+        .fetch_all(&self.pool)
+    }
+
+    pub fn update_resource_claim<'a>(
+        &'a self,
+        subject_eth_address: String,
+        fhir_resource_id: i64,
+        claim: bool,
+    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + 'a {
+        sqlx::query!(
+            "UPDATE resources
+             SET ownership_claimed = $3
+             WHERE
+               subject_eth_address = $1
+               AND fhir_resource_id = $2",
+            subject_eth_address,
+            fhir_resource_id,
+            claim,
+        )
+        .execute(&self.pool)
     }
 }
