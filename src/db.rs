@@ -57,16 +57,26 @@ impl Db {
         requestee_eth_address: String,
         request_open: bool,
     ) -> impl Future<Output = Result<Vec<AccessRequest>, sqlx::Error>> + '_ {
-        sqlx::query_as!(
-            AccessRequest,
-            "SELECT * FROM access_requests
-             WHERE
-               requestee_eth_address = $1
-               AND request_open = $2",
-            requestee_eth_address,
-            request_open
-        )
-        .fetch_all(&self.pool)
+        let query = match request_open {
+            true => sqlx::query_as!(
+                AccessRequest,
+                "SELECT * FROM access_requests
+                 WHERE
+                   requestee_eth_address = $1
+                   AND request_open = $2",
+                requestee_eth_address,
+                request_open
+            ),
+            false => sqlx::query_as!(
+                AccessRequest,
+                "SELECT * FROM access_requests
+                 WHERE
+                   requestee_eth_address = $1",
+                requestee_eth_address,
+            )
+        };
+        
+        query.fetch_all(&self.pool)
     }
 
     pub fn insert_access_request(

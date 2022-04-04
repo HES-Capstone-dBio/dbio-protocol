@@ -67,7 +67,7 @@ async fn get_access_requests(
     requestee_eth_address: Path<String>,
     filter_info: Query<FilterParam>,
 ) -> Result<Json<Vec<AccessRequest>>, HttpError> {
-    let open = matches!(filter_info.into_inner().filter.as_str(), "open");
+    let open = matches!(filter_info.filter.as_str(), "open");
     db.select_access_requests(requestee_eth_address.into_inner(), open)
         .await
         .map(Json)
