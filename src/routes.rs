@@ -42,9 +42,9 @@ async fn post_user(db: Data<Db>, user: Json<User>) -> Result<Json<User>, HttpErr
 #[actix_web::get("/users/eth/{eth_public_address}")]
 async fn get_user_by_eth(
     db: Data<Db>,
-    Path(eth_public_address): Path<String>,
+    eth_public_address: Path<String>,
 ) -> Result<Json<User>, HttpError> {
-    db.select_user_by_eth(eth_public_address)
+    db.select_user_by_eth(eth_public_address.into_inner())
         .await
         .map(Json)
         .map_err(adapt_db_error)
@@ -53,9 +53,9 @@ async fn get_user_by_eth(
 #[actix_web::get("/users/email/{email}")]
 async fn get_user_by_email(
     db: Data<Db>,
-    Path(email): Path<String>,
+    email: Path<String>,
 ) -> Result<Json<User>, HttpError> {
-    db.select_user_by_email(email)
+    db.select_user_by_email(email.into_inner())
         .await
         .map(Json)
         .map_err(adapt_db_error)
@@ -64,11 +64,11 @@ async fn get_user_by_email(
 #[actix_web::get("/access_requests/{requestee_eth_address}")]
 async fn get_access_requests(
     db: Data<Db>,
-    Path(requestee_eth_address): Path<String>,
+    requestee_eth_address: Path<String>,
     filter_info: Query<FilterParam>,
 ) -> Result<Json<Vec<AccessRequest>>, HttpError> {
-    let open = matches!(filter_info.filter.as_str(), "open");
-    db.select_access_requests(requestee_eth_address, open)
+    let open = matches!(filter_info.into_inner().filter.as_str(), "open");
+    db.select_access_requests(requestee_eth_address.into_inner(), open)
         .await
         .map(Json)
         .map_err(adapt_db_error)
@@ -88,11 +88,11 @@ async fn post_access_request(
 #[actix_web::put("/access_requests/{id}")]
 async fn put_access_request_approval(
     db: Data<Db>,
-    Path(id): Path<i64>,
+    id: Path<i64>,
     approval: Query<ApproveParam>,
 ) -> Result<HttpResponse, HttpError> {
     let approve = matches!(approval.approve.as_str(), "true");
-    db.update_access_request(id, approve)
+    db.update_access_request(id.into_inner(), approve)
         .await
         .map(to_ok)
         .map_err(adapt_db_error)
@@ -101,8 +101,9 @@ async fn put_access_request_approval(
 #[actix_web::get("/resources/{subject_eth_address}/{fhir_resource_id}")]
 async fn get_resource_data(
     db: Data<Db>,
-    Path((subject_eth_address, fhir_resource_id)): Path<(String, i64)>,
+    path: Path<(String, i64)>,
 ) -> Result<Json<Resource>, HttpError> {
+    let (subject_eth_address, fhir_resource_id) = path.into_inner();
     db.select_resource_data(subject_eth_address, fhir_resource_id)
         .await
         .map(Json)
@@ -146,9 +147,9 @@ async fn post_resource_data(
 #[actix_web::get("/resources/{subject_eth_address}")]
 async fn get_resource_metadata(
     db: Data<Db>,
-    Path(subject_eth_address): Path<String>,
+    subject_eth_address: Path<String>,
 ) -> Result<HttpResponse, HttpError> {
-    db.select_resource_metadata(subject_eth_address)
+    db.select_resource_metadata(subject_eth_address.into_inner())
         .await
         .map_err(adapt_db_error)
         .map(to_ok)
@@ -157,8 +158,9 @@ async fn get_resource_metadata(
 #[actix_web::put("/resources/claim/{subject_eth_address}/{fhir_resource_id}")]
 async fn put_resource_claim(
     db: Data<Db>,
-    Path((subject_eth_address, fhir_resource_id)): Path<(String, i64)>,
+    path: Path<(String, i64)>,
 ) -> Result<HttpResponse, HttpError> {
+    let (subject_eth_address, fhir_resource_id) = path.into_inner();
     db.update_resource_claim(subject_eth_address, fhir_resource_id, true)
         .await
         .map_err(adapt_db_error)
