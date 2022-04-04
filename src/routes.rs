@@ -49,6 +49,11 @@ fn to_ok<A>(_: A) -> HttpResponse {
     HttpResponse::new(StatusCode::OK)
 }
 
+#[actix_web::get("/health")]
+pub async fn health_check() -> &'static str {
+    HttpResponse::Ok
+}
+
 #[actix_web::post("/users")]
 async fn post_user(db: Data<Db>, user: Json<User>) -> Result<Json<User>, HttpError> {
     db.insert_user(user.into_inner())

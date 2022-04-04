@@ -1,6 +1,4 @@
-use crate::errors::{InternalError, InternalError::*};
 use crate::models::*;
-use crate::StdErr;
 use sqlx::{postgres::*, Pool, Postgres};
 use std::future::Future;
 
@@ -10,12 +8,11 @@ pub struct Db {
 }
 
 impl Db {
-    pub async fn connect() -> Result<Self, InternalError> {
+    pub async fn connect() -> Result<Self, sqlx::Error> {
         let db_url = std::env::var("DATABASE_URL").unwrap();
         PgPoolOptions::new()
             .connect(&db_url)
             .await
-            .map_err(PoolError)
             .map(|pool| Db { pool })
     }
 
