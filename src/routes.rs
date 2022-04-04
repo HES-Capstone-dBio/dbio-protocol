@@ -140,19 +140,19 @@ async fn post_resource_data(
             })
         })
         .await
-        .map_err(adapt_db_error)
         .map(to_ok)
+        .map_err(adapt_db_error)
 }
 
 #[actix_web::get("/resources/{subject_eth_address}")]
 async fn get_resource_metadata(
     db: Data<Db>,
     subject_eth_address: Path<String>,
-) -> Result<HttpResponse, HttpError> {
+) -> Result<Json<Vec<Resource>>, HttpError> {
     db.select_resource_metadata(subject_eth_address.into_inner())
         .await
+        .map(Json)
         .map_err(adapt_db_error)
-        .map(to_ok)
 }
 
 #[actix_web::put("/resources/claim/{subject_eth_address}/{fhir_resource_id}")]
@@ -163,8 +163,8 @@ async fn put_resource_claim(
     let (subject_eth_address, fhir_resource_id) = path.into_inner();
     db.update_resource_claim(subject_eth_address, fhir_resource_id, true)
         .await
-        .map_err(adapt_db_error)
         .map(to_ok)
+        .map_err(adapt_db_error)
 }
 
 pub fn api() -> impl HttpServiceFactory + 'static {
