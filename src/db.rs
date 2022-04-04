@@ -87,7 +87,7 @@ impl Db {
         &'_ self,
         id: i64,
         approval: bool,
-    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
         sqlx::query!(
             "UPDATE access_requests
              SET request_approved = $1, request_open = false
@@ -101,7 +101,7 @@ impl Db {
     pub fn insert_resource_data(
         &'_ self,
         data: ResourceData,
-    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
         sqlx::query!(
             "INSERT INTO resource_store
              VALUES ($1, $2)",
@@ -114,7 +114,7 @@ impl Db {
     pub fn insert_resource(
         &'_ self,
         data: Resource,
-    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
         sqlx::query!(
             "INSERT INTO resources
              VALUES ($1, $2, $3, $4, $5, $6)",
@@ -165,7 +165,7 @@ impl Db {
         subject_eth_address: String,
         fhir_resource_id: i64,
         claim: bool,
-    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
         sqlx::query!(
             "UPDATE resources
              SET ownership_claimed = $3
