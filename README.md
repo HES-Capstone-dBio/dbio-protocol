@@ -42,3 +42,22 @@ In the case of `200 Ok`, the body of the response contains JSON.
 The JSON returned contains the following information:
 - `eth_public_address: String` - the Ethereum public address of the user.
 - `email: String` - the email address of the user.
+
+#### `GET /dbio/users/email/{email}`
+The get request to `/dbio/users/email/{email}` takes as path parameters the following items:
+- `email` - The email address of the user being queried.
+
+The response returned is one of the following:
+- `200 Ok` - The user was found.
+- `404 Not Found` - The user was not found.
+
+In the case of `200 Ok`, the body of the response contains JSON.
+```json
+{
+	"eth_public_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+	"email": "user@example.com"
+}
+```
+The JSON returned contains the following information:
+- `eth_public_address: String` - the Ethereum public address of the user.
+- `email: String` - the email address of the user.
