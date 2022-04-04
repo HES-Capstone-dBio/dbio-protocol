@@ -1,6 +1,7 @@
 use crate::models::*;
 use sqlx::{postgres::*, Pool, Postgres};
 use std::future::Future;
+use futures::FutureExt;
 
 /**
  * Module for interacting with PostgreSQL
@@ -11,10 +12,11 @@ pub struct Db {
 }
 
 impl Db {
-    pub fn connect() -> Result<Self, sqlx::Error> {
+    pub async fn connect() -> Result<Self, sqlx::Error> {
         let db_url = std::env::var("DATABASE_URL").unwrap();
         PgPoolOptions::new()
-            .connect_lazy(&db_url)
+            .connect(&db_url)
+            .await
             .map(|pool| Db { pool })
     }
 

@@ -21,7 +21,7 @@ async fn main() -> Result<(), StdErr> {
     dotenv::dotenv()?;
     logger::init()?;
 
-    let db = db::Db::connect()?;
+    let db = db::Db::connect().await?;
 
     actix_web::HttpServer::new(move || {
         actix_web::App::new()
