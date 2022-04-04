@@ -11,11 +11,10 @@ pub struct Db {
 }
 
 impl Db {
-    pub async fn connect() -> Result<Self, sqlx::Error> {
+    pub fn connect() -> Result<Self, sqlx::Error> {
         let db_url = std::env::var("DATABASE_URL").unwrap();
         PgPoolOptions::new()
             .connect_lazy(&db_url)
-            .await
             .map(|pool| Db { pool })
     }
 

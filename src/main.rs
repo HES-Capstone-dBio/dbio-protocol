@@ -7,6 +7,7 @@ use actix_cors::Cors;
 use actix_web::body::BoxBody;
 use actix_web::http::StatusCode;
 use actix_web::HttpResponse;
+use actix_web::middleware::Logger;
 
 type StdErr = Box<dyn std::error::Error>;
 
@@ -20,16 +21,17 @@ async fn main() -> Result<(), StdErr> {
     dotenv::dotenv()?;
     logger::init()?;
 
-    let db = db::Db::connect().await?;
+    let db = db::Db::connect()?;
 
     actix_web::HttpServer::new(move || {
         actix_web::App::new()
             .wrap(Cors::permissive())
+            .wrap(Logger::default())
             .app_data(db.clone())
             .service(health_check)
             .service(routes::api())
     })
-    .bind(("0.0.0.0", 8000))?
+    .bind(("0.0.0.0", 8080))?
     .run()
     .await?;
 
