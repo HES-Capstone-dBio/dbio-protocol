@@ -1,13 +1,6 @@
 use serde::{Serialize, Deserialize};
 use sqlx::FromRow;
 
-#[derive(Serialize, Deserialize, FromRow)]
-pub struct EncryptedData {
-    pub resource_id: i32,
-    pub resource_type: String,
-    pub ciphertext: String,
-}
-
 /* Database rows */
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct User {
@@ -24,7 +17,6 @@ pub struct Resource {
     pub ownership_claimed: bool,
     pub ipfs_cid: String,
 }
-
 
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct ResourceData {
