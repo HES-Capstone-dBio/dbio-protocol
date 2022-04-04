@@ -52,31 +52,33 @@ impl Db {
         sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", email,).fetch_one(&self.pool)
     }
 
-    pub fn select_access_requests(
+    pub fn select_open_access_requests(
         &'_ self,
         requestee_eth_address: String,
-        request_open: bool,
     ) -> impl Future<Output = Result<Vec<AccessRequest>, sqlx::Error>> + '_ {
-        let query = match request_open {
-            true => sqlx::query_as!(
-                AccessRequest,
-                "SELECT * FROM access_requests
-                 WHERE
-                   requestee_eth_address = $1
-                   AND request_open = $2",
-                requestee_eth_address,
-                request_open
-            ),
-            false => sqlx::query_as!(
-                AccessRequest,
-                "SELECT * FROM access_requests
+        sqlx::query_as!(
+            AccessRequest,
+            "SELECT * FROM access_requests
+             WHERE
+               requestee_eth_address = $1
+               AND request_open",
+            requestee_eth_address,
+        )
+        .fetch_all(&self.pool)
+    }
+
+    pub fn select_all_access_requests(
+        &'_ self,
+        requestee_eth_address: String,
+    ) -> impl Future<Output = Result<Vec<AccessRequest>, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "SELECT * FROM access_requests
                  WHERE
                    requestee_eth_address = $1",
-                requestee_eth_address,
-            )
-        };
-        
-        query.fetch_all(&self.pool)
+            requestee_eth_address,
+        )
+        .fetch_all(&self.pool)
     }
 
     pub fn insert_access_request(

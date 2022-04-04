@@ -51,10 +51,7 @@ async fn get_user_by_eth(
 }
 
 #[actix_web::get("/users/email/{email}")]
-async fn get_user_by_email(
-    db: Data<Db>,
-    email: Path<String>,
-) -> Result<Json<User>, HttpError> {
+async fn get_user_by_email(db: Data<Db>, email: Path<String>) -> Result<Json<User>, HttpError> {
     db.select_user_by_email(email.into_inner())
         .await
         .map(Json)
@@ -67,11 +64,18 @@ async fn get_access_requests(
     requestee_eth_address: Path<String>,
     filter_info: Query<FilterParam>,
 ) -> Result<Json<Vec<AccessRequest>>, HttpError> {
-    let open = matches!(filter_info.filter.as_str(), "open");
-    db.select_access_requests(requestee_eth_address.into_inner(), open)
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
+    match filter_info.filter.as_str() {
+        "open" => {
+            db.select_open_access_requests(requestee_eth_address.into_inner())
+                .await
+        }
+        _ => {
+            db.select_all_access_requests(requestee_eth_address.into_inner())
+                .await
+        }
+    }
+    .map(Json)
+    .map_err(adapt_db_error)
 }
 
 #[actix_web::post("/access_requests")]
