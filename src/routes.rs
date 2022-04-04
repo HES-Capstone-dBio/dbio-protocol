@@ -168,7 +168,7 @@ async fn put_resource_claim(
 }
 
 pub fn api() -> impl HttpServiceFactory + 'static {
-    actix_web::web::scope("/")
+    actix_web::web::scope("/dbio")
         .service(post_user)
         .service(post_resource_data)
         .service(get_resource_data)

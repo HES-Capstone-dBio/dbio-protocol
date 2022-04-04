@@ -18,10 +18,10 @@ async fn health_check() -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> Result<(), StdErr> {
-    dotenv::dotenv()?;
+    dotenv::dotenv().expect(".env file not found");
     logger::init()?;
 
-    let db = db::Db::connect().await?;
+    let db = actix_web::web::Data::new(db::Db::connect().await?);
 
     actix_web::HttpServer::new(move || {
         actix_web::App::new()

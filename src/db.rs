@@ -12,7 +12,7 @@ pub struct Db {
 
 impl Db {
     pub async fn connect() -> Result<Self, sqlx::Error> {
-        let db_url = std::env::var("DATABASE_URL").unwrap();
+        let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL env var not found");
         PgPoolOptions::new()
             .connect(&db_url)
             .await
