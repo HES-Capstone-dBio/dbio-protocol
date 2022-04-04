@@ -1,17 +1,15 @@
 use actix_web::dev::HttpServiceFactory;
 use actix_web::error::Error as HttpError;
-use actix_web::error::{ErrorConflict, ErrorInternalServerError, ErrorNotFound};
+use actix_web::error::ErrorInternalServerError;
 use actix_web::http::StatusCode;
-use actix_web::web::{Data, Json, Path, Query};
+use actix_web::web::*;
 use actix_web::HttpResponse;
 use serde::Deserialize;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::Hasher;
 
 use crate::db::Db;
-use crate::errors::InternalError;
 use crate::models::*;
-use crate::StdErr;
 
 use futures::prelude::*;
 
@@ -29,29 +27,8 @@ fn adapt_db_error(e: sqlx::Error) -> HttpError {
     ErrorInternalServerError(e)
 }
 
-fn adapt_internal_error(e: InternalError) -> HttpError {
-    ErrorInternalServerError(e)
-}
-
-fn to_internal_error(e: StdErr) -> HttpError {
-    ErrorInternalServerError(e)
-}
-
-fn to_conflict(e: StdErr) -> HttpError {
-    ErrorConflict(e)
-}
-
-fn to_not_found(e: StdErr) -> HttpError {
-    ErrorNotFound(e)
-}
-
 fn to_ok<A>(_: A) -> HttpResponse {
     HttpResponse::new(StatusCode::OK)
-}
-
-#[actix_web::get("/health")]
-pub async fn health_check() -> &'static str {
-    HttpResponse::Ok
 }
 
 #[actix_web::post("/users")]

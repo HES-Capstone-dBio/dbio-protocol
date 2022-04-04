@@ -1,6 +1,6 @@
+use log::{debug, error, info, trace, warn};
 use std::env;
 use std::fs;
-use log::{debug, error, info, trace, warn};
 
 pub fn init() -> Result<(), fern::InitError> {
     // pull log level from env
@@ -40,3 +40,4 @@ pub fn init() -> Result<(), fern::InitError> {
 
     Ok(())
 }
+
