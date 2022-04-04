@@ -3,7 +3,8 @@ mod logger;
 mod models;
 mod routes;
 
-use actix_web::body::Body;
+use actix_cors::Cors;
+use actix_web::body::BoxBody;
 use actix_web::http::StatusCode;
 use actix_web::HttpResponse;
 
@@ -11,7 +12,7 @@ type StdErr = Box<dyn std::error::Error>;
 
 #[actix_web::get("/health")]
 async fn health_check() -> HttpResponse {
-    HttpResponse::new(StatusCode::OK).set_body(Body::from_message("I'm alive!"))
+    HttpResponse::new(StatusCode::OK).set_body(BoxBody::new("I'm alive!"))
 }
 
 #[actix_web::main]
@@ -23,7 +24,8 @@ async fn main() -> Result<(), StdErr> {
 
     actix_web::HttpServer::new(move || {
         actix_web::App::new()
-            .data(db.clone())
+            .wrap(Cors::permissive())
+            .app_data(db.clone())
             .service(health_check)
             .service(routes::api())
     })
