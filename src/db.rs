@@ -2,6 +2,9 @@ use crate::models::*;
 use sqlx::{postgres::*, Pool, Postgres};
 use std::future::Future;
 
+/**
+ * Module for interacting with PostgreSQL
+ **/
 #[derive(Clone)]
 pub struct Db {
     pool: Pool<Postgres>,
@@ -16,10 +19,10 @@ impl Db {
             .map(|pool| Db { pool })
     }
 
-    pub fn insert_user<'a>(
-        &'a self,
+    pub fn insert_user(
+        &'_ self,
         user: User,
-    ) -> impl Future<Output = Result<User, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<User, sqlx::Error>> + '_ {
         sqlx::query_as!(
             User,
             "INSERT INTO users (eth_public_address, email)
@@ -30,10 +33,10 @@ impl Db {
         .fetch_one(&self.pool)
     }
 
-    pub fn select_user_by_eth<'a>(
-        &'a self,
+    pub fn select_user_by_eth(
+        &'_ self,
         eth_public_address: String,
-    ) -> impl Future<Output = Result<User, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<User, sqlx::Error>> + '_ {
         sqlx::query_as!(
             User,
             "SELECT * FROM users WHERE eth_public_address = $1",
@@ -42,18 +45,18 @@ impl Db {
         .fetch_one(&self.pool)
     }
 
-    pub fn select_user_by_email<'a>(
-        &'a self,
+    pub fn select_user_by_email(
+        &'_ self,
         email: String,
-    ) -> impl Future<Output = Result<User, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<User, sqlx::Error>> + '_ {
         sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", email,).fetch_one(&self.pool)
     }
 
-    pub fn select_access_requests<'a>(
-        &'a self,
+    pub fn select_access_requests(
+        &'_ self,
         requestee_eth_address: String,
         request_open: bool,
-    ) -> impl Future<Output = Result<Vec<AccessRequest>, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<Vec<AccessRequest>, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
             "SELECT * FROM access_requests
@@ -66,10 +69,10 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
-    pub fn insert_access_request<'a>(
-        &'a self,
+    pub fn insert_access_request(
+        &'_ self,
         access_request_payload: AccessRequestPayload,
-    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
             "INSERT INTO access_requests (requestor_eth_address, requestee_eth_address)
@@ -80,11 +83,11 @@ impl Db {
         .fetch_one(&self.pool)
     }
 
-    pub fn update_access_request<'a>(
-        &'a self,
+    pub fn update_access_request(
+        &'_ self,
         id: i64,
         approval: bool,
-    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + '_ {
         sqlx::query!(
             "UPDATE access_requests
              SET request_approved = $1, request_open = false
@@ -95,10 +98,10 @@ impl Db {
         .execute(&self.pool)
     }
 
-    pub fn insert_resource_data<'a>(
-        &'a self,
+    pub fn insert_resource_data(
+        &'_ self,
         data: ResourceData,
-    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + '_ {
         sqlx::query!(
             "INSERT INTO resource_store
              VALUES ($1, $2)",
@@ -108,10 +111,10 @@ impl Db {
         .execute(&self.pool)
     }
 
-    pub fn insert_resource<'a>(
-        &'a self,
+    pub fn insert_resource(
+        &'_ self,
         data: Resource,
-    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + '_ {
         sqlx::query!(
             "INSERT INTO resources
              VALUES ($1, $2, $3, $4, $5, $6)",
@@ -125,11 +128,11 @@ impl Db {
         .execute(&self.pool)
     }
 
-    pub fn select_resource_data<'a>(
-        &'a self,
+    pub fn select_resource_data(
+        &'_ self,
         subject_eth_address: String,
         resource_id: i64,
-    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
         sqlx::query_as!(
             Resource,
             "SELECT *
@@ -143,10 +146,10 @@ impl Db {
         .fetch_one(&self.pool)
     }
 
-    pub fn select_resource_metadata<'a>(
-        &'a self,
+    pub fn select_resource_metadata(
+        &'_ self,
         subject_eth_address: String,
-    ) -> impl Future<Output = Result<Vec<Resource>, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<Vec<Resource>, sqlx::Error>> + '_ {
         sqlx::query_as!(
             Resource,
             "SELECT *
@@ -157,12 +160,12 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
-    pub fn update_resource_claim<'a>(
-        &'a self,
+    pub fn update_resource_claim(
+        &'_ self,
         subject_eth_address: String,
         fhir_resource_id: i64,
         claim: bool,
-    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + 'a {
+    ) -> impl Future<Output = Result<PgDone, sqlx::Error>> + '_ {
         sqlx::query!(
             "UPDATE resources
              SET ownership_claimed = $3
