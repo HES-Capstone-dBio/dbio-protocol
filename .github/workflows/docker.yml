@@ -2,7 +2,7 @@ name: Docker Image Build & Release
 
 on:
   push:
-    branches: [ trunk, docker-ci-cd ]
+    branches: [ trunk, docker-ci-cd2 ]
 
 env:
   IMAGE_NAME: dbio-protocol
