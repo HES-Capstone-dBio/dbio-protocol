@@ -1,10 +1,12 @@
+use log::{debug, error, info, trace, warn};
 use std::env;
 use std::fs;
-use log::{debug, error, info, trace, warn};
 
 pub fn init() -> Result<(), fern::InitError> {
+    let default: String = "INFO".into();
+
     // pull log level from env
-    let log_level = env::var("LOG_LEVEL").unwrap_or("INFO".into());
+    let log_level = env::var("LOG_LEVEL").unwrap_or(default);
     let log_level = log_level
         .parse::<log::LevelFilter>()
         .unwrap_or(log::LevelFilter::Info);
@@ -40,3 +42,4 @@ pub fn init() -> Result<(), fern::InitError> {
 
     Ok(())
 }
+
