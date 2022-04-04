@@ -1,0 +1,330 @@
+{
+  "db": "PostgreSQL",
+  "3adde3fdff0ec14721ffb16118a9dfa8513fb584a78024f232a10c5be0dde1fb": {
+    "describe": {
+      "columns": [
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "subject_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "resource_type",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ownership_claimed",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "ipfs_cid",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM resources\n             WHERE subject_eth_address = $1"
+  },
+  "6c866574e19482fbba53af412f4b8ce3292ff898946b3e942dadf3daf6d460c1": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Bpchar",
+          "Bpchar",
+          "Varchar",
+          "Bool",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO resources\n             VALUES ($1, $2, $3, $4, $5, $6)"
+  },
+  "835bc9a21abf413308e852d5f05f9b3e149c216b389cb4f0b8b99b7cda0dbee7": {
+    "describe": {
+      "columns": [
+        {
+          "name": "eth_public_address",
+          "ordinal": 0,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "email",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT * FROM users WHERE eth_public_address = $1"
+  },
+  "9f2b84414853c13ef256996dff2d2315c5aa9032cfbd7ac25527af615a29b679": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Int8",
+          "Bool"
+        ]
+      }
+    },
+    "query": "UPDATE resources\n             SET ownership_claimed = $3\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_id = $2"
+  },
+  "9f5710020b50e8bad847575b7f1bacf54325bfdd9cc768902fbb20723703105d": {
+    "describe": {
+      "columns": [
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "subject_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "resource_type",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ownership_claimed",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "ipfs_cid",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Int8"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM resources\n             WHERE \n               subject_eth_address = $1\n               AND fhir_resource_id = $2"
+  },
+  "a6e238d9a1fdb0a9a3e81ab78d913f4cac3aacc5daf9682ec5b610b8a6f40074": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO access_requests (requestor_eth_address, requestee_eth_address)\n             VALUES ($1, $2) RETURNING *"
+  },
+  "ba31447def327d20314d26497df73dec319e93f5a4ad8942bf5c1568651801ac": {
+    "describe": {
+      "columns": [
+        {
+          "name": "eth_public_address",
+          "ordinal": 0,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "email",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO users (eth_public_address, email)\n             VALUES ($1, $2) RETURNING *"
+  },
+  "c69f300df348ef741a793ab28372c5bacf0072f812518083bd2e32574e1d1ce5": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Bool",
+          "Int8"
+        ]
+      }
+    },
+    "query": "UPDATE access_requests\n             SET request_approved = $1, request_open = false\n             WHERE id = $2"
+  },
+  "d7c71401d5f547108a3c6bbe0f9c8785022e6629cbf16baf1a5f26188520e5da": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO resource_store\n             VALUES ($1, $2)"
+  },
+  "dcced34a4309a7a6c1a42368fdc5bfcbbecf805967b83a293318bcc781cf9ee9": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bool"
+        ]
+      }
+    },
+    "query": "SELECT * FROM access_requests\n             WHERE\n               requestee_eth_address = $1\n               AND request_open = $2"
+  },
+  "f3f58600e971f1be6cbe206bba24f77769f54c6230e28f5b3dc719b869d9cb3f": {
+    "describe": {
+      "columns": [
+        {
+          "name": "eth_public_address",
+          "ordinal": 0,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "email",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "SELECT * FROM users WHERE email = $1"
+  }
+}
