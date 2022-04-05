@@ -106,7 +106,7 @@ async fn put_access_request_approval(
 async fn get_resource_data(
     db: Data<Db>,
     path: Path<(String, i64)>,
-) -> Result<Json<Resource>, HttpError> {
+) -> Result<Json<ResourceData>, HttpError> {
     let (subject_eth_address, fhir_resource_id) = path.into_inner();
     db.select_resource_data(subject_eth_address, fhir_resource_id)
         .await

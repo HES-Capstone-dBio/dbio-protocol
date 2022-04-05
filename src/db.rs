@@ -144,14 +144,16 @@ impl Db {
         &'_ self,
         subject_eth_address: String,
         resource_id: i64,
-    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
-            Resource,
+            ResourceData,
             "SELECT *
-             FROM resources
-             WHERE 
-               subject_eth_address = $1
-               AND fhir_resource_id = $2",
+             FROM resource_store
+             WHERE
+               cid = (SELECT ipfs_cid
+                      FROM resources
+                      WHERE subject_eth_address = $1
+                      AND fhir_resource_id = $2)",
             subject_eth_address,
             resource_id
         )
