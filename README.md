@@ -2,6 +2,17 @@
 
 # Setup Instructions
 
+## Setup for Demo, Testing, and Experimentation
+
+If you simply wish to run the `dbio-protocol` server locally for API testing,
+the `docker-compose.yml` file in this repository composes together the most recent
+protocol server code (in this repository branch) with a Postgres database and the `dbio-client` UI.
+
+You can run `docker compose up` or `docker compose up --detach` from this
+directory to spin up the entire dBio application as a set of connected containers.
+The whole setup should take about 5 minutes to build and run on a modern Macbook.
+Once running, the protocol server will bind to `localhost:8080` and the UI at `localhost:3000`.
+
 ## Setup for Development
 
 1. Install `cargo` and `rustup` from your favorite package manager. If
@@ -22,14 +33,6 @@ When developing actual code in this repository and any `sqlx` queries or databas
 you must run `cargo sqlx prepare`. This command regenerates the `sqlx-data.json` file, which should then
 be checked in and committed, as it is used when compiling offline and building the project's Docker image.
 The build will fail without completing this step.
-
-## Setup for Testing and Experimentation
-
-If you simply wish to run the `dbio-protocol` server locally for API testing,
-the `docker-compose.yml` file connects the most recent code (on this repository branch)
-with a Postgres database. You can run `docker compose up` or `docker compose up --detach` from this
-directory to spin up both the protocol and database containers. The whole setup should take about
-5 minutes to build and run on a modern Macbook. Once running, the protocol server will bind to `localhost:8080`.
 
 # API Documentation
 
