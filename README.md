@@ -62,8 +62,8 @@ Upon submitting a request with well-formatted JSON, the requester should be pres
 - `200 Ok` - The user object was created.
 - `409 Conflict` - The user object already exists.
 
-#### `GET /dbio/users/eth/{eth_address}`
-The get request to `/dbio/users/eth/{eth_address}` takes as path parameters the following items:
+#### `GET /dbio/users/eth/{eth-address}`
+The get request to `/dbio/users/eth/{eth-address}` takes as path parameters the following items:
 - `eth_address` - The Ethereum public address of the user being queried.
 
 The response returned is one of the following:
@@ -124,8 +124,8 @@ Upon submitting a request with well-formatted JSON, the requester should be pres
 - `200 Ok` - The user object was created.
 - `409 Conflict` - A resource with the same `creator_eth_address` and `resource_id` pair already exists.
 
-#### `GET /dbio/resources/{subject_eth_address}`
-The get request to `/dbio/users/resources/{subject_eth_address}` takes as path parameters the following items:
+#### `GET /dbio/resources/{subject-eth-address}`
+The get request to `/dbio/users/resources/{subject-eth-address}` takes as path parameters the following items:
 - `subject_eth_address` - The Ethereum public address of the subject of the queried resources.
 
 The response returned is one of the following:
