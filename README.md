@@ -15,10 +15,11 @@
 5. To start *only* the Postgres Docker container, run `docker compose -f ./docker-compose-dev.yml up`.
 6. You can now compile the project with `cargo check`, or run with `cargo run`.
 
-*Important:*
-When actually developing code in this repository and `sqlx` queries or database schemas are changed,
-you must run `cargo sqlx prepare`. This command regenerates the `sqlx-data.json` file, which should be checked in 
-and committed -- this file is used when compiling offline and building the project's Docker iamge.
+**Important:**
+When developing actual code in this repository and any `sqlx` queries or database schemas are changed,
+you must run `cargo sqlx prepare`. This command regenerates the `sqlx-data.json` file, which should then
+be checked in and committed, as it is used when compiling offline and building the project's Docker image.
+The build will fail without completing this step.
 
 ## Setup for Testing and Experimentation
 
