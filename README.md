@@ -116,10 +116,10 @@ The post request to `/dbio/resources` requires a JSON payload that represents a 
 ```json
 {
 	"email": "user@example.com",
-    "creator_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
-    "resource_type": "insert_resource_type_here",
-    "resource_id": 1,
-    "ciphertext": "insert_ciphertext_here"
+	"creator_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+	"resource_type": "insert_resource_type_here",
+	"resource_id": 1,
+	"ciphertext": "insert_ciphertext_here"
 }
 ```
 The parameters in the JSON payload are:
@@ -202,7 +202,7 @@ The post request to `/dbio/access_requests` requires a JSON payload that represe
 ```json
 {
 	"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
-    "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240"
+	"requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240"
 }
 ```
 The parameters in the JSON payload are:
