@@ -36,13 +36,13 @@ directory to spin up both the protocol and database containers. The whole setup 
 [Users](#users)
 
 - [POST /dbio/users](#post-dbiousers)
-- [GET /dbio/users/eth/`{eth_address}`](#get-dbiousersethethaddress)
-- [GET /dbio/users/email/`{email}`](#get-dbiousersemailemail)
+- [GET /dbio/users/eth/{eth-address}](#get-dbiousersethethaddress)
+- [GET /dbio/users/email/{email}](#get-dbiousersemailemail)
 
 [Resources](#resources)
 
 - [POST /dbio/resources](#post-dbioresources)
-- [GET /dbio/resources/`{subject_eth_address}`](#get-dbioresourcessubjectethaddress)
+- [GET /dbio/resources/{subject-eth-address}](#get-dbioresourcessubjectethaddress)
 
 ### Users
 
