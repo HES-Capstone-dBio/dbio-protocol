@@ -23,10 +23,10 @@ and committed -- this file is used when compiling offline and building the proje
 ## Setup for Testing and Experimentation
 
 If you simply wish to run the `dbio-protocol` server locally for API testing,
-there is a `docker-compose.yml` which connects the most recent code (in this repository branch)
-with a Postgres database. You can run `docker compose up` or `docker compose up --detach` to
-spin up both the protocol and database containers. The whole setup should take about 5 minutes to
-build and run on a modern Macbook. Once running, the protocol server will bind to `localhost:8080`.
+the `docker-compose.yml` file connects the most recent code (on this repository branch)
+with a Postgres database. You can run `docker compose up` or `docker compose up --detach` from this
+directory to spin up both the protocol and database containers. The whole setup should take about
+5 minutes to build and run on a modern Macbook. Once running, the protocol server will bind to `localhost:8080`.
 
 # API Documentation
 
