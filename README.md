@@ -44,12 +44,12 @@ directory to spin up both the protocol and database containers. The whole setup 
 - [POST /dbio/resources](#post-dbioresources)
 - [GET /dbio/resources/\{subject-eth-address\}](#get-dbioresourcessubject-eth-address)
 - [GET /dbio/resources/\{subject-eth-address\}/\{resource-id\}](#get-dbioresourcessubject-eth-addressresource-id)
-- [PUT /dbio/resources/claim/\{subject-eth-address\}/\{resource-id\}](#get-dbioresourceclaimssubject-eth-addressresource-id)
+- [PUT /dbio/resources/claim/\{subject-eth-address\}/\{resource-id\}](#put-dbioresourcesclaimsubject-eth-addressresource-id)
 
 [Access Requests](#access-requests)
-- [POST /dbio/access_requests](#post-dbioaccessrequests)
-- [GET /dbio/access_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbioaccessrequestsrequestee-eth-addressfilteropenall)
-- [PUT /dbio/access_requests/{id}?approve=(true|false)](#put-dbioaccessrequestsidapprovetruefalse)
+- [POST /dbio/access_requests](#post-dbioaccess_requests)
+- [GET /dbio/access_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbioaccess_requestsrequestee-eth-addressfilteropenall)
+- [PUT /dbio/access_requests/{id}?approve=(true|false)](#put-dbioaccess_requestsidapprovetruefalse)
 
 ### Users
 
