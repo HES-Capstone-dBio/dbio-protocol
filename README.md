@@ -1,3 +1,5 @@
+![dbio-logo](./readme-assets/dbio-logo.png)
+
 # Setup Instructions
 
 ## Setup for Development
@@ -33,20 +35,20 @@ directory to spin up both the protocol and database containers. The whole setup 
 
 ## Routes
 
-[Users](#users)
+[Users](#users): Registry of the registered users in the dBio system. A new user is added when signing into the dBio client for the first time.
 
 - [POST /dbio/users](#post-dbiousers)
 - [GET /dbio/users/eth/\{eth-address\}](#get-dbiousersetheth-address)
 - [GET /dbio/users/email/{email}](#get-dbiousersemailemail)
 
-[Resources](#resources)
+[Resources](#resources): FHIR resources that pertain to users. Third parties can submit resources for users, and users can view their own resources.
 
 - [POST /dbio/resources](#post-dbioresources)
 - [GET /dbio/resources/\{subject-eth-address\}](#get-dbioresourcessubject-eth-address)
 - [GET /dbio/resources/\{subject-eth-address\}/\{resource-id\}](#get-dbioresourcessubject-eth-addressresource-id)
 - [PUT /dbio/resources/claim/\{subject-eth-address\}/\{resource-id\}](#put-dbioresourcesclaimsubject-eth-addressresource-id)
 
-[Access Requests](#access-requests)
+[Access Requests](#access-requests): Access requests that are made when third parties request access to a user's resources. Users can either approve or deny access requests.
 - [POST /dbio/access_requests](#post-dbioaccess_requests)
 - [GET /dbio/access_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbioaccess_requestsrequestee-eth-addressfilteropenall)
 - [PUT /dbio/access_requests/{id}?approve=(true|false)](#put-dbioaccess_requestsidapprovetruefalse)
