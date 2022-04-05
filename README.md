@@ -1,6 +1,28 @@
 # Setup Instructions
 
-{Insert setup instructions here}
+## Setup for Development
+
+1. Install `cargo` and `rustup` from your favorite package manager. If
+   developing in a text editor which supports [LSP](https://microsoft.github.io/language-server-protocol/),
+   install the `rust-analyzer` binary to greatly improve the development experience. The easiest version of
+   this is in VSCode, where you can simply install `rust-analyzer` as an extension.
+2. Run `rustup toolchain stable` to install the most recent stable version of Rust.
+3. Install [Docker](https://www.docker.com/products/docker-desktop/).
+4. This project uses `sqlx`, a library which optionally validates code against
+   a running SQL database. To have the "full" development experience, it is
+   recommended to follow the rest of the instructions. To work in offline mode,
+   `export SQLX_OFFLINE=true` then compile and run with `cargo run`.
+5. To start *only* the Postgres Docker container, run `docker compose -f ./docker-compose-dev.yml up`.
+6. You can now compile the project with `cargo check`, or run with `cargo run`.
+
+## Setup for Testing and Experimentation
+
+If you simply wish to run the `dbio-protocol` server locally for API testing,
+there is a `docker-compose.yml` which connects the most recent code (in this repository branch)
+with a Postgres database. You can simply run `docker compose up` or
+`docker compose up --detach` to spin up both the protocol and database
+containers. The whole setup should take about 5 minutes to build and run on a modern Macbook.
+One running, the protocol server will bind to `localhost:8080`.
 
 # API Documentation
 
