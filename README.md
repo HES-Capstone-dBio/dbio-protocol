@@ -6,7 +6,7 @@
 
 If you simply wish to run the `dbio-protocol` server locally for API testing,
 the `docker-compose.yml` file in this repository composes together the most recent
-protocol server code (in this repository branch) with a Postgres database and the `dbio-client` UI.
+protocol server code, the most recent `dbio-client` UI image, and a Postgres database.
 
 You can run `docker compose up` or `docker compose up --detach` from this
 directory to spin up the entire dBio application as a set of connected containers.
