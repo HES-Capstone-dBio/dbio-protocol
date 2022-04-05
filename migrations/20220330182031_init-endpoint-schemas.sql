@@ -7,7 +7,7 @@ CREATE INDEX IF NOT EXISTS user_email ON users (email);
 
 CREATE TABLE IF NOT EXISTS resource_store (
   cid VARCHAR(50) PRIMARY KEY,
-  ciphertext VARCHAR
+  ciphertext VARCHAR NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS resources (
