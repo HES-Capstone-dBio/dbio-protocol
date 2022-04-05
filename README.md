@@ -46,6 +46,11 @@ directory to spin up both the protocol and database containers. The whole setup 
 - [GET /dbio/resources/\{subject-eth-address\}/\{resource-id\}](#get-dbioresourcessubject-eth-addressresource-id)
 - [PUT /dbio/resources/claim/\{subject-eth-address\}/\{resource-id\}](#get-dbioresourceclaimssubject-eth-addressresource-id)
 
+[Access Requests](#access-requests)
+- [POST /dbio/access_requests](#post-dbioaccessrequests)
+- [GET /dbio/access_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbioaccessrequestsrequestee-eth-addressfilteropenall)
+- [PUT /dbio/access_requests/{id}?approve=(true|false)](#put-dbioaccessrequestsidapprovetruefalse)
+
 ### Users
 
 #### `POST /dbio/users`
@@ -123,7 +128,7 @@ The parameters in the JSON payload are:
 - `ciphertext: String` - the ciphertext generated after encrypting the resource.
 
 Upon submitting a request with well-formatted JSON, the requester should be presented with one of the following responses:
-- `200 Ok` - The user object was created.
+- `200 Ok` - The resource object was created.
 - `409 Conflict` - A resource with the same `creator_eth_address` and `resource_id` pair already exists.
 
 #### `GET /dbio/resources/{subject-eth-address}`
@@ -188,3 +193,67 @@ The response returned is one of the following:
 - `200 Ok` - A resource was found for the subject and was successfully claimed.
 - `404 Not Found` - No resource matching that resource ID was found for the subject.
 
+### Access Requests
+
+#### `POST /dbio/access_requests`
+The post request to `/dbio/access_requests` requires a JSON payload that represents a user to be sent in the body.
+```json
+{
+	"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+    "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240"
+}
+```
+The parameters in the JSON payload are:
+- `requestor_eth_address : String` - The Ethereum public address of the entity making the access request.
+- `requestee_eth_address : String` - The Ethereum public address of the entity receiving the access request.
+
+Upon submitting a request with well-formatted JSON, the requester should be presented with one of the following responses:
+- `200 Ok` - The access request object was created.
+- `409 Conflict` - This access request already exists in the system.
+
+#### `GET /dbio/access_requests/{requestee-eth-address}?filter=(open|all)`
+The get request to `/dbio/access_requests/{requestee-eth-address}?filter=(open|all)` takes as path parameters the following items:
+- `requestee-eth-address` - The Ethereum public address of the entity receiving the access request.
+
+Additionally, it takes a query parameter:
+- `filter` - Options are `open` or `all`. Based on the query parameter, the route returns either all access requests that a user has received, or just their open access requests.
+
+The response returned is one of the following:
+- `200 Ok` - Access requests that match the filter were found for the subject.
+- `404 Not Found` - No access requests were found for the subject.
+
+In the case of `200 Ok`, the body of the response contains JSON.
+```json
+[
+	{
+		"id": 10,
+    	"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+    	"requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
+    	"request_approved": false,
+    	"request_open": true,
+	},
+	{
+		// ...
+	},
+	// ...
+]
+
+```
+The JSON returned is a list of JSON objects containing the following information:
+- `id: Integer` - the ID of the access request.
+- `requestor_eth_address : String` - The Ethereum public address of the entity making the access request.
+- `requestee_eth_address : String` - The Ethereum public address of the entity receiving the access request.
+- `request_approved : Boolean` - Represents whether the access request has been approved.
+- `request_open : Boolean` - Represents whether the access request is still open.
+
+#### `PUT /dbio/access_requests/{id}?approve=(true|false)`
+
+The put request to `/dbio/access_requests/{id}?approve=(true|false)` takes as path parameters the following items:
+- `id` - The ID of the access request being responded to.
+
+Additionally, it takes a query parameter:
+- `approve` - Options are `true` or `false`. Based on the query parameter, the access request is either approved or denied.
+
+The response returned is one of the following:
+- `200 Ok` - The access request was successfully approved or denied.
+- `404 Not Found` - No access request with the given ID was found.
