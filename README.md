@@ -6,6 +6,17 @@
 
 ## Routes
 
+Users
+
+- [POST /dbio/users](#post-dbiousers)
+- [GET /dbio/users/eth/{eth_address}](#get-dbiousersethethaddress)
+- [GET /dbio/users/email/{email}](#get-dbiousersemailemail)
+
+Resources
+
+- [POST /dbio/resources](#post-dbioresources)
+- [GET /dbio/resources/{subject_eth_address}](#get-dbioresourcessubjectethaddress)
+
 ### Users
 
 #### `POST /dbio/users`
