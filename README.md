@@ -36,13 +36,15 @@ directory to spin up both the protocol and database containers. The whole setup 
 [Users](#users)
 
 - [POST /dbio/users](#post-dbiousers)
-- [GET /dbio/users/eth/\{eth-address\}](#get-dbiousersethethaddress)
+- [GET /dbio/users/eth/\{eth-address\}](#get-dbiousersetheth-address)
 - [GET /dbio/users/email/{email}](#get-dbiousersemailemail)
 
 [Resources](#resources)
 
 - [POST /dbio/resources](#post-dbioresources)
-- [GET /dbio/resources/\{subject-eth-address\}](#get-dbioresourcessubjectethaddress)
+- [GET /dbio/resources/\{subject-eth-address\}](#get-dbioresourcessubject-eth-address)
+- [GET /dbio/resources/\{subject-eth-address\}/\{resource-id\}](#get-dbioresourcessubject-eth-addressresource-id)
+- [PUT /dbio/resources/claim/\{subject-eth-address\}/\{resource-id\}](#get-dbioresourceclaimssubject-eth-addressresource-id)
 
 ### Users
 
@@ -64,7 +66,7 @@ Upon submitting a request with well-formatted JSON, the requester should be pres
 
 #### `GET /dbio/users/eth/{eth-address}`
 The get request to `/dbio/users/eth/{eth-address}` takes as path parameters the following items:
-- `eth_address` - The Ethereum public address of the user being queried.
+- `eth-address` - The Ethereum public address of the user being queried.
 
 The response returned is one of the following:
 - `200 Ok` - The user was found.
@@ -126,7 +128,7 @@ Upon submitting a request with well-formatted JSON, the requester should be pres
 
 #### `GET /dbio/resources/{subject-eth-address}`
 The get request to `/dbio/users/resources/{subject-eth-address}` takes as path parameters the following items:
-- `subject_eth_address` - The Ethereum public address of the subject of the queried resources.
+- `subject-eth-address` - The Ethereum public address of the subject of the queried resources.
 
 The response returned is one of the following:
 - `200 Ok` - Resources were found for the subject.
@@ -156,3 +158,33 @@ The JSON returned is a list of JSON objects containing the following information
 - `resource_id: Integer` - the ID of the resource in the submitter's system.
 - `ownerhsip_claimed: Boolean` - represents whether the subject of the resource has claimed it yet.
 - `ipfs_cid: String` - the content ID of the resource in IPFS storage.
+
+#### `GET /dbio/resources/{subject-eth-address}/{resource-id}`
+The get request to `/dbio/users/resources/{subject-eth-address}/{resource-id}` takes as path parameters the following items:
+- `subject-eth-address` - The Ethereum public address of the subject of the queried resource.
+- `resource-id` - The ID of the resource for which to retrieve ciphertext for.
+
+The response returned is one of the following:
+- `200 Ok` - A resource was found for the subject.
+- `404 Not Found` - No resources were found for the subject.
+
+In the case of `200 Ok`, the body of the response contains JSON.
+```json
+{
+	"cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+	"ciphertext": "insert_ciphertext_here"
+}
+```
+The JSON returned is a JSON object containing the following information:
+- `ipfs_cid: String` - the content ID of the resource in IPFS storage.
+- `ciphertext` - the ciphertext of the FHIR resource.
+
+#### `PUT /dbio/resources/claim/{subject-eth-address}/{resource-id}`
+The put request to `/dbio/resources/claim/{subject-eth-address}/{resource-id}` takes as path parameters the following items:
+- `subject-eth-address` - The Ethereum public address of the subject of the queried resource.
+- `resource-id` - The ID of the resource being claimed.
+
+The response returned is one of the following:
+- `200 Ok` - A resource was found for the subject and was successfully claimed.
+- `404 Not Found` - No resource matching that resource ID was found for the subject.
+
