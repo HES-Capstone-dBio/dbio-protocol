@@ -4,7 +4,7 @@ RUN apt update && apt install lld clang -y
 
 WORKDIR /usr/src/dbio-protocol
 COPY . .
-RUN rm -r target
+RUN cargo clean
 RUN SQLX_OFFLINE=true cargo build --release
 
 EXPOSE 8080
