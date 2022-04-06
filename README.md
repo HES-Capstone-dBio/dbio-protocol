@@ -134,6 +134,7 @@ The parameters in the JSON payload are:
 
 Upon submitting a request with well-formatted JSON, the requester should be presented with one of the following responses:
 - `200 Ok` - The resource object was created.
+- `404 Not Found` - No user with the specified email exists.
 - `500 Internal Server Error` - A resource with the same `creator_eth_address` and `resource_id` pair already exists.
 
 #### `GET /dbio/resources/{subject-eth-address}`

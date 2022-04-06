@@ -1,13 +1,12 @@
 use actix_web::dev::HttpServiceFactory;
 use actix_web::error::Error as HttpError;
 use actix_web::error::{
-    ErrorBadRequest,
     ErrorInternalServerError,
     ErrorNotFound,
 };
 use actix_web::web::*;
 use futures::prelude::*;
-use sqlx::Error::{RowNotFound, Protocol};
+use sqlx::Error::RowNotFound;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::Hasher;
 
