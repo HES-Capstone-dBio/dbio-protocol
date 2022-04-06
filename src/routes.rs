@@ -17,7 +17,6 @@ use crate::models::*;
 
 fn adapt_db_error(e: sqlx::Error) -> HttpError {
     match e {
-        Protocol(e) => ErrorBadRequest(e),
         RowNotFound => ErrorNotFound(e),
         _ => ErrorInternalServerError(e),
     }
