@@ -36,21 +36,20 @@ impl Db {
     pub fn select_user_by_eth(
         &'_ self,
         eth_public_address: String,
-    ) -> impl Future<Output = Result<Option<User>, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<User, sqlx::Error>> + '_ {
         sqlx::query_as!(
             User,
             "SELECT * FROM users WHERE eth_public_address = $1",
             eth_public_address,
         )
-        .fetch_optional(&self.pool)
+        .fetch_one(&self.pool)
     }
 
     pub fn select_user_by_email(
         &'_ self,
         email: String,
-    ) -> impl Future<Output = Result<Option<User>, sqlx::Error>> + '_ {
-        sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", email,)
-            .fetch_optional(&self.pool)
+    ) -> impl Future<Output = Result<User, sqlx::Error>> + '_ {
+        sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", email,).fetch_one(&self.pool)
     }
 
     pub fn select_open_access_requests(
@@ -100,37 +99,42 @@ impl Db {
         &'_ self,
         id: i64,
         approval: bool,
-    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
-        sqlx::query!(
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
             "UPDATE access_requests
              SET request_approved = $1, request_open = false
-             WHERE id = $2",
+             WHERE id = $2
+             RETURNING *",
             approval,
             id,
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
     }
 
     pub fn insert_resource_data(
         &'_ self,
         data: ResourceData,
-    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
-        sqlx::query!(
-            "INSERT INTO resource_store
-             VALUES ($1, $2)",
+    ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            ResourceData,
+            "INSERT INTO resource_store (cid, ciphertext)
+             VALUES ($1, $2) RETURNING *",
             data.cid,
             data.ciphertext
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
     }
 
     pub fn insert_resource(
         &'_ self,
         data: Resource,
-    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
-        sqlx::query!(
+    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            Resource,
             "INSERT INTO resources
-             VALUES ($1, $2, $3, $4, $5, $6)",
+             VALUES ($1, $2, $3, $4, $5, $6)
+             RETURNING *",
             data.fhir_resource_id,
             data.subject_eth_address,
             data.creator_eth_address,
@@ -138,14 +142,14 @@ impl Db {
             data.ownership_claimed,
             data.ipfs_cid
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
     }
 
     pub fn select_resource_data(
         &'_ self,
         subject_eth_address: String,
         resource_id: i64,
-    ) -> impl Future<Output = Result<Option<ResourceData>, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
             ResourceData,
             "SELECT *
@@ -158,7 +162,7 @@ impl Db {
             subject_eth_address,
             resource_id
         )
-        .fetch_optional(&self.pool)
+        .fetch_one(&self.pool)
     }
 
     pub fn select_resource_metadata(
@@ -180,17 +184,19 @@ impl Db {
         subject_eth_address: String,
         fhir_resource_id: i64,
         claim: bool,
-    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
-        sqlx::query!(
+    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            Resource,
             "UPDATE resources
              SET ownership_claimed = $3
              WHERE
                subject_eth_address = $1
-               AND fhir_resource_id = $2",
+               AND fhir_resource_id = $2
+             RETURNING *",
             subject_eth_address,
             fhir_resource_id,
             claim,
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
     }
 }
