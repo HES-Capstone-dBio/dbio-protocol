@@ -33,6 +33,8 @@ directory to spin up both the protocol and database containers. The whole setup 
 
 # API Documentation
 
+**Currently, all errors returned from all routes return 500 Internal Server Error. Error handling is currently very blunt and will be built out to be as per the below specifications.**
+
 ## Routes
 
 [Users](#users): Registry of the registered users in the dBio system. A new user is added when signing into the dBio client for the first time.
