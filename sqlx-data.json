@@ -44,6 +44,61 @@
     },
     "query": "SELECT * FROM access_requests\n                 WHERE\n                   requestee_eth_address = $1"
   },
+  "3867fe95a497e591652c9128ee2980ee220171a43b048e281d35565671b66c75": {
+    "describe": {
+      "columns": [
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "subject_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "resource_type",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ownership_claimed",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "ipfs_cid",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Bpchar",
+          "Bpchar",
+          "Varchar",
+          "Bool",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO resources\n             VALUES ($1, $2, $3, $4, $5, $6)\n             RETURNING *"
+  },
   "3adde3fdff0ec14721ffb16118a9dfa8513fb584a78024f232a10c5be0dde1fb": {
     "describe": {
       "columns": [
@@ -94,6 +149,51 @@
     },
     "query": "SELECT *\n             FROM resources\n             WHERE subject_eth_address = $1"
   },
+  "5086607f2daca750439f10ade503854a84d1913144d20804d12bd84cd5c5bcb6": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bool",
+          "Int8"
+        ]
+      }
+    },
+    "query": "UPDATE access_requests\n             SET request_approved = $1, request_open = false\n             WHERE id = $2\n             RETURNING *"
+  },
   "646412f787d8a00b91baa6c154e98e93d0acd28fead4177ebcea6f7d6081e5e4": {
     "describe": {
       "columns": [
@@ -120,23 +220,6 @@
       }
     },
     "query": "INSERT INTO resource_store (cid, ciphertext)\n             VALUES ($1, $2) RETURNING *"
-  },
-  "6c866574e19482fbba53af412f4b8ce3292ff898946b3e942dadf3daf6d460c1": {
-    "describe": {
-      "columns": [],
-      "nullable": [],
-      "parameters": {
-        "Left": [
-          "Int8",
-          "Bpchar",
-          "Bpchar",
-          "Varchar",
-          "Bool",
-          "Varchar"
-        ]
-      }
-    },
-    "query": "INSERT INTO resources\n             VALUES ($1, $2, $3, $4, $5, $6)"
   },
   "835bc9a21abf413308e852d5f05f9b3e149c216b389cb4f0b8b99b7cda0dbee7": {
     "describe": {
@@ -191,20 +274,6 @@
     },
     "query": "SELECT *\n             FROM resource_store\n             WHERE\n               cid = (SELECT ipfs_cid\n                      FROM resources\n                      WHERE subject_eth_address = $1\n                      AND fhir_resource_id = $2)"
   },
-  "9f2b84414853c13ef256996dff2d2315c5aa9032cfbd7ac25527af615a29b679": {
-    "describe": {
-      "columns": [],
-      "nullable": [],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Int8",
-          "Bool"
-        ]
-      }
-    },
-    "query": "UPDATE resources\n             SET ownership_claimed = $3\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_id = $2"
-  },
   "a6e238d9a1fdb0a9a3e81ab78d913f4cac3aacc5daf9682ec5b610b8a6f40074": {
     "describe": {
       "columns": [
@@ -250,6 +319,58 @@
     },
     "query": "INSERT INTO access_requests (requestor_eth_address, requestee_eth_address)\n             VALUES ($1, $2) RETURNING *"
   },
+  "b036323fe7e728784c8de8f17c0fe8991ae034fd09054f1f916e90475f251c55": {
+    "describe": {
+      "columns": [
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "subject_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "resource_type",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ownership_claimed",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "ipfs_cid",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Int8",
+          "Bool"
+        ]
+      }
+    },
+    "query": "UPDATE resources\n             SET ownership_claimed = $3\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_id = $2\n             RETURNING *"
+  },
   "ba31447def327d20314d26497df73dec319e93f5a4ad8942bf5c1568651801ac": {
     "describe": {
       "columns": [
@@ -276,19 +397,6 @@
       }
     },
     "query": "INSERT INTO users (eth_public_address, email)\n             VALUES ($1, $2) RETURNING *"
-  },
-  "c69f300df348ef741a793ab28372c5bacf0072f812518083bd2e32574e1d1ce5": {
-    "describe": {
-      "columns": [],
-      "nullable": [],
-      "parameters": {
-        "Left": [
-          "Bool",
-          "Int8"
-        ]
-      }
-    },
-    "query": "UPDATE access_requests\n             SET request_approved = $1, request_open = false\n             WHERE id = $2"
   },
   "cf12fc6231b58539f00231ca3c7956ad51d95517b677313a5e1c08990c3c91af": {
     "describe": {

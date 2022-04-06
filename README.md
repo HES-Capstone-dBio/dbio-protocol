@@ -36,8 +36,6 @@ The build will fail without completing this step.
 
 # API Documentation
 
-**Currently, all errors returned from all routes return 500 Internal Server Error. Error handling is currently very blunt and will be built out to be as per the below specifications.**
-
 ## Routes
 
 [Users](#users): Registry of the registered users in the dBio system. A new user is added when signing into the dBio client for the first time.
@@ -74,7 +72,7 @@ The parameters in the JSON payload are:
 
 Upon submitting a request with well-formatted JSON, the requester should be presented with one of the following responses:
 - `200 Ok` - The user object was created.
-- `409 Conflict` - The user object already exists.
+- `500 Internal Server Error` - The user object already exists.
 
 #### `GET /dbio/users/eth/{eth-address}`
 The get request to `/dbio/users/eth/{eth-address}` takes as path parameters the following items:
@@ -136,7 +134,7 @@ The parameters in the JSON payload are:
 
 Upon submitting a request with well-formatted JSON, the requester should be presented with one of the following responses:
 - `200 Ok` - The resource object was created.
-- `409 Conflict` - A resource with the same `creator_eth_address` and `resource_id` pair already exists.
+- `500 Internal Server Error` - A resource with the same `creator_eth_address` and `resource_id` pair already exists.
 
 #### `GET /dbio/resources/{subject-eth-address}`
 The get request to `/dbio/users/resources/{subject-eth-address}` takes as path parameters the following items:
@@ -216,7 +214,7 @@ The parameters in the JSON payload are:
 
 Upon submitting a request with well-formatted JSON, the requester should be presented with one of the following responses:
 - `200 Ok` - The access request object was created.
-- `409 Conflict` - This access request already exists in the system.
+- `500 Internal Server Error` - This access request already exists in the system.
 
 #### `GET /dbio/access_requests/{requestee-eth-address}?filter=(open|all)`
 The get request to `/dbio/access_requests/{requestee-eth-address}?filter=(open|all)` takes as path parameters the following items:

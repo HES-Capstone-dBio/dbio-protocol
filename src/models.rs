@@ -48,3 +48,14 @@ pub struct ResourceDataPayload {
     pub resource_id: i64,
     pub ciphertext: String
 }
+
+/* Route query parameters */
+#[derive(Debug, Deserialize)]
+pub struct FilterParam {
+    pub filter: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ApproveParam {
+    pub approve: String,
+}
