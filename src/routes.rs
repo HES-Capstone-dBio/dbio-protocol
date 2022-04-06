@@ -43,18 +43,22 @@ async fn get_user_by_eth(
     db: Data<Db>,
     eth_public_address: Path<String>,
 ) -> Result<Json<User>, HttpError> {
-    db.select_user_by_eth(eth_public_address.into_inner())
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
+    let result = db.select_user_by_eth(eth_public_address.into_inner()).await;
+    match result {
+        Ok(Some(user)) => Ok(Json(user)),
+        Ok(None) => Err(ErrorNotFound("User not found")),
+        Err(e) => Err(adapt_db_error(e)),
+    }
 }
 
 #[actix_web::get("/users/email/{email}")]
 async fn get_user_by_email(db: Data<Db>, email: Path<String>) -> Result<Json<User>, HttpError> {
-    db.select_user_by_email(email.into_inner())
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
+    let result = db.select_user_by_email(email.into_inner()).await;
+    match result {
+        Ok(Some(user)) => Ok(Json(user)),
+        Ok(None) => Err(ErrorNotFound("User not found")),
+        Err(e) => Err(adapt_db_error(e)),
+    }
 }
 
 #[actix_web::get("/access_requests/{requestee_eth_address}")]
@@ -107,10 +111,14 @@ async fn get_resource_data(
     path: Path<(String, i64)>,
 ) -> Result<Json<ResourceData>, HttpError> {
     let (subject_eth_address, fhir_resource_id) = path.into_inner();
-    db.select_resource_data(subject_eth_address, fhir_resource_id)
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
+    let result = db
+        .select_resource_data(subject_eth_address, fhir_resource_id)
+        .await;
+    match result {
+        Ok(Some(data)) => Ok(Json(data)),
+        Ok(None) => Err(ErrorNotFound("ResourceData not found")),
+        Err(e) => Err(adapt_db_error(e)),
+    }
 }
 
 #[actix_web::post("/resources")]
@@ -127,6 +135,9 @@ async fn post_resource_data(
 
     db.select_user_by_email(in_data.email)
         .and_then(|subject| {
+            // Currently returns 500 when user is not found
+            // Ideally should short circuit into ErrorNotFound
+            let subj = subject.expect("User not found");
             db.insert_resource_data(ResourceData {
                 cid: cid.clone(),
                 ciphertext: in_data.ciphertext,
@@ -134,7 +145,7 @@ async fn post_resource_data(
             .and_then(|_| {
                 db.insert_resource(Resource {
                     fhir_resource_id: in_data.resource_id,
-                    subject_eth_address: subject.eth_public_address,
+                    subject_eth_address: subj.eth_public_address,
                     creator_eth_address: in_data.creator_eth_address,
                     resource_type: in_data.resource_type,
                     ownership_claimed: false,
