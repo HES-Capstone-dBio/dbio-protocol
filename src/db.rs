@@ -36,13 +36,13 @@ impl Db {
     pub fn select_user_by_eth(
         &'_ self,
         eth_public_address: String,
-    ) -> impl Future<Output = Result<User, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<Option<User>, sqlx::Error>> + '_ {
         sqlx::query_as!(
             User,
             "SELECT * FROM users WHERE eth_public_address = $1",
             eth_public_address,
         )
-        .fetch_one(&self.pool)
+        .fetch_optional(&self.pool)
     }
 
     pub fn select_user_by_email(
@@ -146,7 +146,7 @@ impl Db {
         &'_ self,
         subject_eth_address: String,
         resource_id: i64,
-    ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<Option<ResourceData>, sqlx::Error>> + '_ {
         sqlx::query_as!(
             ResourceData,
             "SELECT *
@@ -159,7 +159,7 @@ impl Db {
             subject_eth_address,
             resource_id
         )
-        .fetch_one(&self.pool)
+        .fetch_optional(&self.pool)
     }
 
     pub fn select_resource_metadata(

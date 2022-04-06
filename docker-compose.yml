@@ -1,13 +1,11 @@
 version: "3.9"
 services:
   dbio-postgres:
-    image: postgres:14.2
+    build: ./migrations
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: dbio-protocol-db
-    volumes:
-      - ./migrations/:/docker-entrypoint-initdb.d/
     ports:
       - 5432:5432
 
@@ -20,3 +18,9 @@ services:
     depends_on:
       - dbio-postgres
 
+  dbio-client:
+    image: ssheldharv/dbio-client:latest
+    ports:
+      - 3000:3000
+    depends_on:
+      - dbio-protocol
