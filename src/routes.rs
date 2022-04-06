@@ -6,6 +6,7 @@ use actix_web::http::StatusCode;
 use actix_web::web::*;
 use actix_web::HttpResponse;
 use serde::Deserialize;
+use sqlx::Error::RowNotFound;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::Hasher;
 
@@ -25,7 +26,10 @@ pub struct ApproveParam {
 }
 
 fn adapt_db_error(e: sqlx::Error) -> HttpError {
-    ErrorInternalServerError(e)
+    match e {
+        RowNotFound => ErrorNotFound(e),
+        _ => ErrorInternalServerError(e),
+    }
 }
 
 fn to_ok<A>(_: A) -> HttpResponse {
