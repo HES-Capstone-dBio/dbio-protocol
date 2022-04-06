@@ -137,6 +137,9 @@ async fn post_resource_data(
 
     db.select_user_by_email(in_data.email)
         .and_then(|subject| {
+            // Currently returns 500 when user is not found
+            // Ideally should short circuit into ErrorNotFound
+            let subj = subject.expect("User not found");
             db.insert_resource_data(ResourceData {
                 cid: cid.clone(),
                 ciphertext: in_data.ciphertext,
@@ -144,7 +147,7 @@ async fn post_resource_data(
             .and_then(|_| {
                 db.insert_resource(Resource {
                     fhir_resource_id: in_data.resource_id,
-                    subject_eth_address: subject.expect("User not found").eth_public_address,
+                    subject_eth_address: subj.eth_public_address,
                     creator_eth_address: in_data.creator_eth_address,
                     resource_type: in_data.resource_type,
                     ownership_claimed: false,
