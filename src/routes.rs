@@ -2,9 +2,7 @@ use actix_web::dev::HttpServiceFactory;
 use actix_web::error::Error as HttpError;
 use actix_web::error::ErrorInternalServerError;
 use actix_web::error::ErrorNotFound;
-use actix_web::http::StatusCode;
 use actix_web::web::*;
-use actix_web::HttpResponse;
 use serde::Deserialize;
 use sqlx::Error::RowNotFound;
 use std::collections::hash_map::DefaultHasher;
@@ -30,10 +28,6 @@ fn adapt_db_error(e: sqlx::Error) -> HttpError {
         RowNotFound => ErrorNotFound(e),
         _ => ErrorInternalServerError(e),
     }
-}
-
-fn to_ok<A>(_: A) -> HttpResponse {
-    HttpResponse::new(StatusCode::OK)
 }
 
 #[actix_web::post("/users")]
@@ -99,11 +93,11 @@ async fn put_access_request_approval(
     db: Data<Db>,
     id: Path<i64>,
     approval: Query<ApproveParam>,
-) -> Result<HttpResponse, HttpError> {
+) -> Result<Json<AccessRequest>, HttpError> {
     let approve = matches!(approval.approve.as_str(), "true");
     db.update_access_request(id.into_inner(), approve)
         .await
-        .map(to_ok)
+        .map(Json)
         .map_err(adapt_db_error)
 }
 
@@ -123,7 +117,7 @@ async fn get_resource_data(
 async fn post_resource_data(
     db: Data<Db>,
     payload: Json<ResourceDataPayload>,
-) -> Result<HttpResponse, HttpError> {
+) -> Result<Json<Resource>, HttpError> {
     let in_data = payload.into_inner();
     let cid: String = {
         let mut hasher = DefaultHasher::new();
@@ -149,7 +143,7 @@ async fn post_resource_data(
             })
         })
         .await
-        .map(to_ok)
+        .map(Json)
         .map_err(adapt_db_error)
 }
 
@@ -168,11 +162,11 @@ async fn get_resource_metadata(
 async fn put_resource_claim(
     db: Data<Db>,
     path: Path<(String, i64)>,
-) -> Result<HttpResponse, HttpError> {
+) -> Result<Json<Resource>, HttpError> {
     let (subject_eth_address, fhir_resource_id) = path.into_inner();
     db.update_resource_claim(subject_eth_address, fhir_resource_id, true)
         .await
-        .map(to_ok)
+        .map(Json)
         .map_err(adapt_db_error)
 }
 

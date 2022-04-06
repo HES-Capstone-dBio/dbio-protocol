@@ -49,8 +49,7 @@ impl Db {
         &'_ self,
         email: String,
     ) -> impl Future<Output = Result<User, sqlx::Error>> + '_ {
-        sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", email,)
-            .fetch_one(&self.pool)
+        sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", email,).fetch_one(&self.pool)
     }
 
     pub fn select_open_access_requests(
@@ -100,15 +99,17 @@ impl Db {
         &'_ self,
         id: i64,
         approval: bool,
-    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
-        sqlx::query!(
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
             "UPDATE access_requests
              SET request_approved = $1, request_open = false
-             WHERE id = $2",
+             WHERE id = $2
+             RETURNING *",
             approval,
             id,
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
     }
 
     pub fn insert_resource_data(
@@ -128,10 +129,12 @@ impl Db {
     pub fn insert_resource(
         &'_ self,
         data: Resource,
-    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
-        sqlx::query!(
+    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            Resource,
             "INSERT INTO resources
-             VALUES ($1, $2, $3, $4, $5, $6)",
+             VALUES ($1, $2, $3, $4, $5, $6)
+             RETURNING *",
             data.fhir_resource_id,
             data.subject_eth_address,
             data.creator_eth_address,
@@ -139,7 +142,7 @@ impl Db {
             data.ownership_claimed,
             data.ipfs_cid
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
     }
 
     pub fn select_resource_data(
@@ -181,17 +184,19 @@ impl Db {
         subject_eth_address: String,
         fhir_resource_id: i64,
         claim: bool,
-    ) -> impl Future<Output = Result<PgQueryResult, sqlx::Error>> + '_ {
-        sqlx::query!(
+    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            Resource,
             "UPDATE resources
              SET ownership_claimed = $3
              WHERE
                subject_eth_address = $1
-               AND fhir_resource_id = $2",
+               AND fhir_resource_id = $2
+             RETURNING *",
             subject_eth_address,
             fhir_resource_id,
             claim,
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
     }
 }
