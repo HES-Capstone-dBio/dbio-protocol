@@ -146,7 +146,7 @@ impl Db {
 
     pub fn select_resource_data(
         &'_ self,
-        subject_eth_address: String,
+        _: String,
         resource_id: String,
     ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
@@ -156,9 +156,7 @@ impl Db {
              WHERE
                id = (SELECT ipfs_cid
                       FROM resources
-                      WHERE subject_eth_address = $1
-                      AND fhir_resource_id = $2)",
-            subject_eth_address,
+                      WHERE fhir_resource_id = $1)",
             resource_id
         )
         .fetch_one(&self.pool)

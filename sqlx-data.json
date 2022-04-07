@@ -71,33 +71,6 @@
     },
     "query": "INSERT INTO resource_store (id, body)\n             VALUES ($1, $2) RETURNING *"
   },
-  "2f20df3bf58af028045cdea330cb96a0e64d33213a5f067e71496e25b1a3842f": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "body",
-          "ordinal": 1,
-          "type_info": "Varchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Bpchar"
-        ]
-      }
-    },
-    "query": "SELECT *\n             FROM resource_store\n             WHERE\n               id = (SELECT ipfs_cid\n                      FROM resources\n                      WHERE subject_eth_address = $1\n                      AND fhir_resource_id = $2)"
-  },
   "3adde3fdff0ec14721ffb16118a9dfa8513fb584a78024f232a10c5be0dde1fb": {
     "describe": {
       "columns": [
@@ -260,6 +233,32 @@
       }
     },
     "query": "INSERT INTO resources\n             VALUES ($1, $2, $3, $4, $5)\n             RETURNING *"
+  },
+  "91d0c2ce13f903d2b33d1c489a31dbe05dc29cf9f5c129e78cfb2988be9da558": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "body",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM resource_store\n             WHERE\n               id = (SELECT ipfs_cid\n                      FROM resources\n                      WHERE fhir_resource_id = $1)"
   },
   "a6e238d9a1fdb0a9a3e81ab78d913f4cac3aacc5daf9682ec5b610b8a6f40074": {
     "describe": {
