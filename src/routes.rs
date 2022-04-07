@@ -95,7 +95,7 @@ async fn put_access_request_approval(
 #[actix_web::get("/resources/{subject_eth_address}/{fhir_resource_id}")]
 async fn get_resource_data(
     db: Data<Db>,
-    path: Path<(String, i64)>,
+    path: Path<(String, String)>,
 ) -> Result<Json<ResourceData>, HttpError> {
     let (subject_eth_address, fhir_resource_id) = path.into_inner();
     db.select_resource_data(subject_eth_address, fhir_resource_id)
@@ -151,7 +151,7 @@ async fn get_resource_metadata(
 #[actix_web::put("/resources/claim/{subject_eth_address}/{fhir_resource_id}")]
 async fn put_resource_claim(
     db: Data<Db>,
-    path: Path<(String, i64)>,
+    path: Path<(String, String)>,
 ) -> Result<Json<Resource>, HttpError> {
     let (subject_eth_address, fhir_resource_id) = path.into_inner();
     db.update_resource_claim(subject_eth_address, fhir_resource_id, true)

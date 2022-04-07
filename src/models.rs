@@ -10,7 +10,7 @@ pub struct User {
 
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct Resource {
-    pub fhir_resource_id: i64,
+    pub fhir_resource_id: String,
     pub subject_eth_address: String,
     pub resource_type: String,
     pub ownership_claimed: bool,
@@ -44,7 +44,7 @@ pub struct ResourceDataPayload {
     pub email: String,
     pub creator_eth_address: String,
     pub resource_type: String,
-    pub resource_id: i64,
+    pub resource_id: String,
     pub ciphertext: String
 }
 
