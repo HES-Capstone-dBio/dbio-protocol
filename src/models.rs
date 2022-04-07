@@ -12,7 +12,6 @@ pub struct User {
 pub struct Resource {
     pub fhir_resource_id: i64,
     pub subject_eth_address: String,
-    pub creator_eth_address: String,
     pub resource_type: String,
     pub ownership_claimed: bool,
     pub ipfs_cid: String,

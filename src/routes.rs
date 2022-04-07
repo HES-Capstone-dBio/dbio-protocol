@@ -126,7 +126,6 @@ async fn post_resource_data(
                 db.insert_resource(Resource {
                     fhir_resource_id: in_data.resource_id,
                     subject_eth_address: subject.eth_public_address,
-                    creator_eth_address: in_data.creator_eth_address,
                     resource_type: in_data.resource_type,
                     ownership_claimed: false,
                     ipfs_cid: cid,
