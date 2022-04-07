@@ -118,7 +118,7 @@ impl Db {
     ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
             ResourceData,
-            "INSERT INTO resource_store (cid, ciphertext)
+            "INSERT INTO resource_store (id, body)
              VALUES ($1, $2) RETURNING *",
             data.id,
             data.body
@@ -154,7 +154,7 @@ impl Db {
             "SELECT *
              FROM resource_store
              WHERE
-               cid = (SELECT ipfs_cid
+               id = (SELECT ipfs_cid
                       FROM resources
                       WHERE subject_eth_address = $1
                       AND fhir_resource_id = $2)",

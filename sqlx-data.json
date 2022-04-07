@@ -44,6 +44,60 @@
     },
     "query": "SELECT * FROM access_requests\n                 WHERE\n                   requestee_eth_address = $1"
   },
+  "2c71021a1ac68f6ed2c9389cab209c83dee57833508172ed0651387f558b2cc1": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "body",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO resource_store (id, body)\n             VALUES ($1, $2) RETURNING *"
+  },
+  "2f20df3bf58af028045cdea330cb96a0e64d33213a5f067e71496e25b1a3842f": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "body",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM resource_store\n             WHERE\n               id = (SELECT ipfs_cid\n                      FROM resources\n                      WHERE subject_eth_address = $1\n                      AND fhir_resource_id = $2)"
+  },
   "3adde3fdff0ec14721ffb16118a9dfa8513fb584a78024f232a10c5be0dde1fb": {
     "describe": {
       "columns": [
@@ -133,33 +187,6 @@
     },
     "query": "UPDATE access_requests\n             SET request_approved = $1, request_open = false\n             WHERE id = $2\n             RETURNING *"
   },
-  "646412f787d8a00b91baa6c154e98e93d0acd28fead4177ebcea6f7d6081e5e4": {
-    "describe": {
-      "columns": [
-        {
-          "name": "cid",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ciphertext",
-          "ordinal": 1,
-          "type_info": "Varchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Varchar",
-          "Varchar"
-        ]
-      }
-    },
-    "query": "INSERT INTO resource_store (cid, ciphertext)\n             VALUES ($1, $2) RETURNING *"
-  },
   "835bc9a21abf413308e852d5f05f9b3e149c216b389cb4f0b8b99b7cda0dbee7": {
     "describe": {
       "columns": [
@@ -233,33 +260,6 @@
       }
     },
     "query": "INSERT INTO resources\n             VALUES ($1, $2, $3, $4, $5)\n             RETURNING *"
-  },
-  "8c4f7865e3d08f8eacaf1ea1f8b66c4f29d64a77c9e4211b490ea417df678ee5": {
-    "describe": {
-      "columns": [
-        {
-          "name": "cid",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ciphertext",
-          "ordinal": 1,
-          "type_info": "Varchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Bpchar"
-        ]
-      }
-    },
-    "query": "SELECT *\n             FROM resource_store\n             WHERE\n               cid = (SELECT ipfs_cid\n                      FROM resources\n                      WHERE subject_eth_address = $1\n                      AND fhir_resource_id = $2)"
   },
   "a6e238d9a1fdb0a9a3e81ab78d913f4cac3aacc5daf9682ec5b610b8a6f40074": {
     "describe": {

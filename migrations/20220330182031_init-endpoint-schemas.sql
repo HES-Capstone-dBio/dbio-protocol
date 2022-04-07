@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX IF NOT EXISTS user_email ON users (email);
 
 CREATE TABLE IF NOT EXISTS resource_store (
-  cid VARCHAR(50) PRIMARY KEY,
-  ciphertext VARCHAR NOT NULL
+  id VARCHAR(50) PRIMARY KEY,
+  body VARCHAR NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS resources (
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS resources (
   subject_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   resource_type VARCHAR(40) NOT NULL,
   ownership_claimed BOOL NOT NULL DEFAULT false,
-  ipfs_cid VARCHAR(50) REFERENCES resource_store(cid) NOT NULL
+  ipfs_cid VARCHAR(50) REFERENCES resource_store(id) NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS resources_subject_address ON resources (subject_eth_address);
