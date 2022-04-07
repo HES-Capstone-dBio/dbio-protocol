@@ -50,7 +50,7 @@
         {
           "name": "fhir_resource_id",
           "ordinal": 0,
-          "type_info": "Int8"
+          "type_info": "Bpchar"
         },
         {
           "name": "subject_eth_address",
@@ -192,7 +192,7 @@
         {
           "name": "fhir_resource_id",
           "ordinal": 0,
-          "type_info": "Int8"
+          "type_info": "Bpchar"
         },
         {
           "name": "subject_eth_address",
@@ -224,7 +224,7 @@
       ],
       "parameters": {
         "Left": [
-          "Int8",
+          "Bpchar",
           "Bpchar",
           "Varchar",
           "Bool",
@@ -255,7 +255,7 @@
       "parameters": {
         "Left": [
           "Bpchar",
-          "Int8"
+          "Bpchar"
         ]
       }
     },
@@ -312,7 +312,7 @@
         {
           "name": "fhir_resource_id",
           "ordinal": 0,
-          "type_info": "Int8"
+          "type_info": "Bpchar"
         },
         {
           "name": "subject_eth_address",
@@ -345,7 +345,7 @@
       "parameters": {
         "Left": [
           "Bpchar",
-          "Int8",
+          "Bpchar",
           "Bool"
         ]
       }
