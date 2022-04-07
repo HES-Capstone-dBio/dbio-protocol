@@ -19,8 +19,8 @@ pub struct Resource {
 
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct ResourceData {
-    pub cid: String,
-    pub ciphertext: String
+    pub id: String,
+    pub body: String
 }
 
 #[derive(Serialize, Deserialize, FromRow)]

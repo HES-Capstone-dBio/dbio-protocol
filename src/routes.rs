@@ -119,8 +119,8 @@ async fn post_resource_data(
     db.select_user_by_email(in_data.email)
         .and_then(|subject| {
             db.insert_resource_data(ResourceData {
-                cid: cid.clone(),
-                ciphertext: in_data.ciphertext,
+                id: cid.clone(),
+                body: in_data.ciphertext,
             })
             .and_then(|_| {
                 db.insert_resource(Resource {

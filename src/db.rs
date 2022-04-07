@@ -120,8 +120,8 @@ impl Db {
             ResourceData,
             "INSERT INTO resource_store (cid, ciphertext)
              VALUES ($1, $2) RETURNING *",
-            data.cid,
-            data.ciphertext
+            data.id,
+            data.body
         )
         .fetch_one(&self.pool)
     }
