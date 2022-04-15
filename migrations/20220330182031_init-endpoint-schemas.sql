@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS resource_store (
 );
 
 CREATE TABLE IF NOT EXISTS resources (
-  fhir_resource_id BIGINT NOT NULL,
+  fhir_resource_id VARCHAR(64) NOT NULL,
   subject_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   creator_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   resource_type VARCHAR(40) NOT NULL,

@@ -148,7 +148,7 @@ impl Db {
     pub fn select_resource_data(
         &'_ self,
         subject_eth_address: String,
-        resource_id: i64,
+        resource_id: String,
     ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
             ResourceData,
@@ -182,7 +182,7 @@ impl Db {
     pub fn update_resource_claim(
         &'_ self,
         subject_eth_address: String,
-        fhir_resource_id: i64,
+        fhir_resource_id: String,
         claim: bool,
     ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
         sqlx::query_as!(

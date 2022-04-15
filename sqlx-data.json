@@ -50,7 +50,7 @@
         {
           "name": "fhir_resource_id",
           "ordinal": 0,
-          "type_info": "Int8"
+          "type_info": "Varchar"
         },
         {
           "name": "subject_eth_address",
@@ -88,7 +88,7 @@
       ],
       "parameters": {
         "Left": [
-          "Int8",
+          "Varchar",
           "Bpchar",
           "Bpchar",
           "Varchar",
@@ -105,7 +105,7 @@
         {
           "name": "fhir_resource_id",
           "ordinal": 0,
-          "type_info": "Int8"
+          "type_info": "Varchar"
         },
         {
           "name": "subject_eth_address",
@@ -268,7 +268,7 @@
       "parameters": {
         "Left": [
           "Bpchar",
-          "Int8"
+          "Text"
         ]
       }
     },
@@ -325,7 +325,7 @@
         {
           "name": "fhir_resource_id",
           "ordinal": 0,
-          "type_info": "Int8"
+          "type_info": "Varchar"
         },
         {
           "name": "subject_eth_address",
@@ -364,7 +364,7 @@
       "parameters": {
         "Left": [
           "Bpchar",
-          "Int8",
+          "Text",
           "Bool"
         ]
       }
