@@ -200,10 +200,10 @@ The JSON returned is a JSON object containing the following information:
 - `ipfs_cid: String` - the content ID of the resource in IPFS storage.
 - `ciphertext` - the ciphertext of the FHIR resource.
 
-#### `PUT /dbio/resources/claim/{subject-eth-address}/{resource-id}`
-The put request to `/dbio/resources/claim/{subject-eth-address}/{resource-id}` takes as path parameters the following items:
+#### `PUT /dbio/resources/claim/{subject-eth-address}/{fhir-resource-id}`
+The put request to `/dbio/resources/claim/{subject-eth-address}/{fhir-resource-id}` takes as path parameters the following items:
 - `subject-eth-address` - The Ethereum public address of the subject of the queried resource.
-- `resource-id` - The ID of the resource being claimed.
+- `fhir-resource-id` - The FHIR resource ID of the resource being claimed.
 
 The response returned is one of the following:
 - `200 Ok` - A resource was found for the subject and was successfully claimed.
