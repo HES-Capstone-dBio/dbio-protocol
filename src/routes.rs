@@ -125,6 +125,7 @@ async fn post_resource_data(
             .and_then(|_| {
                 db.insert_resource(Resource {
                     fhir_resource_id: in_data.resource_id,
+                    ironcore_document_id: in_data.ironcore_document_id,
                     subject_eth_address: subject.eth_public_address,
                     creator_eth_address: in_data.creator_eth_address,
                     resource_type: in_data.resource_type,

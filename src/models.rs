@@ -11,6 +11,7 @@ pub struct User {
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct Resource {
     pub fhir_resource_id: String,
+    pub ironcore_document_id: String,
     pub subject_eth_address: String,
     pub creator_eth_address: String,
     pub resource_type: String,
@@ -46,6 +47,7 @@ pub struct ResourceDataPayload {
     pub creator_eth_address: String,
     pub resource_type: String,
     pub resource_id: String,
+    pub ironcore_document_id: String,
     pub ciphertext: String,
 }
 
