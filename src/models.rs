@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::{Serialize, Deserialize};
 use sqlx::FromRow;
 
@@ -10,18 +11,21 @@ pub struct User {
 
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct Resource {
-    pub fhir_resource_id: i64,
+    pub fhir_resource_id: String,
+    pub ironcore_document_id: String,
     pub subject_eth_address: String,
     pub creator_eth_address: String,
     pub resource_type: String,
+    pub resource_title: String,
     pub ownership_claimed: bool,
     pub ipfs_cid: String,
+    pub timestamp: DateTime<Utc>,
 }
 
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct ResourceData {
     pub cid: String,
-    pub ciphertext: String
+    pub ciphertext: String,
 }
 
 #[derive(Serialize, Deserialize, FromRow)]
@@ -31,6 +35,15 @@ pub struct AccessRequest {
     pub requestee_eth_address: String,
     pub request_approved: bool,
     pub request_open: bool,
+}
+
+/* Specialized return types */
+
+#[derive(Serialize, FromRow)]
+pub struct DecryptableResourceData {
+    pub cid: String,
+    pub ciphertext: String,
+    pub ironcore_document_id: String,
 }
 
 /* Request payloads */
@@ -45,8 +58,10 @@ pub struct ResourceDataPayload {
     pub email: String,
     pub creator_eth_address: String,
     pub resource_type: String,
-    pub resource_id: i64,
-    pub ciphertext: String
+    pub fhir_resource_id: String,
+    pub ironcore_document_id: String,
+    pub ciphertext: String,
+    pub resource_title: String,
 }
 
 /* Route query parameters */

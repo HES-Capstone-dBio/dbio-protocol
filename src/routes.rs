@@ -95,8 +95,8 @@ async fn put_access_request_approval(
 #[actix_web::get("/resources/{subject_eth_address}/{fhir_resource_id}")]
 async fn get_resource_data(
     db: Data<Db>,
-    path: Path<(String, i64)>,
-) -> Result<Json<ResourceData>, HttpError> {
+    path: Path<(String, String)>,
+) -> Result<Json<DecryptableResourceData>, HttpError> {
     let (subject_eth_address, fhir_resource_id) = path.into_inner();
     db.select_resource_data(subject_eth_address, fhir_resource_id)
         .await
@@ -124,12 +124,15 @@ async fn post_resource_data(
             })
             .and_then(|_| {
                 db.insert_resource(Resource {
-                    fhir_resource_id: in_data.resource_id,
+                    fhir_resource_id: in_data.fhir_resource_id,
+                    ironcore_document_id: in_data.ironcore_document_id,
                     subject_eth_address: subject.eth_public_address,
                     creator_eth_address: in_data.creator_eth_address,
                     resource_type: in_data.resource_type,
+                    resource_title: in_data.resource_title,
                     ownership_claimed: false,
                     ipfs_cid: cid,
+                    timestamp: chrono::offset::Utc::now(),
                 })
             })
         })
@@ -152,7 +155,7 @@ async fn get_resource_metadata(
 #[actix_web::put("/resources/claim/{subject_eth_address}/{fhir_resource_id}")]
 async fn put_resource_claim(
     db: Data<Db>,
-    path: Path<(String, i64)>,
+    path: Path<(String, String)>,
 ) -> Result<Json<Resource>, HttpError> {
     let (subject_eth_address, fhir_resource_id) = path.into_inner();
     db.update_resource_claim(subject_eth_address, fhir_resource_id, true)
