@@ -133,13 +133,14 @@ impl Db {
         sqlx::query_as!(
             Resource,
             "INSERT INTO resources
-             VALUES ($1, $2, $3, $4, $5, $6, $7)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
              RETURNING *",
             data.fhir_resource_id,
             data.ironcore_document_id,
             data.subject_eth_address,
             data.creator_eth_address,
             data.resource_type,
+            data.resource_title,
             data.ownership_claimed,
             data.ipfs_cid
         )
