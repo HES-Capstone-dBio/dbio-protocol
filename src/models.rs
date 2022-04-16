@@ -49,7 +49,7 @@ pub struct ResourceDataPayload {
     pub email: String,
     pub creator_eth_address: String,
     pub resource_type: String,
-    pub resource_id: String,
+    pub fhir_resource_id: String,
     pub ironcore_document_id: String,
     pub ciphertext: String,
     pub resource_title: String,
