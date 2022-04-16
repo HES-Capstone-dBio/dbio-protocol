@@ -132,7 +132,7 @@ async fn post_resource_data(
                     resource_title: in_data.resource_title,
                     ownership_claimed: false,
                     ipfs_cid: cid,
-                    timestamp: chrono::offset::Utc::now()
+                    timestamp: chrono::offset::Utc::now(),
                 })
             })
         })
