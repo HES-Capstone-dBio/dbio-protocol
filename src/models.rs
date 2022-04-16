@@ -37,6 +37,15 @@ pub struct AccessRequest {
     pub request_open: bool,
 }
 
+/* Specialized return types */
+
+#[derive(Serialize, FromRow)]
+pub struct DecryptableResourceData {
+    pub cid: String,
+    pub ciphertext: String,
+    pub ironcore_document_id: String,
+}
+
 /* Request payloads */
 #[derive(Debug, Deserialize)]
 pub struct AccessRequestPayload {

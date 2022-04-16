@@ -184,6 +184,39 @@
     },
     "query": "INSERT INTO resource_store (cid, ciphertext)\n             VALUES ($1, $2) RETURNING *"
   },
+  "832787b62d4d11423c434b45b2bc90ea9815dd3a3461707a3655ed8ee399b975": {
+    "describe": {
+      "columns": [
+        {
+          "name": "cid",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ciphertext",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ironcore_document_id",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Text"
+        ]
+      }
+    },
+    "query": "SELECT cid, ciphertext, ironcore_document_id\n             FROM resource_store\n             INNER JOIN resources\n             ON resource_store.cid = resources.ipfs_cid\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_id = $2"
+  },
   "835bc9a21abf413308e852d5f05f9b3e149c216b389cb4f0b8b99b7cda0dbee7": {
     "describe": {
       "columns": [
@@ -285,33 +318,6 @@
       }
     },
     "query": "INSERT INTO resources\n             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\n             RETURNING *"
-  },
-  "8c4f7865e3d08f8eacaf1ea1f8b66c4f29d64a77c9e4211b490ea417df678ee5": {
-    "describe": {
-      "columns": [
-        {
-          "name": "cid",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ciphertext",
-          "ordinal": 1,
-          "type_info": "Varchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Text"
-        ]
-      }
-    },
-    "query": "SELECT *\n             FROM resource_store\n             WHERE\n               cid = (SELECT ipfs_cid\n                      FROM resources\n                      WHERE subject_eth_address = $1\n                      AND fhir_resource_id = $2)"
   },
   "a6e238d9a1fdb0a9a3e81ab78d913f4cac3aacc5daf9682ec5b610b8a6f40074": {
     "describe": {

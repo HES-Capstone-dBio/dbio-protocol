@@ -121,7 +121,7 @@ impl Db {
             "INSERT INTO resource_store (cid, ciphertext)
              VALUES ($1, $2) RETURNING *",
             data.cid,
-            data.ciphertext
+            data.ciphertext,
         )
         .fetch_one(&self.pool)
     }
@@ -152,18 +152,18 @@ impl Db {
         &'_ self,
         subject_eth_address: String,
         resource_id: String,
-    ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<DecryptableResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
-            ResourceData,
-            "SELECT *
+            DecryptableResourceData,
+            "SELECT cid, ciphertext, ironcore_document_id
              FROM resource_store
+             INNER JOIN resources
+             ON resource_store.cid = resources.ipfs_cid
              WHERE
-               cid = (SELECT ipfs_cid
-                      FROM resources
-                      WHERE subject_eth_address = $1
-                      AND fhir_resource_id = $2)",
+               subject_eth_address = $1
+               AND fhir_resource_id = $2",
             subject_eth_address,
-            resource_id
+            resource_id,
         )
         .fetch_one(&self.pool)
     }
@@ -177,7 +177,7 @@ impl Db {
             "SELECT *
              FROM resources
              WHERE subject_eth_address = $1",
-            subject_eth_address
+            subject_eth_address,
         )
         .fetch_all(&self.pool)
     }
