@@ -153,11 +153,11 @@ In the case of `200 Ok`, the body of the response contains JSON.
 	{
 		"fhir_resource_id": "insert_fhir_resource_id_here",
 		"ironcore_document_id": "2b544876c9ec9fa56c800c3a2235fdbd",
-    	"subject_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
-    	"creator_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
-    	"resource_type": "insert_resource_type_here",
-    	"ownership_claimed": true,
-    	"ipfs_cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+		"subject_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
+		"creator_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+		"resource_type": "insert_resource_type_here",
+		"ownership_claimed": true,
+		"ipfs_cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
 	},
 	{
 		// ...
@@ -237,10 +237,10 @@ In the case of `200 Ok`, the body of the response contains JSON.
 [
 	{
 		"id": 10,
-    	"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
-    	"requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
-    	"request_approved": false,
-    	"request_open": true,
+		"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+		"requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
+		"request_approved": false,
+		"request_open": true,
 	},
 	{
 		// ...
