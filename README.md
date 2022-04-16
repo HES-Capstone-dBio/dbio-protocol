@@ -48,8 +48,8 @@ The build will fail without completing this step.
 
 - [POST /dbio/resources](#post-dbioresources)
 - [GET /dbio/resources/\{subject-eth-address\}](#get-dbioresourcessubject-eth-address)
-- [GET /dbio/resources/\{subject-eth-address\}/\{resource-id\}](#get-dbioresourcessubject-eth-addressresource-id)
-- [PUT /dbio/resources/claim/\{subject-eth-address\}/\{resource-id\}](#put-dbioresourcesclaimsubject-eth-addressresource-id)
+- [GET /dbio/resources/\{subject-eth-address\}/\{fhir-resource-id\}](#get-dbioresourcessubject-eth-addressfhir-resource-id)
+- [PUT /dbio/resources/claim/\{subject-eth-address\}/\{fhir-resource-id\}](#put-dbioresourcesclaimsubject-eth-addressfhir-resource-id)
 
 [Access Requests](#access-requests): Access requests that are made when third parties request access to a user's resources. Users can either approve or deny access requests.
 - [POST /dbio/access_requests](#post-dbioaccess_requests)
@@ -180,10 +180,10 @@ The JSON returned is a list of JSON objects containing the following information
 - `ipfs_cid: String` - the content ID of the resource in IPFS storage.
 - `timestamp: String` - the timestamp at which the resource was created, formatted as per ISO 8601 standards.
 
-#### `GET /dbio/resources/{subject-eth-address}/{resource-id}`
+#### `GET /dbio/resources/{subject-eth-address}/{fhir-resource-id}`
 The get request to `/dbio/users/resources/{subject-eth-address}/{resource-id}` takes as path parameters the following items:
 - `subject-eth-address` - The Ethereum public address of the subject of the queried resource.
-- `resource-id` - The ID of the resource for which to retrieve ciphertext for.
+- `fhir-resource-id` - The FHIR resource ID of the resource for which to retrieve ciphertext for.
 
 The response returned is one of the following:
 - `200 Ok` - A resource was found for the subject.
