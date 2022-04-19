@@ -1,6 +1,51 @@
 {
   "db": "PostgreSQL",
-  "05bad92cd42cd9ee793972f50172ca12869adb6dfdb324a2ef095bbbe51ef647": {
+  "08cbf8976214642f4c0fdf002a4e13f7ef628e60f29bbe79a0833c2b951330ce": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO write_requests (requestor_eth_address, requestee_eth_address)\n             VALUES ($1, $2) RETURNING *"
+  },
+  "0e03a5e14eb8b36ba29fd392530270128e75c4a0d29c3342ef12e03f8102e93c": {
     "describe": {
       "columns": [
         {
@@ -42,7 +87,95 @@
         ]
       }
     },
-    "query": "SELECT * FROM access_requests\n                 WHERE\n                   requestee_eth_address = $1"
+    "query": "SELECT *\n             FROM read_requests\n             WHERE\n               requestee_eth_address = $1"
+  },
+  "1d64b66ad8f6ed923aba5434c228a8497e807cff68142efec39f9f50d0812502": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM read_requests\n             WHERE\n               requestee_eth_address = $1\n               AND request_open"
+  },
+  "39709820edafc596177de773679408707feb1930d3f9cd321e50286fd967afc2": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM write_requests\n             WHERE\n               requestee_eth_address = $1"
   },
   "3adde3fdff0ec14721ffb16118a9dfa8513fb584a78024f232a10c5be0dde1fb": {
     "describe": {
@@ -112,7 +245,52 @@
     },
     "query": "SELECT *\n             FROM resources\n             WHERE subject_eth_address = $1"
   },
-  "5086607f2daca750439f10ade503854a84d1913144d20804d12bd84cd5c5bcb6": {
+  "425fd5f263c62fa0996f9644a650e692beec708f73f9b2ec6beb7ec6597df855": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO read_requests (requestor_eth_address, requestee_eth_address)\n             VALUES ($1, $2) RETURNING *"
+  },
+  "53de15a506616f6cbe37a7f69426b41c56daf9f0e4fce716e312d5c35dc79243": {
     "describe": {
       "columns": [
         {
@@ -155,7 +333,7 @@
         ]
       }
     },
-    "query": "UPDATE access_requests\n             SET request_approved = $1, request_open = false\n             WHERE id = $2\n             RETURNING *"
+    "query": "UPDATE write_requests\n             SET request_approved = $1, request_open = false\n             WHERE id = $2\n             RETURNING *"
   },
   "646412f787d8a00b91baa6c154e98e93d0acd28fead4177ebcea6f7d6081e5e4": {
     "describe": {
@@ -319,7 +497,7 @@
     },
     "query": "INSERT INTO resources\n             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\n             RETURNING *"
   },
-  "a6e238d9a1fdb0a9a3e81ab78d913f4cac3aacc5daf9682ec5b610b8a6f40074": {
+  "aef70b05f63e89d8402a21be5cd3f7975800c0331f899d2f368c930f133ff200": {
     "describe": {
       "columns": [
         {
@@ -357,12 +535,11 @@
       ],
       "parameters": {
         "Left": [
-          "Bpchar",
           "Bpchar"
         ]
       }
     },
-    "query": "INSERT INTO access_requests (requestor_eth_address, requestee_eth_address)\n             VALUES ($1, $2) RETURNING *"
+    "query": "SELECT *\n             FROM write_requests\n             WHERE\n               requestee_eth_address = $1\n               AND request_open"
   },
   "b036323fe7e728784c8de8f17c0fe8991ae034fd09054f1f916e90475f251c55": {
     "describe": {
@@ -461,7 +638,7 @@
     },
     "query": "INSERT INTO users (eth_public_address, email)\n             VALUES ($1, $2) RETURNING *"
   },
-  "cf12fc6231b58539f00231ca3c7956ad51d95517b677313a5e1c08990c3c91af": {
+  "e0fb901d560930309dcfe342091d26c502b4d3a633fdda29db8709a790f84830": {
     "describe": {
       "columns": [
         {
@@ -499,11 +676,12 @@
       ],
       "parameters": {
         "Left": [
-          "Bpchar"
+          "Bool",
+          "Int8"
         ]
       }
     },
-    "query": "SELECT * FROM access_requests\n             WHERE\n               requestee_eth_address = $1\n               AND request_open"
+    "query": "UPDATE read_requests\n             SET request_approved = $1, request_open = false\n             WHERE id = $2\n             RETURNING *"
   },
   "f3f58600e971f1be6cbe206bba24f77769f54c6230e28f5b3dc719b869d9cb3f": {
     "describe": {

@@ -48,19 +48,19 @@ async fn get_user_by_email(db: Data<Db>, email: Path<String>) -> Result<Json<Use
         .map_err(adapt_db_error)
 }
 
-#[actix_web::get("/access_requests/{requestee_eth_address}")]
-async fn get_access_requests(
+#[actix_web::get("/read_requests/{requestee_eth_address}")]
+async fn get_read_requests(
     db: Data<Db>,
     requestee_eth_address: Path<String>,
     filter_info: Query<FilterParam>,
 ) -> Result<Json<Vec<AccessRequest>>, HttpError> {
     match filter_info.filter.as_str() {
         "open" => {
-            db.select_open_access_requests(requestee_eth_address.into_inner())
+            db.select_open_read_requests(requestee_eth_address.into_inner())
                 .await
         }
         _ => {
-            db.select_all_access_requests(requestee_eth_address.into_inner())
+            db.select_all_read_requests(requestee_eth_address.into_inner())
                 .await
         }
     }
@@ -68,25 +68,69 @@ async fn get_access_requests(
     .map_err(adapt_db_error)
 }
 
-#[actix_web::post("/access_requests")]
-async fn post_access_request(
+#[actix_web::post("/read_requests")]
+async fn post_read_request(
     db: Data<Db>,
     access_request_payload: Json<AccessRequestPayload>,
 ) -> Result<Json<AccessRequest>, HttpError> {
-    db.insert_access_request(access_request_payload.into_inner())
+    db.insert_read_request(access_request_payload.into_inner())
         .await
         .map(Json)
         .map_err(adapt_db_error)
 }
 
-#[actix_web::put("/access_requests/{id}")]
-async fn put_access_request_approval(
+#[actix_web::put("/read_requests/{id}")]
+async fn put_read_request_approval(
     db: Data<Db>,
     id: Path<i64>,
     approval: Query<ApproveParam>,
 ) -> Result<Json<AccessRequest>, HttpError> {
     let approve = matches!(approval.approve.as_str(), "true");
-    db.update_access_request(id.into_inner(), approve)
+    db.update_read_request(id.into_inner(), approve)
+        .await
+        .map(Json)
+        .map_err(adapt_db_error)
+}
+
+#[actix_web::get("/write_requests/{requestee_eth_address}")]
+async fn get_write_requests(
+    db: Data<Db>,
+    requestee_eth_address: Path<String>,
+    filter_info: Query<FilterParam>,
+) -> Result<Json<Vec<AccessRequest>>, HttpError> {
+    match filter_info.filter.as_str() {
+        "open" => {
+            db.select_open_write_requests(requestee_eth_address.into_inner())
+                .await
+        }
+        _ => {
+            db.select_all_write_requests(requestee_eth_address.into_inner())
+                .await
+        }
+    }
+    .map(Json)
+    .map_err(adapt_db_error)
+}
+
+#[actix_web::post("/write_requests")]
+async fn post_write_request(
+    db: Data<Db>,
+    access_request_payload: Json<AccessRequestPayload>,
+) -> Result<Json<AccessRequest>, HttpError> {
+    db.insert_write_request(access_request_payload.into_inner())
+        .await
+        .map(Json)
+        .map_err(adapt_db_error)
+}
+
+#[actix_web::put("/write_requests/{id}")]
+async fn put_write_request_approval(
+    db: Data<Db>,
+    id: Path<i64>,
+    approval: Query<ApproveParam>,
+) -> Result<Json<AccessRequest>, HttpError> {
+    let approve = matches!(approval.approve.as_str(), "true");
+    db.update_write_request(id.into_inner(), approve)
         .await
         .map(Json)
         .map_err(adapt_db_error)
@@ -173,7 +217,10 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(put_resource_claim)
         .service(get_user_by_eth)
         .service(get_user_by_email)
-        .service(get_access_requests)
-        .service(post_access_request)
-        .service(put_access_request_approval)
+        .service(get_read_requests)
+        .service(post_read_request)
+        .service(put_read_request_approval)
+        .service(get_write_requests)
+        .service(post_write_request)
+        .service(put_write_request_approval)
 }

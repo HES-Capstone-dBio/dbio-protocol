@@ -12,7 +12,8 @@ pub struct Db {
 
 impl Db {
     pub async fn connect() -> Result<Self, sqlx::Error> {
-        let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL env var not found");
+        let db_url = std::env::var("DATABASE_URL")
+            .expect("DATABASE_URL env var not found");
         PgPoolOptions::new()
             .connect(&db_url)
             .await
@@ -49,16 +50,22 @@ impl Db {
         &'_ self,
         email: String,
     ) -> impl Future<Output = Result<User, sqlx::Error>> + '_ {
-        sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", email,).fetch_one(&self.pool)
+        sqlx::query_as!(
+            User,
+            "SELECT * FROM users WHERE email = $1",
+            email,
+        )
+        .fetch_one(&self.pool)
     }
 
-    pub fn select_open_access_requests(
+    pub fn select_open_read_requests(
         &'_ self,
         requestee_eth_address: String,
     ) -> impl Future<Output = Result<Vec<AccessRequest>, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
-            "SELECT * FROM access_requests
+            "SELECT *
+             FROM read_requests
              WHERE
                requestee_eth_address = $1
                AND request_open",
@@ -67,27 +74,28 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
-    pub fn select_all_access_requests(
+    pub fn select_all_read_requests(
         &'_ self,
         requestee_eth_address: String,
     ) -> impl Future<Output = Result<Vec<AccessRequest>, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
-            "SELECT * FROM access_requests
-                 WHERE
-                   requestee_eth_address = $1",
+            "SELECT *
+             FROM read_requests
+             WHERE
+               requestee_eth_address = $1",
             requestee_eth_address,
         )
         .fetch_all(&self.pool)
     }
 
-    pub fn insert_access_request(
+    pub fn insert_read_request(
         &'_ self,
         access_request_payload: AccessRequestPayload,
     ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
-            "INSERT INTO access_requests (requestor_eth_address, requestee_eth_address)
+            "INSERT INTO read_requests (requestor_eth_address, requestee_eth_address)
              VALUES ($1, $2) RETURNING *",
             access_request_payload.requestor_eth_address,
             access_request_payload.requestee_eth_address,
@@ -95,14 +103,76 @@ impl Db {
         .fetch_one(&self.pool)
     }
 
-    pub fn update_access_request(
+    pub fn update_read_request(
         &'_ self,
         id: i64,
         approval: bool,
     ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
-            "UPDATE access_requests
+            "UPDATE read_requests
+             SET request_approved = $1, request_open = false
+             WHERE id = $2
+             RETURNING *",
+            approval,
+            id,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn select_open_write_requests(
+        &'_ self,
+        requestee_eth_address: String,
+    ) -> impl Future<Output = Result<Vec<AccessRequest>, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "SELECT *
+             FROM write_requests
+             WHERE
+               requestee_eth_address = $1
+               AND request_open",
+            requestee_eth_address,
+        )
+        .fetch_all(&self.pool)
+    }
+
+    pub fn select_all_write_requests(
+        &'_ self,
+        requestee_eth_address: String,
+    ) -> impl Future<Output = Result<Vec<AccessRequest>, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "SELECT *
+             FROM write_requests
+             WHERE
+               requestee_eth_address = $1",
+            requestee_eth_address,
+        )
+        .fetch_all(&self.pool)
+    }
+
+    pub fn insert_write_request(
+        &'_ self,
+        access_request_payload: AccessRequestPayload,
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "INSERT INTO write_requests (requestor_eth_address, requestee_eth_address)
+             VALUES ($1, $2) RETURNING *",
+            access_request_payload.requestor_eth_address,
+            access_request_payload.requestee_eth_address,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn update_write_request(
+        &'_ self,
+        id: i64,
+        approval: bool,
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "UPDATE write_requests
              SET request_approved = $1, request_open = false
              WHERE id = $2
              RETURNING *",
