@@ -51,10 +51,15 @@ The build will fail without completing this step.
 - [GET /dbio/resources/\{subject-eth-address\}/\{fhir-resource-id\}](#get-dbioresourcessubject-eth-addressfhir-resource-id)
 - [PUT /dbio/resources/claim/\{subject-eth-address\}/\{fhir-resource-id\}](#put-dbioresourcesclaimsubject-eth-addressfhir-resource-id)
 
-[Access Requests](#access-requests): Access requests that are made when third parties request access to a user's resources. Users can either approve or deny access requests.
-- [POST /dbio/access_requests](#post-dbioaccess_requests)
-- [GET /dbio/access_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbioaccess_requestsrequestee-eth-addressfilteropenall)
-- [PUT /dbio/access_requests/{id}?approve=(true|false)](#put-dbioaccess_requestsidapprovetruefalse)
+[Read Requests](#read-requests): Access requests that are made when third parties request access to read a user's resources. Users can either approve or deny read requests.
+- [POST /dbio/read_requests](#post-dbioread_requests)
+- [GET /dbio/read_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbioread_requestsrequestee-eth-addressfilteropenall)
+- [PUT /dbio/read_requests/{id}?approve=(true|false)](#put-dbioread_requestsidapprovetruefalse)
+
+[Write Requests](#write-requests): Access requests that are made when third parties request access to write to a user's resources. Users can either approve or deny write requests.
+- [POST /dbio/write_requests](#post-dbiowrite_requests)
+- [GET /dbio/write_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbiowrite_requestsrequestee-eth-addressfilteropenall)
+- [PUT /dbio/write_requests/{id}?approve=(true|false)](#put-dbiowrite_requestsidapprovetruefalse)
 
 ### Users
 
@@ -211,10 +216,10 @@ The response returned is one of the following:
 - `200 Ok` - A resource was found for the subject and was successfully claimed.
 - `404 Not Found` - No resource matching that resource ID was found for the subject.
 
-### Access Requests
+### Read Requests
 
-#### `POST /dbio/access_requests`
-The post request to `/dbio/access_requests` requires a JSON payload that represents a user to be sent in the body.
+#### `POST /dbio/read_requests`
+The post request to `/dbio/read_requests` requires a JSON payload that represents a user to be sent in the body.
 ```json
 {
 	"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
@@ -222,23 +227,23 @@ The post request to `/dbio/access_requests` requires a JSON payload that represe
 }
 ```
 The parameters in the JSON payload are:
-- `requestor_eth_address : String` - The Ethereum public address of the entity making the access request.
-- `requestee_eth_address : String` - The Ethereum public address of the entity receiving the access request.
+- `requestor_eth_address : String` - The Ethereum public address of the entity making the read request.
+- `requestee_eth_address : String` - The Ethereum public address of the entity receiving the read request.
 
-Upon submitting a request with well-formatted JSON, the requester should be presented with one of the following responses:
+Upon submitting a request with well-formatted JSON, the requestor should be presented with one of the following responses:
 - `200 Ok` - The access request object was created.
 - `500 Internal Server Error` - This access request already exists in the system.
 
-#### `GET /dbio/access_requests/{requestee-eth-address}?filter=(open|all)`
-The get request to `/dbio/access_requests/{requestee-eth-address}?filter=(open|all)` takes as path parameters the following items:
+#### `GET /dbio/read_requests/{requestee-eth-address}?filter=(open|all)`
+The get request to `/dbio/read_requests/{requestee-eth-address}?filter=(open|all)` takes as path parameters the following items:
 - `requestee-eth-address` - The Ethereum public address of the entity receiving the access request.
 
 Additionally, it takes a query parameter:
-- `filter` - Options are `open` or `all`. Based on the query parameter, the route returns either all access requests that a user has received, or just their open access requests.
+- `filter` - Options are `open` or `all`. Based on the query parameter, the route returns either all read requests that a user has received, or just their open read requests.
 
 The response returned is one of the following:
-- `200 Ok` - Access requests that match the filter were found for the subject.
-- `404 Not Found` - No access requests were found for the subject.
+- `200 Ok` - Read requests that match the filter were found for the subject.
+- `404 Not Found` - No read requests were found for the subject.
 
 In the case of `200 Ok`, the body of the response contains JSON.
 ```json
@@ -258,20 +263,85 @@ In the case of `200 Ok`, the body of the response contains JSON.
 
 ```
 The JSON returned is a list of JSON objects containing the following information:
-- `id: Integer` - the ID of the access request.
-- `requestor_eth_address : String` - The Ethereum public address of the entity making the access request.
-- `requestee_eth_address : String` - The Ethereum public address of the entity receiving the access request.
-- `request_approved : Boolean` - Represents whether the access request has been approved.
-- `request_open : Boolean` - Represents whether the access request is still open.
+- `id: Integer` - the ID of the read request.
+- `requestor_eth_address : String` - The Ethereum public address of the entity making the read request.
+- `requestee_eth_address : String` - The Ethereum public address of the entity receiving the read request.
+- `request_approved : Boolean` - Represents whether the read request has been approved.
+- `request_open : Boolean` - Represents whether the read request is still open.
 
-#### `PUT /dbio/access_requests/{id}?approve=(true|false)`
+#### `PUT /dbio/read_requests/{id}?approve=(true|false)`
 
-The put request to `/dbio/access_requests/{id}?approve=(true|false)` takes as path parameters the following items:
-- `id` - The ID of the access request being responded to.
+The put request to `/dbio/read_requests/{id}?approve=(true|false)` takes as path parameters the following items:
+- `id` - The ID of the read request being responded to.
 
 Additionally, it takes a query parameter:
-- `approve` - Options are `true` or `false`. Based on the query parameter, the access request is either approved or denied.
+- `approve` - Options are `true` or `false`. Based on the query parameter, the read request is either approved or denied.
 
 The response returned is one of the following:
-- `200 Ok` - The access request was successfully approved or denied.
-- `404 Not Found` - No access request with the given ID was found.
+- `200 Ok` - The read request was successfully approved or denied.
+- `404 Not Found` - No read request with the given ID was found.
+
+### Write Requests
+
+#### `POST /dbio/write_requests`
+The post request to `/dbio/write_requests` requires a JSON payload that represents a user to be sent in the body.
+```json
+{
+	"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+	"requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240"
+}
+```
+The parameters in the JSON payload are:
+- `requestor_eth_address : String` - The Ethereum public address of the entity making the write request.
+- `requestee_eth_address : String` - The Ethereum public address of the entity receiving the write request.
+
+Upon submitting a request with well-formatted JSON, the requestor should be presented with one of the following responses:
+- `200 Ok` - The write request object was created.
+- `500 Internal Server Error` - This write request already exists in the system.
+
+#### `GET /dbio/write_requests/{requestee-eth-address}?filter=(open|all)`
+The get request to `/dbio/write_requests/{requestee-eth-address}?filter=(open|all)` takes as path parameters the following items:
+- `requestee-eth-address` - The Ethereum public address of the entity receiving the write request.
+
+Additionally, it takes a query parameter:
+- `filter` - Options are `open` or `all`. Based on the query parameter, the route returns either all write requests that a user has received, or just their open write requests.
+
+The response returned is one of the following:
+- `200 Ok` - Write requests that match the filter were found for the subject.
+- `404 Not Found` - No write requests were found for the subject.
+
+In the case of `200 Ok`, the body of the response contains JSON.
+```json
+[
+	{
+		"id": 10,
+		"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+		"requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
+		"request_approved": false,
+		"request_open": true,
+	},
+	{
+		// ...
+	},
+	// ...
+]
+
+```
+The JSON returned is a list of JSON objects containing the following information:
+- `id: Integer` - the ID of the write request.
+- `requestor_eth_address : String` - The Ethereum public address of the entity making the write request.
+- `requestee_eth_address : String` - The Ethereum public address of the entity receiving the write request.
+- `request_approved : Boolean` - Represents whether the write request has been approved.
+- `request_open : Boolean` - Represents whether the write request is still open.
+
+#### `PUT /dbio/write_requests/{id}?approve=(true|false)`
+
+The put request to `/dbio/write_requests/{id}?approve=(true|false)` takes as path parameters the following items:
+- `id` - The ID of the write request being responded to.
+
+Additionally, it takes a query parameter:
+- `approve` - Options are `true` or `false`. Based on the query parameter, the write request is either approved or denied.
+
+The response returned is one of the following:
+- `200 Ok` - The write request was successfully approved or denied.
+- `404 Not Found` - No write request with the given ID was found.
