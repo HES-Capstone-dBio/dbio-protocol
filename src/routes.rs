@@ -231,6 +231,17 @@ async fn get_claimed_resource_metadata(
         .map_err(adapt_db_error)
 }
 
+#[actix_web::get("/resources/unclaimed/{subject_eth_address}")]
+async fn get_unclaimed_resource_metadata(
+    db: Data<Db>,
+    subject_eth_address: Path<String>,
+) -> Result<Json<Vec<EscrowedResource>>, HttpError> {
+    db.select_unclaimed_resource_metadata(subject_eth_address.into_inner())
+        .await
+        .map(Json)
+        .map_err(adapt_db_error)
+}
+
 pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/dbio")
         .service(post_user)
@@ -238,6 +249,7 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(post_unclaimed_resource_data)
         .service(get_claimed_resource_data)
         .service(get_claimed_resource_metadata)
+        .service(get_unclaimed_resource_metadata)
         .service(get_user_by_eth)
         .service(get_user_by_email)
         .service(get_read_requests)

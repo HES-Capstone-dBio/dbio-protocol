@@ -301,6 +301,20 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
+    pub fn select_unclaimed_resource_metadata(
+        &'_ self,
+        subject_eth_address: String,
+    ) -> impl Future<Output = Result<Vec<EscrowedResource>, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            EscrowedResource,
+            "SELECT *
+             FROM resource_escrow
+             WHERE subject_eth_address = $1",
+            subject_eth_address,
+        )
+        .fetch_all(&self.pool)
+    }
+
     pub fn remove_from_escrow(
         &'_ self,
         creator_eth_address: String,
