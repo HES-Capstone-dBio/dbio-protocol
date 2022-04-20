@@ -224,7 +224,7 @@ impl Db {
     ) -> impl Future<Output = Result<DecryptableResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
             DecryptableResourceData,
-            "SELECT cid, ciphertext, ironcore_document_id
+            "SELECT cid, ciphertext, ironcore_document_id, fhir_resource_id, resource_type
              FROM resource_store
              INNER JOIN resources
              ON resource_store.cid = resources.ipfs_cid

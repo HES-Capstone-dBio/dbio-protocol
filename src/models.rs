@@ -43,6 +43,8 @@ pub struct DecryptableResourceData {
     pub cid: String,
     pub ciphertext: String,
     pub ironcore_document_id: String,
+    pub fhir_resource_id: String,
+    pub resource_type: String,
 }
 
 /* Request payloads */

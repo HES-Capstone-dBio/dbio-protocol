@@ -425,39 +425,6 @@
     },
     "query": "INSERT INTO resource_store (cid, ciphertext)\n             VALUES ($1, $2) RETURNING *"
   },
-  "832787b62d4d11423c434b45b2bc90ea9815dd3a3461707a3655ed8ee399b975": {
-    "describe": {
-      "columns": [
-        {
-          "name": "cid",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ciphertext",
-          "ordinal": 1,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ironcore_document_id",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Text"
-        ]
-      }
-    },
-    "query": "SELECT cid, ciphertext, ironcore_document_id\n             FROM resource_store\n             INNER JOIN resources\n             ON resource_store.cid = resources.ipfs_cid\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_id = $2"
-  },
   "835bc9a21abf413308e852d5f05f9b3e149c216b389cb4f0b8b99b7cda0dbee7": {
     "describe": {
       "columns": [
@@ -618,6 +585,51 @@
       }
     },
     "query": "INSERT INTO users (eth_public_address, email)\n             VALUES ($1, $2) RETURNING *"
+  },
+  "e00286dd39bf32774ae693e2a2c65b6c9ee7f867a057214912dd45fc32441fa4": {
+    "describe": {
+      "columns": [
+        {
+          "name": "cid",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ciphertext",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ironcore_document_id",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "resource_type",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Text"
+        ]
+      }
+    },
+    "query": "SELECT cid, ciphertext, ironcore_document_id, fhir_resource_id, resource_type\n             FROM resource_store\n             INNER JOIN resources\n             ON resource_store.cid = resources.ipfs_cid\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_id = $2"
   },
   "e0fb901d560930309dcfe342091d26c502b4d3a633fdda29db8709a790f84830": {
     "describe": {
