@@ -267,6 +267,7 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(post_claimed_resource_data)
         .service(post_unclaimed_resource_data)
         .service(get_claimed_resource_data)
+        .service(get_unclaimed_resource_data)
         .service(get_claimed_resource_metadata)
         .service(get_unclaimed_resource_metadata)
         .service(get_user_by_eth)
