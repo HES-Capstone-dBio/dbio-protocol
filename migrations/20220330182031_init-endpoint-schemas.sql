@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS resources (
   subject_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   creator_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   resource_type VARCHAR(40) NOT NULL,
-  resource_title VARCHAR(80) NOT NULL,
   ownership_claimed BOOL NOT NULL DEFAULT false,
   ipfs_cid VARCHAR(50) REFERENCES resource_store(cid) NOT NULL,
   timestamp TIMESTAMPTZ NOT NULL,

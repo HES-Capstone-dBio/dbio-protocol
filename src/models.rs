@@ -16,7 +16,6 @@ pub struct Resource {
     pub subject_eth_address: String,
     pub creator_eth_address: String,
     pub resource_type: String,
-    pub resource_title: String,
     pub ownership_claimed: bool,
     pub ipfs_cid: String,
     pub timestamp: DateTime<Utc>,
@@ -61,7 +60,6 @@ pub struct ResourceDataPayload {
     pub fhir_resource_id: String,
     pub ironcore_document_id: String,
     pub ciphertext: String,
-    pub resource_title: String,
 }
 
 /* Route query parameters */
