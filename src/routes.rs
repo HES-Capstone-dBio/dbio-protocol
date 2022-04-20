@@ -196,6 +196,30 @@ async fn post_claimed_resource_data(
         .map_err(adapt_db_error)
 }
 
+#[actix_web::post("/resources/unclaimed")]
+async fn post_unclaimed_resource_data(
+    db: Data<Db>,
+    payload: Json<ResourceDataPayload>,
+) -> Result<Json<EscrowedResource>, HttpError> {
+    let in_data = payload.into_inner();
+
+    db.select_user_by_email(in_data.email)
+        .and_then(|subject| {
+            db.insert_unclaimed_resource(EscrowedResource {
+                fhir_resource_id: in_data.fhir_resource_id,
+                ironcore_document_id: in_data.ironcore_document_id,
+                subject_eth_address: subject.eth_public_address,
+                creator_eth_address: in_data.creator_eth_address,
+                resource_type: in_data.resource_type,
+                ciphertext: in_data.ciphertext,
+                timestamp: chrono::offset::Utc::now(),
+            })
+        })
+        .await
+        .map(Json)
+        .map_err(adapt_db_error)
+}
+
 #[actix_web::get("/resources/claimed/{subject_eth_address}")]
 async fn get_claimed_resource_metadata(
     db: Data<Db>,
@@ -211,6 +235,7 @@ pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/dbio")
         .service(post_user)
         .service(post_claimed_resource_data)
+        .service(post_unclaimed_resource_data)
         .service(get_claimed_resource_data)
         .service(get_claimed_resource_metadata)
         .service(get_user_by_eth)

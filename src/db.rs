@@ -230,6 +230,34 @@ impl Db {
         .fetch_one(&self.pool)
     }
 
+    pub fn insert_unclaimed_resource(
+        &'_ self,
+        data: EscrowedResource,
+    ) -> impl Future<Output = Result<EscrowedResource, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            EscrowedResource,
+            "INSERT INTO resource_escrow (
+               fhir_resource_id,
+               ironcore_document_id,
+               subject_eth_address,
+               creator_eth_address,
+               resource_type,
+               ciphertext,
+               timestamp
+             )
+             VALUES ($1, $2, $3, $4, $5, $6, $7)
+             RETURNING *",
+            data.fhir_resource_id,
+            data.ironcore_document_id,
+            data.subject_eth_address,
+            data.creator_eth_address,
+            data.resource_type,
+            data.ciphertext,
+            data.timestamp,
+        )
+        .fetch_one(&self.pool)
+    }
+
     pub fn select_claimed_resource_data(
         &'_ self,
         subject_eth_address: String,
