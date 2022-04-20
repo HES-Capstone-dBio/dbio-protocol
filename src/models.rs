@@ -16,8 +16,18 @@ pub struct Resource {
     pub subject_eth_address: String,
     pub creator_eth_address: String,
     pub resource_type: String,
-    pub ownership_claimed: bool,
     pub ipfs_cid: String,
+    pub timestamp: DateTime<Utc>,
+}
+
+#[derive(Serialize, Deserialize, FromRow)]
+pub struct EscrowedResource {
+    pub fhir_resource_id: String,
+    pub ironcore_document_id: String,
+    pub subject_eth_address: String,
+    pub creator_eth_address: String,
+    pub resource_type: String,
+    pub ciphertext: String,
     pub timestamp: DateTime<Utc>,
 }
 

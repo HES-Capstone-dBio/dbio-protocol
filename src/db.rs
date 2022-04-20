@@ -95,7 +95,10 @@ impl Db {
     ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
-            "INSERT INTO read_requests (requestor_eth_address, requestee_eth_address)
+            "INSERT INTO read_requests (
+               requestor_eth_address,
+               requestee_eth_address
+             )
              VALUES ($1, $2) RETURNING *",
             access_request_payload.requestor_eth_address,
             access_request_payload.requestee_eth_address,
@@ -157,7 +160,10 @@ impl Db {
     ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
-            "INSERT INTO write_requests (requestor_eth_address, requestee_eth_address)
+            "INSERT INTO write_requests (
+               requestor_eth_address,
+               requestee_eth_address
+             )
              VALUES ($1, $2) RETURNING *",
             access_request_payload.requestor_eth_address,
             access_request_payload.requestee_eth_address,
@@ -196,48 +202,64 @@ impl Db {
         .fetch_one(&self.pool)
     }
 
-    pub fn insert_resource(
+    pub fn insert_claimed_resource(
         &'_ self,
         data: Resource,
     ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
         sqlx::query_as!(
             Resource,
-            "INSERT INTO resources
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            "INSERT INTO resources (
+               fhir_resource_id,
+               ironcore_document_id,
+               subject_eth_address,
+               creator_eth_address,
+               resource_type,
+               ipfs_cid,
+               timestamp
+             )
+             VALUES ($1, $2, $3, $4, $5, $6, $7)
              RETURNING *",
             data.fhir_resource_id,
             data.ironcore_document_id,
             data.subject_eth_address,
             data.creator_eth_address,
             data.resource_type,
-            data.ownership_claimed,
             data.ipfs_cid,
             data.timestamp,
         )
         .fetch_one(&self.pool)
     }
 
-    pub fn select_resource_data(
+    pub fn select_claimed_resource_data(
         &'_ self,
         subject_eth_address: String,
+        resource_type: String,
         resource_id: String,
     ) -> impl Future<Output = Result<DecryptableResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
             DecryptableResourceData,
-            "SELECT cid, ciphertext, ironcore_document_id, fhir_resource_id, resource_type
-             FROM resource_store
-             INNER JOIN resources
-             ON resource_store.cid = resources.ipfs_cid
+            "SELECT
+               cid,
+               ciphertext,
+               ironcore_document_id,
+               fhir_resource_id,
+               resource_type
+             FROM
+               resource_store
+               INNER JOIN resources
+               ON resource_store.cid = resources.ipfs_cid
              WHERE
                subject_eth_address = $1
-               AND fhir_resource_id = $2",
+               AND resource_type = $2
+               AND fhir_resource_id = $3",
             subject_eth_address,
+            resource_type,
             resource_id,
         )
         .fetch_one(&self.pool)
     }
 
-    pub fn select_resource_metadata(
+    pub fn select_claimed_resource_metadata(
         &'_ self,
         subject_eth_address: String,
     ) -> impl Future<Output = Result<Vec<Resource>, sqlx::Error>> + '_ {
@@ -251,23 +273,20 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
-    pub fn update_resource_claim(
+    pub fn remove_from_escrow(
         &'_ self,
-        subject_eth_address: String,
+        creator_eth_address: String,
         fhir_resource_id: String,
-        claim: bool,
-    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<EscrowedResource, sqlx::Error>> + '_ {
         sqlx::query_as!(
-            Resource,
-            "UPDATE resources
-             SET ownership_claimed = $3
+            EscrowedResource,
+            "DELETE FROM resource_escrow
              WHERE
-               subject_eth_address = $1
+               creator_eth_address = $1
                AND fhir_resource_id = $2
              RETURNING *",
-            subject_eth_address,
+            creator_eth_address,
             fhir_resource_id,
-            claim,
         )
         .fetch_one(&self.pool)
     }

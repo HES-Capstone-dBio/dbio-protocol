@@ -18,8 +18,18 @@ CREATE TABLE IF NOT EXISTS resources (
   subject_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   creator_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   resource_type VARCHAR(40) NOT NULL,
-  ownership_claimed BOOL NOT NULL DEFAULT false,
   ipfs_cid VARCHAR(50) REFERENCES resource_store(cid) NOT NULL,
+  timestamp TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (creator_eth_address, fhir_resource_id)
+);
+
+CREATE TABLE IF NOT EXISTS resource_escrow (
+  fhir_resource_id VARCHAR(64) NOT NULL,
+  ironcore_document_id CHAR(32) NOT NULL,
+  subject_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
+  creator_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
+  resource_type VARCHAR(40) NOT NULL,
+  ciphertext VARCHAR NOT NULL,
   timestamp TIMESTAMPTZ NOT NULL,
   PRIMARY KEY (creator_eth_address, fhir_resource_id)
 );
@@ -45,4 +55,3 @@ CREATE TABLE IF NOT EXISTS write_requests (
 );
 
 CREATE INDEX IF NOT EXISTS write_requests_requestee ON write_requests (requestee_eth_address);
-
