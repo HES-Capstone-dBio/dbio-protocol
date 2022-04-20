@@ -188,12 +188,12 @@ impl Db {
         .fetch_one(&self.pool)
     }
 
-    pub fn insert_resource_data(
+    pub fn insert_resource_store_data(
         &'_ self,
-        data: ResourceData,
-    ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
+        data: ResourceStoreData,
+    ) -> impl Future<Output = Result<ResourceStoreData, sqlx::Error>> + '_ {
         sqlx::query_as!(
-            ResourceData,
+            ResourceStoreData,
             "INSERT INTO resource_store (cid, ciphertext)
              VALUES ($1, $2) RETURNING *",
             data.cid,
@@ -263,9 +263,9 @@ impl Db {
         subject_eth_address: String,
         resource_type: String,
         resource_id: String,
-    ) -> impl Future<Output = Result<DecryptableResourceData, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
-            DecryptableResourceData,
+            ResourceData,
             "SELECT
                cid,
                ciphertext,
@@ -276,6 +276,32 @@ impl Db {
                resource_store
                INNER JOIN resources
                ON resource_store.cid = resources.ipfs_cid
+             WHERE
+               subject_eth_address = $1
+               AND resource_type = $2
+               AND fhir_resource_id = $3",
+            subject_eth_address,
+            resource_type,
+            resource_id,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn select_unclaimed_resource_data(
+        &'_ self,
+        subject_eth_address: String,
+        resource_type: String,
+        resource_id: String,
+    ) -> impl Future<Output = Result<EscrowedResourceData, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            EscrowedResourceData,
+            "SELECT
+               ciphertext,
+               ironcore_document_id,
+               fhir_resource_id,
+               resource_type
+             FROM
+               resource_escrow
              WHERE
                subject_eth_address = $1
                AND resource_type = $2

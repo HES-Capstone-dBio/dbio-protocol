@@ -32,7 +32,7 @@ pub struct EscrowedResource {
 }
 
 #[derive(Serialize, Deserialize, FromRow)]
-pub struct ResourceData {
+pub struct ResourceStoreData {
     pub cid: String,
     pub ciphertext: String,
 }
@@ -49,8 +49,16 @@ pub struct AccessRequest {
 /* Specialized return types */
 
 #[derive(Serialize, FromRow)]
-pub struct DecryptableResourceData {
+pub struct ResourceData {
     pub cid: String,
+    pub ciphertext: String,
+    pub ironcore_document_id: String,
+    pub fhir_resource_id: String,
+    pub resource_type: String,
+}
+
+#[derive(Serialize, FromRow)]
+pub struct EscrowedResourceData {
     pub ciphertext: String,
     pub ironcore_document_id: String,
     pub fhir_resource_id: String,

@@ -140,12 +140,31 @@ async fn put_write_request_approval(
 async fn get_claimed_resource_data(
     db: Data<Db>,
     path: Path<(String, String, String)>,
-) -> Result<Json<DecryptableResourceData>, HttpError> {
+) -> Result<Json<ResourceData>, HttpError> {
     let (subject_eth_address,
          resource_type,
          fhir_resource_id
     ) = path.into_inner();
     db.select_claimed_resource_data(
+        subject_eth_address,
+        resource_type,
+        fhir_resource_id
+    )
+    .await
+    .map(Json)
+    .map_err(adapt_db_error)
+}
+
+#[actix_web::get("/resources/unclaimed/{subject_eth_address}/{resource_type}/{fhir_resource_id}")]
+async fn get_unclaimed_resource_data(
+    db: Data<Db>,
+    path: Path<(String, String, String)>,
+) -> Result<Json<EscrowedResourceData>, HttpError> {
+    let (subject_eth_address,
+         resource_type,
+         fhir_resource_id
+    ) = path.into_inner();
+    db.select_unclaimed_resource_data(
         subject_eth_address,
         resource_type,
         fhir_resource_id
@@ -169,7 +188,7 @@ async fn post_claimed_resource_data(
 
     db.select_user_by_email(in_data.email)
         .and_then(|subject| {
-            db.insert_resource_data(ResourceData {
+            db.insert_resource_store_data(ResourceStoreData {
                 cid: cid.clone(),
                 ciphertext: in_data.ciphertext,
             })
