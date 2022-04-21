@@ -213,7 +213,7 @@ impl Db {
                ironcore_document_id,
                subject_eth_address,
                creator_eth_address,
-               resource_type,
+               fhir_resource_type,
                ipfs_cid,
                timestamp
              )
@@ -223,7 +223,7 @@ impl Db {
             data.ironcore_document_id,
             data.subject_eth_address,
             data.creator_eth_address,
-            data.resource_type,
+            data.fhir_resource_type,
             data.ipfs_cid,
             data.timestamp,
         )
@@ -241,7 +241,7 @@ impl Db {
                ironcore_document_id,
                subject_eth_address,
                creator_eth_address,
-               resource_type,
+               fhir_resource_type,
                ciphertext,
                timestamp
              )
@@ -251,7 +251,7 @@ impl Db {
             data.ironcore_document_id,
             data.subject_eth_address,
             data.creator_eth_address,
-            data.resource_type,
+            data.fhir_resource_type,
             data.ciphertext,
             data.timestamp,
         )
@@ -261,7 +261,7 @@ impl Db {
     pub fn select_claimed_resource_data(
         &'_ self,
         subject_eth_address: String,
-        resource_type: String,
+        fhir_resource_type: String,
         resource_id: String,
     ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
@@ -271,17 +271,17 @@ impl Db {
                ciphertext,
                ironcore_document_id,
                fhir_resource_id,
-               resource_type
+               fhir_resource_type
              FROM
                resource_store
                INNER JOIN resources
                ON resource_store.cid = resources.ipfs_cid
              WHERE
                subject_eth_address = $1
-               AND resource_type = $2
+               AND fhir_resource_type = $2
                AND fhir_resource_id = $3",
             subject_eth_address,
-            resource_type,
+            fhir_resource_type,
             resource_id,
         )
         .fetch_one(&self.pool)
@@ -290,7 +290,7 @@ impl Db {
     pub fn select_unclaimed_resource_data(
         &'_ self,
         subject_eth_address: String,
-        resource_type: String,
+        fhir_resource_type: String,
         resource_id: String,
     ) -> impl Future<Output = Result<EscrowedResourceData, sqlx::Error>> + '_ {
         sqlx::query_as!(
@@ -299,15 +299,15 @@ impl Db {
                ciphertext,
                ironcore_document_id,
                fhir_resource_id,
-               resource_type
+               fhir_resource_type
              FROM
                resource_escrow
              WHERE
                subject_eth_address = $1
-               AND resource_type = $2
+               AND fhir_resource_type = $2
                AND fhir_resource_id = $3",
             subject_eth_address,
-            resource_type,
+            fhir_resource_type,
             resource_id,
         )
         .fetch_one(&self.pool)

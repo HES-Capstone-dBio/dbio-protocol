@@ -136,18 +136,18 @@ async fn put_write_request_approval(
         .map_err(adapt_db_error)
 }
 
-#[actix_web::get("/resources/claimed/{subject_eth_address}/{resource_type}/{fhir_resource_id}")]
+#[actix_web::get("/resources/claimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
 async fn get_claimed_resource_data(
     db: Data<Db>,
     path: Path<(String, String, String)>,
 ) -> Result<Json<ResourceData>, HttpError> {
     let (subject_eth_address,
-         resource_type,
+         fhir_resource_type,
          fhir_resource_id
     ) = path.into_inner();
     db.select_claimed_resource_data(
         subject_eth_address,
-        resource_type,
+        fhir_resource_type,
         fhir_resource_id
     )
     .await
@@ -155,18 +155,18 @@ async fn get_claimed_resource_data(
     .map_err(adapt_db_error)
 }
 
-#[actix_web::get("/resources/unclaimed/{subject_eth_address}/{resource_type}/{fhir_resource_id}")]
+#[actix_web::get("/resources/unclaimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
 async fn get_unclaimed_resource_data(
     db: Data<Db>,
     path: Path<(String, String, String)>,
 ) -> Result<Json<EscrowedResourceData>, HttpError> {
     let (subject_eth_address,
-         resource_type,
+         fhir_resource_type,
          fhir_resource_id
     ) = path.into_inner();
     db.select_unclaimed_resource_data(
         subject_eth_address,
-        resource_type,
+        fhir_resource_type,
         fhir_resource_id
     )
     .await
@@ -203,7 +203,7 @@ async fn post_claimed_resource_data(
                         ironcore_document_id: in_data.ironcore_document_id,
                         subject_eth_address: subject.eth_public_address,
                         creator_eth_address: in_data.creator_eth_address,
-                        resource_type: in_data.resource_type,
+                        fhir_resource_type: in_data.fhir_resource_type,
                         ipfs_cid: cid,
                         timestamp: chrono::offset::Utc::now(),   
                     })
@@ -229,7 +229,7 @@ async fn post_unclaimed_resource_data(
                 ironcore_document_id: in_data.ironcore_document_id,
                 subject_eth_address: subject.eth_public_address,
                 creator_eth_address: in_data.creator_eth_address,
-                resource_type: in_data.resource_type,
+                fhir_resource_type: in_data.fhir_resource_type,
                 ciphertext: in_data.ciphertext,
                 timestamp: chrono::offset::Utc::now(),
             })

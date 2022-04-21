@@ -1,5 +1,113 @@
 {
   "db": "PostgreSQL",
+  "05aeecbab956855e3980828d56b7abda2805fcac375e9c09c5b241974590c3c9": {
+    "describe": {
+      "columns": [
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ironcore_document_id",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "subject_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_eth_address",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "fhir_resource_type",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ipfs_cid",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "timestamp",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Bpchar",
+          "Bpchar",
+          "Bpchar",
+          "Varchar",
+          "Varchar",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "INSERT INTO resources (\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               fhir_resource_type,\n               ipfs_cid,\n               timestamp\n             )\n             VALUES ($1, $2, $3, $4, $5, $6, $7)\n             RETURNING *"
+  },
+  "08fbd03e257f5f242c46bcbe7c88b4716871f398a5d0740e7ee8a7116d209b3f": {
+    "describe": {
+      "columns": [
+        {
+          "name": "cid",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ciphertext",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ironcore_document_id",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "fhir_resource_type",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Text",
+          "Text"
+        ]
+      }
+    },
+    "query": "SELECT\n               cid,\n               ciphertext,\n               ironcore_document_id,\n               fhir_resource_id,\n               fhir_resource_type\n             FROM\n               resource_store\n               INNER JOIN resources\n               ON resource_store.cid = resources.ipfs_cid\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_type = $2\n               AND fhir_resource_id = $3"
+  },
   "0e03a5e14eb8b36ba29fd392530270128e75c4a0d29c3342ef12e03f8102e93c": {
     "describe": {
       "columns": [
@@ -156,7 +264,7 @@
           "type_info": "Bpchar"
         },
         {
-          "name": "resource_type",
+          "name": "fhir_resource_type",
           "ordinal": 4,
           "type_info": "Varchar"
         },
@@ -257,7 +365,7 @@
           "type_info": "Bpchar"
         },
         {
-          "name": "resource_type",
+          "name": "fhir_resource_type",
           "ordinal": 4,
           "type_info": "Varchar"
         },
@@ -385,7 +493,7 @@
           "type_info": "Bpchar"
         },
         {
-          "name": "resource_type",
+          "name": "fhir_resource_type",
           "ordinal": 4,
           "type_info": "Varchar"
         },
@@ -418,6 +526,46 @@
     },
     "query": "DELETE FROM resource_escrow\n             WHERE\n               creator_eth_address = $1\n               AND fhir_resource_id = $2\n             RETURNING *"
   },
+  "7028462b3f14c871a8c9bb24b256d1f3e467fbd8171625c772bc9b94efe96817": {
+    "describe": {
+      "columns": [
+        {
+          "name": "ciphertext",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ironcore_document_id",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "fhir_resource_type",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Text",
+          "Text"
+        ]
+      }
+    },
+    "query": "SELECT\n               ciphertext,\n               ironcore_document_id,\n               fhir_resource_id,\n               fhir_resource_type\n             FROM\n               resource_escrow\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_type = $2\n               AND fhir_resource_id = $3"
+  },
   "835bc9a21abf413308e852d5f05f9b3e149c216b389cb4f0b8b99b7cda0dbee7": {
     "describe": {
       "columns": [
@@ -443,6 +591,68 @@
       }
     },
     "query": "SELECT * FROM users WHERE eth_public_address = $1"
+  },
+  "92965d6002fdbdcf18541864e14d4a19f7bc25142681820c0d0b0174a78c0178": {
+    "describe": {
+      "columns": [
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ironcore_document_id",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "subject_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_eth_address",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "fhir_resource_type",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ciphertext",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "timestamp",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Bpchar",
+          "Bpchar",
+          "Bpchar",
+          "Varchar",
+          "Varchar",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "INSERT INTO resource_escrow (\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               fhir_resource_type,\n               ciphertext,\n               timestamp\n             )\n             VALUES ($1, $2, $3, $4, $5, $6, $7)\n             RETURNING *"
   },
   "aef70b05f63e89d8402a21be5cd3f7975800c0331f899d2f368c930f133ff200": {
     "describe": {
@@ -560,170 +770,6 @@
     },
     "query": "INSERT INTO write_requests (\n               requestor_eth_address,\n               requestee_eth_address\n             )\n             VALUES ($1, $2) RETURNING *"
   },
-  "c90c82832d0b4b3f36a598501d58ca094e4296ce3056062e994f1c84774ff5e7": {
-    "describe": {
-      "columns": [
-        {
-          "name": "fhir_resource_id",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ironcore_document_id",
-          "ordinal": 1,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "subject_eth_address",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "creator_eth_address",
-          "ordinal": 3,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "resource_type",
-          "ordinal": 4,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ipfs_cid",
-          "ordinal": 5,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "timestamp",
-          "ordinal": 6,
-          "type_info": "Timestamptz"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Varchar",
-          "Bpchar",
-          "Bpchar",
-          "Bpchar",
-          "Varchar",
-          "Varchar",
-          "Timestamptz"
-        ]
-      }
-    },
-    "query": "INSERT INTO resources (\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               resource_type,\n               ipfs_cid,\n               timestamp\n             )\n             VALUES ($1, $2, $3, $4, $5, $6, $7)\n             RETURNING *"
-  },
-  "c9760d6fc495ecff1b7abd61f3b0f278e0ab167db11b5293417970bcb78d1d50": {
-    "describe": {
-      "columns": [
-        {
-          "name": "ciphertext",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ironcore_document_id",
-          "ordinal": 1,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "fhir_resource_id",
-          "ordinal": 2,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "resource_type",
-          "ordinal": 3,
-          "type_info": "Varchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Text",
-          "Text"
-        ]
-      }
-    },
-    "query": "SELECT\n               ciphertext,\n               ironcore_document_id,\n               fhir_resource_id,\n               resource_type\n             FROM\n               resource_escrow\n             WHERE\n               subject_eth_address = $1\n               AND resource_type = $2\n               AND fhir_resource_id = $3"
-  },
-  "d7285248e228139bd2fcc5588da02ae00a19227e97217bc81240af1a638218a0": {
-    "describe": {
-      "columns": [
-        {
-          "name": "fhir_resource_id",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ironcore_document_id",
-          "ordinal": 1,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "subject_eth_address",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "creator_eth_address",
-          "ordinal": 3,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "resource_type",
-          "ordinal": 4,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ciphertext",
-          "ordinal": 5,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "timestamp",
-          "ordinal": 6,
-          "type_info": "Timestamptz"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Varchar",
-          "Bpchar",
-          "Bpchar",
-          "Bpchar",
-          "Varchar",
-          "Varchar",
-          "Timestamptz"
-        ]
-      }
-    },
-    "query": "INSERT INTO resource_escrow (\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               resource_type,\n               ciphertext,\n               timestamp\n             )\n             VALUES ($1, $2, $3, $4, $5, $6, $7)\n             RETURNING *"
-  },
   "e0fb901d560930309dcfe342091d26c502b4d3a633fdda29db8709a790f84830": {
     "describe": {
       "columns": [
@@ -794,51 +840,5 @@
       }
     },
     "query": "SELECT * FROM users WHERE email = $1"
-  },
-  "fd7640650a9819aea27c0d92fecfc4bc4e98df54d3710652b59e1a4c43ed4274": {
-    "describe": {
-      "columns": [
-        {
-          "name": "cid",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ciphertext",
-          "ordinal": 1,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ironcore_document_id",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "fhir_resource_id",
-          "ordinal": 3,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "resource_type",
-          "ordinal": 4,
-          "type_info": "Varchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Text",
-          "Text"
-        ]
-      }
-    },
-    "query": "SELECT\n               cid,\n               ciphertext,\n               ironcore_document_id,\n               fhir_resource_id,\n               resource_type\n             FROM\n               resource_store\n               INNER JOIN resources\n               ON resource_store.cid = resources.ipfs_cid\n             WHERE\n               subject_eth_address = $1\n               AND resource_type = $2\n               AND fhir_resource_id = $3"
   }
 }

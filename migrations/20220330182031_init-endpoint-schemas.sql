@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS resources (
   ironcore_document_id CHAR(32) NOT NULL,
   subject_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   creator_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
-  resource_type VARCHAR(40) NOT NULL,
+  fhir_resource_type VARCHAR(40) NOT NULL,
   ipfs_cid VARCHAR(50) REFERENCES resource_store(cid) NOT NULL,
   timestamp TIMESTAMPTZ NOT NULL,
   PRIMARY KEY (creator_eth_address, fhir_resource_id)
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS resource_escrow (
   ironcore_document_id CHAR(32) NOT NULL,
   subject_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   creator_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
-  resource_type VARCHAR(40) NOT NULL,
+  fhir_resource_type VARCHAR(40) NOT NULL,
   ciphertext VARCHAR NOT NULL,
   timestamp TIMESTAMPTZ NOT NULL,
   PRIMARY KEY (creator_eth_address, fhir_resource_id)

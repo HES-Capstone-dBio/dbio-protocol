@@ -15,7 +15,7 @@ pub struct Resource {
     pub ironcore_document_id: String,
     pub subject_eth_address: String,
     pub creator_eth_address: String,
-    pub resource_type: String,
+    pub fhir_resource_type: String,
     pub ipfs_cid: String,
     pub timestamp: DateTime<Utc>,
 }
@@ -26,7 +26,7 @@ pub struct EscrowedResource {
     pub ironcore_document_id: String,
     pub subject_eth_address: String,
     pub creator_eth_address: String,
-    pub resource_type: String,
+    pub fhir_resource_type: String,
     pub ciphertext: String,
     pub timestamp: DateTime<Utc>,
 }
@@ -54,7 +54,7 @@ pub struct ResourceData {
     pub ciphertext: String,
     pub ironcore_document_id: String,
     pub fhir_resource_id: String,
-    pub resource_type: String,
+    pub fhir_resource_type: String,
 }
 
 #[derive(Serialize, FromRow)]
@@ -62,7 +62,7 @@ pub struct EscrowedResourceData {
     pub ciphertext: String,
     pub ironcore_document_id: String,
     pub fhir_resource_id: String,
-    pub resource_type: String,
+    pub fhir_resource_type: String,
 }
 
 /* Request payloads */
@@ -76,7 +76,7 @@ pub struct AccessRequestPayload {
 pub struct ResourceDataPayload {
     pub email: String,
     pub creator_eth_address: String,
-    pub resource_type: String,
+    pub fhir_resource_type: String,
     pub fhir_resource_id: String,
     pub ironcore_document_id: String,
     pub ciphertext: String,
