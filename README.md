@@ -223,7 +223,6 @@ In the case of `200 Ok`, the body of the response contains JSON.
 		"subject_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
 		"creator_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
 		"fhir_resource_type": "insert_resource_type_here",
-		"ciphertext": "insert_ciphertext_here",
 		"timestamp": "2022-04-16T16:22:20.949607Z"
 	},
 	{
