@@ -65,6 +65,16 @@ pub struct EscrowedResourceData {
     pub fhir_resource_type: String,
 }
 
+#[derive(Serialize, FromRow)]
+pub struct EscrowedMetadata {
+    pub fhir_resource_id: String,
+    pub ironcore_document_id: String,
+    pub subject_eth_address: String,
+    pub creator_eth_address: String,
+    pub fhir_resource_type: String,
+    pub timestamp: DateTime<Utc>,
+}
+
 /* Request payloads */
 #[derive(Debug, Deserialize)]
 pub struct AccessRequestPayload {

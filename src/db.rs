@@ -330,10 +330,16 @@ impl Db {
     pub fn select_unclaimed_resource_metadata(
         &'_ self,
         subject_eth_address: String,
-    ) -> impl Future<Output = Result<Vec<EscrowedResource>, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<Vec<EscrowedMetadata>, sqlx::Error>> + '_ {
         sqlx::query_as!(
-            EscrowedResource,
-            "SELECT *
+            EscrowedMetadata,
+            "SELECT
+               fhir_resource_id,
+               ironcore_document_id,
+               subject_eth_address,
+               creator_eth_address,
+               fhir_resource_type,
+               timestamp
              FROM resource_escrow
              WHERE subject_eth_address = $1",
             subject_eth_address,

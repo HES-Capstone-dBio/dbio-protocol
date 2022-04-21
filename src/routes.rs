@@ -254,7 +254,7 @@ async fn get_claimed_resource_metadata(
 async fn get_unclaimed_resource_metadata(
     db: Data<Db>,
     subject_eth_address: Path<String>,
-) -> Result<Json<Vec<EscrowedResource>>, HttpError> {
+) -> Result<Json<Vec<EscrowedMetadata>>, HttpError> {
     db.select_unclaimed_resource_metadata(subject_eth_address.into_inner())
         .await
         .map(Json)
