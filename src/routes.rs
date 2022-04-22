@@ -137,7 +137,7 @@ async fn put_write_request_approval(
 }
 
 #[actix_web::get("/resources/claimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
-async fn get_claimed_resource_data(
+async fn get_claimed_resource(
     db: Data<Db>,
     path: Path<(String, String, String)>,
 ) -> Result<Json<ResourceData>, HttpError> {
@@ -156,7 +156,7 @@ async fn get_claimed_resource_data(
 }
 
 #[actix_web::get("/resources/unclaimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
-async fn get_unclaimed_resource_data(
+async fn get_unclaimed_resource(
     db: Data<Db>,
     path: Path<(String, String, String)>,
 ) -> Result<Json<EscrowedResourceData>, HttpError> {
@@ -175,7 +175,7 @@ async fn get_unclaimed_resource_data(
 }
 
 #[actix_web::post("/resources/claimed")]
-async fn post_claimed_resource_data(
+async fn post_claimed_resource(
     db: Data<Db>,
     payload: Json<ResourceDataPayload>,
 ) -> Result<Json<Resource>, HttpError> {
@@ -216,7 +216,7 @@ async fn post_claimed_resource_data(
 }
 
 #[actix_web::post("/resources/unclaimed")]
-async fn post_unclaimed_resource_data(
+async fn post_unclaimed_resource(
     db: Data<Db>,
     payload: Json<ResourceDataPayload>,
 ) -> Result<Json<EscrowedResource>, HttpError> {
@@ -264,10 +264,10 @@ async fn get_unclaimed_resource_metadata(
 pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/dbio")
         .service(post_user)
-        .service(post_claimed_resource_data)
-        .service(post_unclaimed_resource_data)
-        .service(get_claimed_resource_data)
-        .service(get_unclaimed_resource_data)
+        .service(post_claimed_resource)
+        .service(post_unclaimed_resource)
+        .service(get_claimed_resource)
+        .service(get_unclaimed_resource)
         .service(get_claimed_resource_metadata)
         .service(get_unclaimed_resource_metadata)
         .service(get_user_by_eth)
