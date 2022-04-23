@@ -15,15 +15,24 @@ pub struct Resource {
     pub ironcore_document_id: String,
     pub subject_eth_address: String,
     pub creator_eth_address: String,
-    pub resource_type: String,
-    pub resource_title: String,
-    pub ownership_claimed: bool,
+    pub fhir_resource_type: String,
     pub ipfs_cid: String,
     pub timestamp: DateTime<Utc>,
 }
 
 #[derive(Serialize, Deserialize, FromRow)]
-pub struct ResourceData {
+pub struct EscrowedResource {
+    pub fhir_resource_id: String,
+    pub ironcore_document_id: String,
+    pub subject_eth_address: String,
+    pub creator_eth_address: String,
+    pub fhir_resource_type: String,
+    pub ciphertext: String,
+    pub timestamp: DateTime<Utc>,
+}
+
+#[derive(Serialize, Deserialize, FromRow)]
+pub struct ResourceStoreData {
     pub cid: String,
     pub ciphertext: String,
 }
@@ -40,10 +49,30 @@ pub struct AccessRequest {
 /* Specialized return types */
 
 #[derive(Serialize, FromRow)]
-pub struct DecryptableResourceData {
+pub struct ResourceData {
     pub cid: String,
     pub ciphertext: String,
     pub ironcore_document_id: String,
+    pub fhir_resource_id: String,
+    pub fhir_resource_type: String,
+}
+
+#[derive(Serialize, FromRow)]
+pub struct EscrowedResourceData {
+    pub ciphertext: String,
+    pub ironcore_document_id: String,
+    pub fhir_resource_id: String,
+    pub fhir_resource_type: String,
+}
+
+#[derive(Serialize, FromRow)]
+pub struct EscrowedMetadata {
+    pub fhir_resource_id: String,
+    pub ironcore_document_id: String,
+    pub subject_eth_address: String,
+    pub creator_eth_address: String,
+    pub fhir_resource_type: String,
+    pub timestamp: DateTime<Utc>,
 }
 
 /* Request payloads */
@@ -57,11 +86,10 @@ pub struct AccessRequestPayload {
 pub struct ResourceDataPayload {
     pub email: String,
     pub creator_eth_address: String,
-    pub resource_type: String,
+    pub fhir_resource_type: String,
     pub fhir_resource_id: String,
     pub ironcore_document_id: String,
     pub ciphertext: String,
-    pub resource_title: String,
 }
 
 /* Route query parameters */

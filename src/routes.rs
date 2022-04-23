@@ -136,20 +136,46 @@ async fn put_write_request_approval(
         .map_err(adapt_db_error)
 }
 
-#[actix_web::get("/resources/{subject_eth_address}/{fhir_resource_id}")]
-async fn get_resource_data(
+#[actix_web::get("/resources/claimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
+async fn get_claimed_resource(
     db: Data<Db>,
-    path: Path<(String, String)>,
-) -> Result<Json<DecryptableResourceData>, HttpError> {
-    let (subject_eth_address, fhir_resource_id) = path.into_inner();
-    db.select_resource_data(subject_eth_address, fhir_resource_id)
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
+    path: Path<(String, String, String)>,
+) -> Result<Json<ResourceData>, HttpError> {
+    let (subject_eth_address,
+         fhir_resource_type,
+         fhir_resource_id
+    ) = path.into_inner();
+    db.select_claimed_resource_data(
+        subject_eth_address,
+        fhir_resource_type,
+        fhir_resource_id
+    )
+    .await
+    .map(Json)
+    .map_err(adapt_db_error)
 }
 
-#[actix_web::post("/resources")]
-async fn post_resource_data(
+#[actix_web::get("/resources/unclaimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
+async fn get_unclaimed_resource(
+    db: Data<Db>,
+    path: Path<(String, String, String)>,
+) -> Result<Json<EscrowedResourceData>, HttpError> {
+    let (subject_eth_address,
+         fhir_resource_type,
+         fhir_resource_id
+    ) = path.into_inner();
+    db.select_unclaimed_resource_data(
+        subject_eth_address,
+        fhir_resource_type,
+        fhir_resource_id
+    )
+    .await
+    .map(Json)
+    .map_err(adapt_db_error)
+}
+
+#[actix_web::post("/resources/claimed")]
+async fn post_claimed_resource(
     db: Data<Db>,
     payload: Json<ResourceDataPayload>,
 ) -> Result<Json<Resource>, HttpError> {
@@ -162,21 +188,25 @@ async fn post_resource_data(
 
     db.select_user_by_email(in_data.email)
         .and_then(|subject| {
-            db.insert_resource_data(ResourceData {
+            db.insert_resource_store_data(ResourceStoreData {
                 cid: cid.clone(),
                 ciphertext: in_data.ciphertext,
             })
             .and_then(|_| {
-                db.insert_resource(Resource {
-                    fhir_resource_id: in_data.fhir_resource_id,
-                    ironcore_document_id: in_data.ironcore_document_id,
-                    subject_eth_address: subject.eth_public_address,
-                    creator_eth_address: in_data.creator_eth_address,
-                    resource_type: in_data.resource_type,
-                    resource_title: in_data.resource_title,
-                    ownership_claimed: false,
-                    ipfs_cid: cid,
-                    timestamp: chrono::offset::Utc::now(),
+                db.remove_from_escrow(
+                    in_data.creator_eth_address.clone(),
+                    in_data.fhir_resource_id.clone(),
+                )
+                .and_then(|_| {
+                    db.insert_claimed_resource(Resource {
+                        fhir_resource_id: in_data.fhir_resource_id,
+                        ironcore_document_id: in_data.ironcore_document_id,
+                        subject_eth_address: subject.eth_public_address,
+                        creator_eth_address: in_data.creator_eth_address,
+                        fhir_resource_type: in_data.fhir_resource_type,
+                        ipfs_cid: cid,
+                        timestamp: chrono::offset::Utc::now(),   
+                    })
                 })
             })
         })
@@ -185,24 +215,47 @@ async fn post_resource_data(
         .map_err(adapt_db_error)
 }
 
-#[actix_web::get("/resources/{subject_eth_address}")]
-async fn get_resource_metadata(
+#[actix_web::post("/resources/unclaimed")]
+async fn post_unclaimed_resource(
     db: Data<Db>,
-    subject_eth_address: Path<String>,
-) -> Result<Json<Vec<Resource>>, HttpError> {
-    db.select_resource_metadata(subject_eth_address.into_inner())
+    payload: Json<ResourceDataPayload>,
+) -> Result<Json<EscrowedResource>, HttpError> {
+    let in_data = payload.into_inner();
+
+    db.select_user_by_email(in_data.email)
+        .and_then(|subject| {
+            db.insert_unclaimed_resource(EscrowedResource {
+                fhir_resource_id: in_data.fhir_resource_id,
+                ironcore_document_id: in_data.ironcore_document_id,
+                subject_eth_address: subject.eth_public_address,
+                creator_eth_address: in_data.creator_eth_address,
+                fhir_resource_type: in_data.fhir_resource_type,
+                ciphertext: in_data.ciphertext,
+                timestamp: chrono::offset::Utc::now(),
+            })
+        })
         .await
         .map(Json)
         .map_err(adapt_db_error)
 }
 
-#[actix_web::put("/resources/claim/{subject_eth_address}/{fhir_resource_id}")]
-async fn put_resource_claim(
+#[actix_web::get("/resources/claimed/{subject_eth_address}")]
+async fn get_claimed_resource_metadata(
     db: Data<Db>,
-    path: Path<(String, String)>,
-) -> Result<Json<Resource>, HttpError> {
-    let (subject_eth_address, fhir_resource_id) = path.into_inner();
-    db.update_resource_claim(subject_eth_address, fhir_resource_id, true)
+    subject_eth_address: Path<String>,
+) -> Result<Json<Vec<Resource>>, HttpError> {
+    db.select_claimed_resource_metadata(subject_eth_address.into_inner())
+        .await
+        .map(Json)
+        .map_err(adapt_db_error)
+}
+
+#[actix_web::get("/resources/unclaimed/{subject_eth_address}")]
+async fn get_unclaimed_resource_metadata(
+    db: Data<Db>,
+    subject_eth_address: Path<String>,
+) -> Result<Json<Vec<EscrowedMetadata>>, HttpError> {
+    db.select_unclaimed_resource_metadata(subject_eth_address.into_inner())
         .await
         .map(Json)
         .map_err(adapt_db_error)
@@ -211,10 +264,12 @@ async fn put_resource_claim(
 pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/dbio")
         .service(post_user)
-        .service(post_resource_data)
-        .service(get_resource_data)
-        .service(get_resource_metadata)
-        .service(put_resource_claim)
+        .service(post_claimed_resource)
+        .service(post_unclaimed_resource)
+        .service(get_claimed_resource)
+        .service(get_unclaimed_resource)
+        .service(get_claimed_resource_metadata)
+        .service(get_unclaimed_resource_metadata)
         .service(get_user_by_eth)
         .service(get_user_by_email)
         .service(get_read_requests)
