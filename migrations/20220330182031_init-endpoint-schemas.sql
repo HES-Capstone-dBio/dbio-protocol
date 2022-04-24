@@ -9,7 +9,7 @@ CREATE INDEX IF NOT EXISTS user_email ON users (email);
 
 CREATE TABLE IF NOT EXISTS resource_store (
   cid VARCHAR(50) PRIMARY KEY,
-  ciphertext VARCHAR NOT NULL
+  ciphertext BYTEA NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS resources (
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS resource_escrow (
   subject_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   creator_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   fhir_resource_type VARCHAR(40) NOT NULL,
-  ciphertext VARCHAR NOT NULL,
+  ciphertext BYTEA NOT NULL,
   timestamp TIMESTAMPTZ NOT NULL,
   PRIMARY KEY (creator_eth_address, fhir_resource_id)
 );

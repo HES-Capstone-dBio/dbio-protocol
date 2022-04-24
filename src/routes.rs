@@ -182,7 +182,7 @@ async fn post_claimed_resource(
     let in_data = payload.into_inner();
     let cid: String = {
         let mut hasher = DefaultHasher::new();
-        hasher.write(in_data.ciphertext.as_bytes());
+        hasher.write(&in_data.ciphertext);
         hasher.finish().to_string()
     };
 

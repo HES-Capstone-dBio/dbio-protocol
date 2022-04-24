@@ -1,5 +1,5 @@
 use chrono::{DateTime, Utc};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
 /* Database rows */
@@ -27,14 +27,14 @@ pub struct EscrowedResource {
     pub subject_eth_address: String,
     pub creator_eth_address: String,
     pub fhir_resource_type: String,
-    pub ciphertext: String,
+    pub ciphertext: Vec<u8>,
     pub timestamp: DateTime<Utc>,
 }
 
 #[derive(Serialize, Deserialize, FromRow)]
 pub struct ResourceStoreData {
     pub cid: String,
-    pub ciphertext: String,
+    pub ciphertext: Vec<u8>,
 }
 
 #[derive(Serialize, Deserialize, FromRow)]
@@ -51,7 +51,7 @@ pub struct AccessRequest {
 #[derive(Serialize, FromRow)]
 pub struct ResourceData {
     pub cid: String,
-    pub ciphertext: String,
+    pub ciphertext: Vec<u8>,
     pub ironcore_document_id: String,
     pub fhir_resource_id: String,
     pub fhir_resource_type: String,
@@ -59,7 +59,7 @@ pub struct ResourceData {
 
 #[derive(Serialize, FromRow)]
 pub struct EscrowedResourceData {
-    pub ciphertext: String,
+    pub ciphertext: Vec<u8>,
     pub ironcore_document_id: String,
     pub fhir_resource_id: String,
     pub fhir_resource_type: String,
@@ -89,7 +89,7 @@ pub struct ResourceDataPayload {
     pub fhir_resource_type: String,
     pub fhir_resource_id: String,
     pub ironcore_document_id: String,
-    pub ciphertext: String,
+    pub ciphertext: Vec<u8>,
 }
 
 /* Route query parameters */

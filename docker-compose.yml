@@ -24,3 +24,8 @@ services:
       - 3000:3000
     depends_on:
       - dbio-protocol
+
+  dbio-fhir-proxy:
+    image: dbio-fhir-proxy:test
+    ports:
+      - 8081:8080
