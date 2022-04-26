@@ -143,6 +143,7 @@ The parameters in the JSON payload are:
 
 Upon submitting a request with well-formatted JSON, the requester should be presented with one of the following responses:
 - `200 Ok` - The resource object was created.
+- `403 Forbidden` - The creator specified by the creator's Ethereum public address does not have permission to write resources for the subject. Additionally, users are unable to write to their own records.
 - `404 Not Found` - No user with the specified email exists.
 - `500 Internal Server Error` - A resource with the same `creator_eth_address` and `resource_id` pair already exists.
 
@@ -168,6 +169,7 @@ The parameters in the JSON payload are:
 
 Upon submitting a request with well-formatted JSON, the requester should be presented with one of the following responses:
 - `200 Ok` - The resource object was created and placed in escrow.
+- `403 Forbidden` - The creator specified by the creator's Ethereum public address does not have permission to write resources for the subject. Additionally, users are unable to write to their own records.
 - `404 Not Found` - No user with the specified email exists.
 - `500 Internal Server Error` - A resource with the same `creator_eth_address` and `resource_id` pair already exists in escrow.
 
@@ -175,8 +177,18 @@ Upon submitting a request with well-formatted JSON, the requester should be pres
 The get request to `/dbio/users/resources/claimed/{subject-eth-address}` takes as path parameters the following items:
 - `subject-eth-address` - The Ethereum public address of the subject of the queried resources.
 
+Additionally, it takes as input a JSON payload.
+```json
+{
+	"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584"
+}
+```
+The parameters in the JSON payload are:
+- `requestor_eth_address`: The Ethereum public address of the entity make the request to this route.
+
 The response returned is one of the following:
 - `200 Ok` - Resources were found for the subject.
+- `403 Forbidden` - The requestor does not have access to the requested data.
 - `404 Not Found` - No resources were found for the subject.
 
 In the case of `200 Ok`, the body of the response contains JSON.
@@ -210,8 +222,18 @@ The JSON returned is a list of JSON objects containing the following information
 The get request to `/dbio/users/resources/unclaimed/{subject-eth-address}` takes as path parameters the following items:
 - `subject-eth-address` - The Ethereum public address of the subject of the queried resources.
 
+Additionally, it takes as input a JSON payload.
+```json
+{
+	"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584"
+}
+```
+The parameters in the JSON payload are:
+- `requestor_eth_address`: The Ethereum public address of the entity make the request to this route.
+
 The response returned is one of the following:
 - `200 Ok` - Resources were found for the subject.
+- `403 Forbidden` - The requestor does not have access to the requested data.
 - `404 Not Found` - No resources were found for the subject.
 
 In the case of `200 Ok`, the body of the response contains JSON.
@@ -246,8 +268,18 @@ The get request to `/dbio/users/resources/claimed/{subject-eth-address}/{fhir-re
 - `fhir-resource-type` - The type of the resource (correlates with a FHIR resource type).
 - `fhir-resource-id` - The FHIR resource ID of the resource for which to retrieve ciphertext for.
 
+Additionally, it takes as input a JSON payload.
+```json
+{
+	"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584"
+}
+```
+The parameters in the JSON payload are:
+- `requestor_eth_address`: The Ethereum public address of the entity make the request to this route.
+
 The response returned is one of the following:
 - `200 Ok` - A resource was found for the subject.
+- `403 Forbidden` - The requestor does not have access to the requested data.
 - `404 Not Found` - No resources were found for the subject.
 
 In the case of `200 Ok`, the body of the response contains JSON.
@@ -273,8 +305,18 @@ The get request to `/dbio/users/resources/unclaimed/{subject-eth-address}/{fhir-
 - `fhir-resource-type` - The type of the resource (correlates with a FHIR resource type).
 - `fhir-resource-id` - The FHIR resource ID of the resource for which to retrieve ciphertext for.
 
+Additionally, it takes as input a JSON payload.
+```json
+{
+	"requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584"
+}
+```
+The parameters in the JSON payload are:
+- `requestor_eth_address`: The Ethereum public address of the entity make the request to this route.
+
 The response returned is one of the following:
 - `200 Ok` - A resource was found for the subject.
+- `403 Forbidden` - The requestor does not have access to the requested data.
 - `404 Not Found` - No resources were found for the subject.
 
 In the case of `200 Ok`, the body of the response contains JSON.
