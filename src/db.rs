@@ -364,4 +364,40 @@ impl Db {
         )
         .fetch_one(&self.pool)
     }
+
+    pub fn check_read_access(
+        &'_ self,
+        reader_eth_address: String,
+        subject_eth_address: String,
+    ) -> impl Future<Output = Result<RequestStatus, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            RequestStatus,
+            "SELECT request_approved, request_open
+                FROM read_requests
+                WHERE
+                requestor_eth_address = $1
+                AND requestee_eth_address = $2",
+            reader_eth_address,
+            subject_eth_address,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn check_write_access(
+        &'_ self,
+        writer_eth_address: String,
+        subject_eth_address: String,
+    ) -> impl Future<Output = Result<RequestStatus, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            RequestStatus,
+            "SELECT request_approved, request_open
+                FROM write_requests
+                WHERE
+                requestor_eth_address = $1
+                AND requestee_eth_address = $2",
+            writer_eth_address,
+            subject_eth_address,
+        )
+        .fetch_one(&self.pool)
+    }
 }

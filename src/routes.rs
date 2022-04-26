@@ -3,6 +3,7 @@ use actix_web::error::Error as HttpError;
 use actix_web::error::{
     ErrorInternalServerError,
     ErrorNotFound,
+    ErrorForbidden,
 };
 use actix_web::web::*;
 use futures::prelude::*;
@@ -185,34 +186,53 @@ async fn post_claimed_resource(
         hasher.write(in_data.ciphertext.as_bytes());
         hasher.finish().to_string()
     };
+    let subject = match db.select_user_by_email(in_data.email).await {
+        Ok(user) => user,
+        Err(e) => return Err(adapt_db_error(e)),
+    };
 
-    db.select_user_by_email(in_data.email)
-        .and_then(|subject| {
-            db.insert_resource_store_data(ResourceStoreData {
-                cid: cid.clone(),
-                ciphertext: in_data.ciphertext,
-            })
-            .and_then(|_| {
-                db.remove_from_escrow(
-                    in_data.creator_eth_address.clone(),
-                    in_data.fhir_resource_id.clone(),
-                )
-                .and_then(|_| {
-                    db.insert_claimed_resource(Resource {
-                        fhir_resource_id: in_data.fhir_resource_id,
-                        ironcore_document_id: in_data.ironcore_document_id,
-                        subject_eth_address: subject.eth_public_address,
-                        creator_eth_address: in_data.creator_eth_address,
-                        fhir_resource_type: in_data.fhir_resource_type,
-                        ipfs_cid: cid,
-                        timestamp: chrono::offset::Utc::now(),   
-                    })
-                })
+    if in_data.creator_eth_address == subject.eth_public_address {
+        return Err(ErrorForbidden("users can not write their own records"));
+    }
+    match db.check_write_access(
+        in_data.creator_eth_address.clone(),
+        subject.eth_public_address.clone(),
+    )
+    .await {
+        Ok(request_status) => {
+            if request_status.request_approved {
+                return Err(
+                    ErrorForbidden("must receive approval from subject")
+                );
+            }
+        },
+        Err(e) => return Err(adapt_db_error(e)),
+    }
+
+    db.insert_resource_store_data(ResourceStoreData {
+        cid: cid.clone(),
+        ciphertext: in_data.ciphertext,
+    })
+    .and_then(|_| {
+        db.remove_from_escrow(
+            in_data.creator_eth_address.clone(),
+            in_data.fhir_resource_id.clone(),
+        )
+        .and_then(|_| {
+            db.insert_claimed_resource(Resource {
+                fhir_resource_id: in_data.fhir_resource_id,
+                ironcore_document_id: in_data.ironcore_document_id,
+                subject_eth_address: subject.eth_public_address,
+                creator_eth_address: in_data.creator_eth_address,
+                fhir_resource_type: in_data.fhir_resource_type,
+                ipfs_cid: cid,
+                timestamp: chrono::offset::Utc::now(),   
             })
         })
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
+    })
+    .await
+    .map(Json)
+    .map_err(adapt_db_error)
 }
 
 #[actix_web::post("/resources/unclaimed")]
@@ -222,21 +242,41 @@ async fn post_unclaimed_resource(
 ) -> Result<Json<EscrowedResource>, HttpError> {
     let in_data = payload.into_inner();
 
-    db.select_user_by_email(in_data.email)
-        .and_then(|subject| {
-            db.insert_unclaimed_resource(EscrowedResource {
-                fhir_resource_id: in_data.fhir_resource_id,
-                ironcore_document_id: in_data.ironcore_document_id,
-                subject_eth_address: subject.eth_public_address,
-                creator_eth_address: in_data.creator_eth_address,
-                fhir_resource_type: in_data.fhir_resource_type,
-                ciphertext: in_data.ciphertext,
-                timestamp: chrono::offset::Utc::now(),
-            })
-        })
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
+    let subject = match db.select_user_by_email(in_data.email).await {
+        Ok(user) => user,
+        Err(e) => return Err(adapt_db_error(e)),
+    };
+
+    if in_data.creator_eth_address == subject.eth_public_address {
+        return Err(ErrorForbidden("users can not write their own records"));
+    }
+    match db.check_write_access(
+        in_data.creator_eth_address.clone(),
+        subject.eth_public_address.clone(),
+    )
+    .await {
+        Ok(request_status) => {
+            if request_status.request_approved {
+                return Err(
+                    ErrorForbidden("must receive approval from subject")
+                );
+            }
+        },
+        Err(e) => return Err(adapt_db_error(e)),
+    }
+
+    db.insert_unclaimed_resource(EscrowedResource {
+        fhir_resource_id: in_data.fhir_resource_id,
+        ironcore_document_id: in_data.ironcore_document_id,
+        subject_eth_address: subject.eth_public_address,
+        creator_eth_address: in_data.creator_eth_address,
+        fhir_resource_type: in_data.fhir_resource_type,
+        ciphertext: in_data.ciphertext,
+        timestamp: chrono::offset::Utc::now(),
+    })
+    .await
+    .map(Json)
+    .map_err(adapt_db_error)
 }
 
 #[actix_web::get("/resources/claimed/{subject_eth_address}")]

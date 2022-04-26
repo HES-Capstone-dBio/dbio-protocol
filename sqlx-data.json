@@ -152,6 +152,33 @@
     },
     "query": "SELECT *\n             FROM read_requests\n             WHERE\n               requestee_eth_address = $1"
   },
+  "154e0dc54cc95762e7e68fa64889ec868964dcb2c9fe0eb7d957fd698e18dd65": {
+    "describe": {
+      "columns": [
+        {
+          "name": "request_approved",
+          "ordinal": 0,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 1,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT request_approved, request_open\n                FROM write_requests\n                WHERE\n                requestor_eth_address = $1\n                AND requestee_eth_address = $2"
+  },
   "1d64b66ad8f6ed923aba5434c228a8497e807cff68142efec39f9f50d0812502": {
     "describe": {
       "columns": [
@@ -295,6 +322,33 @@
       }
     },
     "query": "SELECT *\n             FROM resources\n             WHERE subject_eth_address = $1"
+  },
+  "4690a54ef235e9fdae33016a66276f860786aca8200a085f7fd464a6f287d8d6": {
+    "describe": {
+      "columns": [
+        {
+          "name": "request_approved",
+          "ordinal": 0,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 1,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT request_approved, request_open\n                FROM read_requests\n                WHERE\n                requestor_eth_address = $1\n                AND requestee_eth_address = $2"
   },
   "53de15a506616f6cbe37a7f69426b41c56daf9f0e4fce716e312d5c35dc79243": {
     "describe": {

@@ -48,6 +48,12 @@ pub struct AccessRequest {
 
 /* Specialized return types */
 
+#[derive(FromRow)]
+pub struct RequestStatus {
+    pub request_approved: bool,
+    pub request_open: bool,
+}
+
 #[derive(Serialize, FromRow)]
 pub struct ResourceData {
     pub cid: String,
