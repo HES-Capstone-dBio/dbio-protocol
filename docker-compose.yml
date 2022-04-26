@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   dbio-postgres:
+    container_name: dbio-postgres
     build: ./migrations
     environment:
       POSTGRES_USER: postgres
@@ -10,7 +11,8 @@ services:
       - 5432:5432
 
   dbio-protocol:
-    build: .
+    container_name: dbio-protocol
+    image: ssheldharv/dbio-protocol:latest
     environment:
       DATABASE_URL: postgres://postgres:password@dbio-postgres/dbio-protocol-db
     ports:
@@ -19,8 +21,15 @@ services:
       - dbio-postgres
 
   dbio-client:
+    container_name: dbio-client
     image: ssheldharv/dbio-client:latest
     ports:
       - 3000:3000
     depends_on:
       - dbio-protocol
+
+  dbio-fhir-proxy:
+    container_name: dbio-fhir-proxy
+    image: ssheldharv/dbio-fhir-proxy:latest
+    ports:
+      - 8081:8080
