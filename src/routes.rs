@@ -23,7 +23,10 @@ fn adapt_db_error(e: sqlx::Error) -> HttpError {
 }
 
 #[actix_web::post("/users")]
-async fn post_user(db: Data<Db>, user: Json<User>) -> Result<Json<User>, HttpError> {
+async fn post_user(
+    db: Data<Db>,
+    user: Json<User>,
+) -> Result<Json<User>, HttpError> {
     db.insert_user(user.into_inner())
         .await
         .map(Json)
@@ -140,12 +143,33 @@ async fn put_write_request_approval(
 #[actix_web::get("/resources/claimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
 async fn get_claimed_resource(
     db: Data<Db>,
+    requestor: Json<ReadAuthPayload>,
     path: Path<(String, String, String)>,
 ) -> Result<Json<ResourceData>, HttpError> {
     let (subject_eth_address,
          fhir_resource_type,
          fhir_resource_id
     ) = path.into_inner();
+
+    let reader_eth_address = requestor.into_inner().requestor_eth_address;
+
+    if reader_eth_address != subject_eth_address {
+        match db.check_read_access(
+            reader_eth_address,
+            subject_eth_address.clone(),
+        )
+        .await {
+            Ok(request_status) => {
+                if !request_status.request_approved {
+                    return Err(
+                        ErrorForbidden("must receive approval from subject")
+                    );
+                }
+            },
+            Err(e) => return Err(adapt_db_error(e)),
+        }
+    }
+
     db.select_claimed_resource_data(
         subject_eth_address,
         fhir_resource_type,
@@ -159,12 +183,33 @@ async fn get_claimed_resource(
 #[actix_web::get("/resources/unclaimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
 async fn get_unclaimed_resource(
     db: Data<Db>,
+    requestor: Json<ReadAuthPayload>,
     path: Path<(String, String, String)>,
 ) -> Result<Json<EscrowedResourceData>, HttpError> {
     let (subject_eth_address,
          fhir_resource_type,
          fhir_resource_id
     ) = path.into_inner();
+
+    let reader_eth_address = requestor.into_inner().requestor_eth_address;
+
+    if reader_eth_address != subject_eth_address {
+        match db.check_read_access(
+            reader_eth_address,
+            subject_eth_address.clone(),
+        )
+        .await {
+            Ok(request_status) => {
+                if !request_status.request_approved {
+                    return Err(
+                        ErrorForbidden("must receive approval from subject")
+                    );
+                }
+            },
+            Err(e) => return Err(adapt_db_error(e)),
+        }
+    }
+
     db.select_unclaimed_resource_data(
         subject_eth_address,
         fhir_resource_type,
@@ -200,7 +245,7 @@ async fn post_claimed_resource(
     )
     .await {
         Ok(request_status) => {
-            if request_status.request_approved {
+            if !request_status.request_approved {
                 return Err(
                     ErrorForbidden("must receive approval from subject")
                 );
@@ -256,7 +301,7 @@ async fn post_unclaimed_resource(
     )
     .await {
         Ok(request_status) => {
-            if request_status.request_approved {
+            if !request_status.request_approved {
                 return Err(
                     ErrorForbidden("must receive approval from subject")
                 );
@@ -282,9 +327,30 @@ async fn post_unclaimed_resource(
 #[actix_web::get("/resources/claimed/{subject_eth_address}")]
 async fn get_claimed_resource_metadata(
     db: Data<Db>,
-    subject_eth_address: Path<String>,
+    requestor: Json<ReadAuthPayload>,
+    path: Path<String>,
 ) -> Result<Json<Vec<Resource>>, HttpError> {
-    db.select_claimed_resource_metadata(subject_eth_address.into_inner())
+    let subject_eth_address = path.into_inner();
+    let reader_eth_address = requestor.into_inner().requestor_eth_address;
+
+    if reader_eth_address != subject_eth_address {
+        match db.check_read_access(
+            reader_eth_address,
+            subject_eth_address.clone(),
+        )
+        .await {
+            Ok(request_status) => {
+                if !request_status.request_approved {
+                    return Err(
+                        ErrorForbidden("must receive approval from subject")
+                    );
+                }
+            },
+            Err(e) => return Err(adapt_db_error(e)),
+        }
+    }
+
+    db.select_claimed_resource_metadata(subject_eth_address)
         .await
         .map(Json)
         .map_err(adapt_db_error)
@@ -293,9 +359,30 @@ async fn get_claimed_resource_metadata(
 #[actix_web::get("/resources/unclaimed/{subject_eth_address}")]
 async fn get_unclaimed_resource_metadata(
     db: Data<Db>,
-    subject_eth_address: Path<String>,
+    requestor: Json<ReadAuthPayload>,
+    path: Path<String>,
 ) -> Result<Json<Vec<EscrowedMetadata>>, HttpError> {
-    db.select_unclaimed_resource_metadata(subject_eth_address.into_inner())
+    let subject_eth_address = path.into_inner();
+    let reader_eth_address = requestor.into_inner().requestor_eth_address;
+
+    if reader_eth_address != subject_eth_address {
+        match db.check_read_access(
+            reader_eth_address,
+            subject_eth_address.clone(),
+        )
+        .await {
+            Ok(request_status) => {
+                if !request_status.request_approved {
+                    return Err(
+                        ErrorForbidden("must receive approval from subject")
+                    );
+                }
+            },
+            Err(e) => return Err(adapt_db_error(e)),
+        }
+    }
+
+    db.select_unclaimed_resource_metadata(subject_eth_address)
         .await
         .map(Json)
         .map_err(adapt_db_error)

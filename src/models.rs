@@ -98,6 +98,11 @@ pub struct ResourceDataPayload {
     pub ciphertext: String,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct ReadAuthPayload {
+    pub requestor_eth_address: String,
+}
+
 /* Route query parameters */
 #[derive(Debug, Deserialize)]
 pub struct FilterParam {
