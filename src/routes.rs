@@ -166,7 +166,9 @@ async fn get_claimed_resource(
                     );
                 }
             },
-            Err(e) => return Err(adapt_db_error(e)),
+            Err(_) => return Err(
+                ErrorForbidden("must receive approval from subject")
+            ),
         }
     }
 
@@ -206,7 +208,9 @@ async fn get_unclaimed_resource(
                     );
                 }
             },
-            Err(e) => return Err(adapt_db_error(e)),
+            Err(_) => return Err(
+                ErrorForbidden("must receive approval from subject")
+            ),
         }
     }
 
@@ -248,11 +252,13 @@ async fn post_claimed_resource(
             if !request_status.request_approved {
                 return Err(
                     ErrorForbidden("must receive approval from subject")
-                );
+                )
             }
         },
-        Err(e) => return Err(adapt_db_error(e)),
-    }
+        Err(_) => return Err(
+            ErrorForbidden("must receive approval from subject")
+        ),
+    };
 
     db.insert_resource_store_data(ResourceStoreData {
         cid: cid.clone(),
@@ -304,11 +310,13 @@ async fn post_unclaimed_resource(
             if !request_status.request_approved {
                 return Err(
                     ErrorForbidden("must receive approval from subject")
-                );
+                )
             }
         },
-        Err(e) => return Err(adapt_db_error(e)),
-    }
+        Err(_) => return Err(
+            ErrorForbidden("must receive approval from subject")
+        ),
+    };
 
     db.insert_unclaimed_resource(EscrowedResource {
         fhir_resource_id: in_data.fhir_resource_id,
@@ -346,7 +354,9 @@ async fn get_claimed_resource_metadata(
                     );
                 }
             },
-            Err(e) => return Err(adapt_db_error(e)),
+            Err(_) => return Err(
+                ErrorForbidden("must receive approval from subject")
+            ),
         }
     }
 
@@ -378,7 +388,9 @@ async fn get_unclaimed_resource_metadata(
                     );
                 }
             },
-            Err(e) => return Err(adapt_db_error(e)),
+            Err(_) => return Err(
+                ErrorForbidden("must receive approval from subject")
+            ),
         }
     }
 
