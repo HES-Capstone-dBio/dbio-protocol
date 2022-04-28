@@ -41,6 +41,7 @@ pub struct ResourceStoreData {
 pub struct AccessRequest {
     pub id: i64,
     pub requestor_eth_address: String,
+    pub requestor_details: String,
     pub requestee_eth_address: String,
     pub request_approved: bool,
     pub request_open: bool,
@@ -85,6 +86,7 @@ pub struct EscrowedMetadata {
 #[derive(Debug, Deserialize)]
 pub struct AccessRequestPayload {
     pub requestor_eth_address: String,
+    pub requestor_details: String,
     pub requestee_eth_address: String,
 }
 

@@ -39,6 +39,7 @@ CREATE INDEX IF NOT EXISTS resources_subject_address ON resources (subject_eth_a
 CREATE TABLE IF NOT EXISTS read_requests (
   id BIGSERIAL PRIMARY KEY,
   requestor_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
+  requestor_details CHAR(128) NOT NULL,
   requestee_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   request_approved BOOL NOT NULL DEFAULT false,
   request_open BOOL NOT NULL DEFAULT true
@@ -49,6 +50,7 @@ CREATE INDEX IF NOT EXISTS read_requests_requestee ON read_requests (requestee_e
 CREATE TABLE IF NOT EXISTS write_requests (
   id BIGSERIAL PRIMARY KEY,
   requestor_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
+  requestor_details CHAR(128) NOT NULL,
   requestee_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   request_approved BOOL NOT NULL DEFAULT false,
   request_open BOOL NOT NULL DEFAULT true

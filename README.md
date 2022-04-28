@@ -355,11 +355,13 @@ The post request to `/dbio/read_requests` requires a JSON payload that represent
 ```json
 {
     "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+    "requestor_details": "Web3 Hospital of Decentralized Healthcare",
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240"
 }
 ```
 The parameters in the JSON payload are:
 - `requestor_eth_address: String` - The Ethereum public address of the entity making the read request.
+- `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the read request.
 
 Upon submitting a request with well-formatted JSON, the requestor should be presented with one of the following responses:
@@ -384,6 +386,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
     {
         "id": 10,
         "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+        "requestor_details": "Web3 Hospital of Decentralized Healthcare",
         "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
         "request_approved": false,
         "request_open": true,
@@ -397,6 +400,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
 The JSON returned is a list of JSON objects containing the following information:
 - `id: Integer` - the ID of the read request.
 - `requestor_eth_address: String` - The Ethereum public address of the entity making the read request.
+- `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the read request.
 - `request_approved: Boolean` - Represents whether the read request has been approved.
 - `request_open: Boolean` - Represents whether the read request is still open.
@@ -417,6 +421,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
 {
     "id": 10,
     "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+    "requestor_details": "Web3 Hospital of Decentralized Healthcare",
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
@@ -425,6 +430,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
 The JSON returned is an object containing the following information:
 - `id: Integer` - the ID of the read request.
 - `requestor_eth_address: String` - The Ethereum public address of the entity making the read request.
+- `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the read request.
 - `request_approved: Boolean` - Represents whether the read request has been approved.
 - `request_open: Boolean` - Represents whether the read request is still open.
@@ -444,6 +450,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
 {
     "id": 10,
     "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+    "requestor_details": "Web3 Hospital of Decentralized Healthcare",
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
@@ -452,6 +459,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
 The JSON returned is an object containing the following information:
 - `id: Integer` - the ID of the read request.
 - `requestor_eth_address: String` - The Ethereum public address of the entity making the read request.
+- `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the read request.
 - `request_approved: Boolean` - Represents whether the read request has been approved.
 - `request_open: Boolean` - Represents whether the read request is still open.
@@ -476,11 +484,13 @@ The post request to `/dbio/write_requests` requires a JSON payload that represen
 ```json
 {
     "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+    "requestor_details": "Web3 Hospital of Decentralized Healthcare",
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240"
 }
 ```
 The parameters in the JSON payload are:
 - `requestor_eth_address: String` - The Ethereum public address of the entity making the write request.
+- `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the write request.
 
 Upon submitting a request with well-formatted JSON, the requestor should be presented with one of the following responses:
@@ -505,6 +515,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
     {
         "id": 10,
         "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+        "requestor_details": "Web3 Hospital of Decentralized Healthcare",
         "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
         "request_approved": false,
         "request_open": true,
@@ -519,6 +530,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
 The JSON returned is a list of JSON objects containing the following information:
 - `id: Integer` - the ID of the write request.
 - `requestor_eth_address: String` - The Ethereum public address of the entity making the write request.
+- `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the write request.
 - `request_approved: Boolean` - Represents whether the write request has been approved.
 - `request_open: Boolean` - Represents whether the write request is still open.
@@ -539,6 +551,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
 {
     "id": 10,
     "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+    "requestor_details": "Web3 Hospital of Decentralized Healthcare",
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
@@ -547,6 +560,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
 The JSON returned is an object containing the following information:
 - `id: Integer` - the ID of the write request.
 - `requestor_eth_address: String` - The Ethereum public address of the entity making the write request.
+- `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the write request.
 - `request_approved: Boolean` - Represents whether the write request has been approved.
 - `request_open: Boolean` - Represents whether the write request is still open.
@@ -566,6 +580,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
 {
     "id": 10,
     "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+    "requestor_details": "Web3 Hospital of Decentralized Healthcare",
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
@@ -574,6 +589,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
 The JSON returned is an object containing the following information:
 - `id: Integer` - the ID of the write request.
 - `requestor_eth_address: String` - The Ethereum public address of the entity making the write request.
+- `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the write request.
 - `request_approved: Boolean` - Represents whether the write request has been approved.
 - `request_open: Boolean` - Represents whether the write request is still open.

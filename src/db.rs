@@ -130,10 +130,12 @@ impl Db {
             AccessRequest,
             "INSERT INTO read_requests (
                requestor_eth_address,
+               requestor_details,
                requestee_eth_address
              )
-             VALUES ($1, $2) RETURNING *",
+             VALUES ($1, $2, $3) RETURNING *",
             access_request_payload.requestor_eth_address,
+            access_request_payload.requestor_details,
             access_request_payload.requestee_eth_address,
         )
         .fetch_one(&self.pool)
@@ -228,10 +230,12 @@ impl Db {
             AccessRequest,
             "INSERT INTO write_requests (
                requestor_eth_address,
+               requestor_details,
                requestee_eth_address
              )
-             VALUES ($1, $2) RETURNING *",
+             VALUES ($1, $2, $3) RETURNING *",
             access_request_payload.requestor_eth_address,
+            access_request_payload.requestor_details,
             access_request_payload.requestee_eth_address,
         )
         .fetch_one(&self.pool)
