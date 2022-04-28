@@ -34,6 +34,10 @@ you must run `cargo sqlx prepare`. This command regenerates the `sqlx-data.json`
 be checked in and committed, as it is used when compiling offline and building the project's Docker image.
 The build will fail without completing this step.
 
+<br>
+---
+<br>
+
 # API Documentation
 
 ## Routes
@@ -66,6 +70,10 @@ The build will fail without completing this step.
 - [GET /dbio/write_requests/\{requestee-eth-address\}/\{requestor-eth-address\}](#get-dbiowrite_requestsrequestee-eth-addressrequestor-eth-address)
 - [GET /dbio/write_requests/id/\{id\}](#get-dbiowrite_requestsidid)
 - [PUT /dbio/write_requests/\{id\}?approve=\(true|false\)](#put-dbiowrite_requestsidapprovetruefalse)
+
+<br>
+---
+<br>
 
 ### Users
 
@@ -127,6 +135,10 @@ In the case of `200 Ok`, the body of the response contains JSON.
 The JSON returned contains the following information:
 - `eth_public_address: String` - the Ethereum public address of the user.
 - `email: String` - the email address of the user.
+
+<br>
+---
+<br>
 
 ### Resources
 
@@ -391,6 +403,10 @@ The JSON returned is a JSON object containing the following information:
 - `fhir_resource_type: String` - the type of the resource (should correlate with a FHIR resource type).
 - `fhir_resource_id: String` - the ID of the resource in the submitter's system.
 
+<br>
+---
+<br>
+
 ### Read Requests
 
 #### `POST /dbio/read_requests`
@@ -557,6 +573,10 @@ The JSON returned is an object that represents the updated read request, contain
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the read request.
 - `request_approved: Boolean` - Represents whether the read request has been approved.
 - `request_open: Boolean` - Represents whether the read request is still open.
+
+<br>
+---
+<br>
 
 ### Write Requests
 
