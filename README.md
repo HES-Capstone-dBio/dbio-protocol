@@ -35,7 +35,9 @@ be checked in and committed, as it is used when compiling offline and building t
 The build will fail without completing this step.
 
 <br>
+
 ---
+
 <br>
 
 # API Documentation
@@ -72,7 +74,9 @@ The build will fail without completing this step.
 - [PUT /dbio/write_requests/\{id\}?approve=\(true|false\)](#put-dbiowrite_requestsidapprovetruefalse)
 
 <br>
+
 ---
+
 <br>
 
 ### Users
@@ -137,7 +141,9 @@ The JSON returned contains the following information:
 - `email: String` - the email address of the user.
 
 <br>
+
 ---
+
 <br>
 
 ### Resources
@@ -404,7 +410,9 @@ The JSON returned is a JSON object containing the following information:
 - `fhir_resource_id: String` - the ID of the resource in the submitter's system.
 
 <br>
+
 ---
+
 <br>
 
 ### Read Requests
@@ -575,7 +583,9 @@ The JSON returned is an object that represents the updated read request, contain
 - `request_open: Boolean` - Represents whether the read request is still open.
 
 <br>
+
 ---
+
 <br>
 
 ### Write Requests
