@@ -161,13 +161,18 @@ async fn get_claimed_resource(
         .await {
             Ok(request_status) => {
                 if !request_status.request_approved {
+                    let msg = if request_status.request_open {
+                        "please wait for your read request to be approved"
+                    } else {
+                        "your read request has been denied"
+                    };
                     return Err(
-                        ErrorForbidden("must receive approval from subject")
+                        ErrorForbidden(msg)
                     );
                 }
             },
             Err(_) => return Err(
-                ErrorForbidden("must receive approval from subject")
+                ErrorForbidden("please submit a read access request")
             ),
         }
     }
@@ -203,13 +208,18 @@ async fn get_unclaimed_resource(
         .await {
             Ok(request_status) => {
                 if !request_status.request_approved {
+                    let msg = if request_status.request_open {
+                        "please wait for your read request to be approved"
+                    } else {
+                        "your read request has been denied"
+                    };
                     return Err(
-                        ErrorForbidden("must receive approval from subject")
+                        ErrorForbidden(msg)
                     );
                 }
             },
             Err(_) => return Err(
-                ErrorForbidden("must receive approval from subject")
+                ErrorForbidden("please submit a read access request")
             ),
         }
     }
@@ -250,13 +260,18 @@ async fn post_claimed_resource(
     .await {
         Ok(request_status) => {
             if !request_status.request_approved {
+                let msg = if request_status.request_open {
+                    "please wait for your write request to be approved"
+                } else {
+                    "your write request has been denied"
+                };
                 return Err(
-                    ErrorForbidden("must receive approval from subject")
-                )
+                    ErrorForbidden(msg)
+                );
             }
         },
         Err(_) => return Err(
-            ErrorForbidden("must receive approval from subject")
+            ErrorForbidden("please submit a write access request")
         ),
     };
 
@@ -308,13 +323,18 @@ async fn post_unclaimed_resource(
     .await {
         Ok(request_status) => {
             if !request_status.request_approved {
+                let msg = if request_status.request_open {
+                    "please wait for your write request to be approved"
+                } else {
+                    "your write request has been denied"
+                };
                 return Err(
-                    ErrorForbidden("must receive approval from subject")
-                )
+                    ErrorForbidden(msg)
+                );
             }
         },
         Err(_) => return Err(
-            ErrorForbidden("must receive approval from subject")
+            ErrorForbidden("please submit a write access request")
         ),
     };
 
@@ -349,13 +369,18 @@ async fn get_claimed_resource_metadata(
         .await {
             Ok(request_status) => {
                 if !request_status.request_approved {
+                    let msg = if request_status.request_open {
+                        "please wait for your read request to be approved"
+                    } else {
+                        "your read request has been denied"
+                    };
                     return Err(
-                        ErrorForbidden("must receive approval from subject")
+                        ErrorForbidden(msg)
                     );
                 }
             },
             Err(_) => return Err(
-                ErrorForbidden("must receive approval from subject")
+                ErrorForbidden("please submit a read access request")
             ),
         }
     }
@@ -383,13 +408,18 @@ async fn get_unclaimed_resource_metadata(
         .await {
             Ok(request_status) => {
                 if !request_status.request_approved {
+                    let msg = if request_status.request_open {
+                        "please wait for your request to be approved"
+                    } else {
+                        "your read request has been denied"
+                    };
                     return Err(
-                        ErrorForbidden("must receive approval from subject")
+                        ErrorForbidden(msg)
                     );
                 }
             },
             Err(_) => return Err(
-                ErrorForbidden("must receive approval from subject")
+                ErrorForbidden("please submit a read access request")
             ),
         }
     }
