@@ -89,6 +89,21 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
+    pub fn select_read_request_by_id(
+        &'_ self,
+        id: i64,
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "SELECT *
+             FROM read_requests
+             WHERE
+               id = $1",
+            id,
+        )
+        .fetch_one(&self.pool)
+    }
+
     pub fn insert_read_request(
         &'_ self,
         access_request_payload: AccessRequestPayload,
@@ -152,6 +167,21 @@ impl Db {
             requestee_eth_address,
         )
         .fetch_all(&self.pool)
+    }
+
+    pub fn select_write_request_by_id(
+        &'_ self,
+        id: i64,
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "SELECT *
+             FROM write_requests
+             WHERE
+               id = $1",
+            id,
+        )
+        .fetch_one(&self.pool)
     }
 
     pub fn insert_write_request(

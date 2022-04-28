@@ -108,6 +108,50 @@
     },
     "query": "SELECT\n               cid,\n               ciphertext,\n               ironcore_document_id,\n               fhir_resource_id,\n               fhir_resource_type\n             FROM\n               resource_store\n               INNER JOIN resources\n               ON resource_store.cid = resources.ipfs_cid\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_type = $2\n               AND fhir_resource_id = $3"
   },
+  "09b32cc01c2abb927ba078de8dd2eba62d1c7c451b1104eed440a750816a72e6": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM read_requests\n             WHERE\n               id = $1"
+  },
   "0e03a5e14eb8b36ba29fd392530270128e75c4a0d29c3342ef12e03f8102e93c": {
     "describe": {
       "columns": [
@@ -563,6 +607,50 @@
       }
     },
     "query": "SELECT\n               ciphertext,\n               ironcore_document_id,\n               fhir_resource_id,\n               fhir_resource_type\n             FROM\n               resource_escrow\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_type = $2\n               AND fhir_resource_id = $3"
+  },
+  "823dd791729e49d1601534d96b07d6af2d16511e5e24f6cbed801b8ca9747a9f": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM write_requests\n             WHERE\n               id = $1"
   },
   "835bc9a21abf413308e852d5f05f9b3e149c216b389cb4f0b8b99b7cda0dbee7": {
     "describe": {
