@@ -94,6 +94,18 @@ async fn post_read_request(
         .map_err(adapt_db_error)
 }
 
+#[actix_web::get("/read_requests/{requestee_eth_address}/{requestor_eth_address}")]
+async fn get_read_request(
+    db: Data<Db>,
+    path: Path<(String, String)>,
+) -> Result<Json<AccessRequest>, HttpError> {
+    let (requestee_eth_address, requestor_eth_address) = path.into_inner();
+    db.select_read_request(requestee_eth_address, requestor_eth_address)
+        .await
+        .map(Json)
+        .map_err(adapt_db_error)
+}
+
 #[actix_web::put("/read_requests/{id}")]
 async fn put_read_request_approval(
     db: Data<Db>,
@@ -125,6 +137,18 @@ async fn get_write_requests(
     }
     .map(Json)
     .map_err(adapt_db_error)
+}
+
+#[actix_web::get("/write_requests/{requestee_eth_address}/{requestor_eth_address}")]
+async fn get_write_request(
+    db: Data<Db>,
+    path: Path<(String, String)>,
+) -> Result<Json<AccessRequest>, HttpError> {
+    let (requestee_eth_address, requestor_eth_address) = path.into_inner();
+    db.select_write_request(requestee_eth_address, requestor_eth_address)
+        .await
+        .map(Json)
+        .map_err(adapt_db_error)
 }
 
 #[actix_web::get("/write_requests/id/{id}")]
@@ -464,10 +488,12 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(get_user_by_eth)
         .service(get_user_by_email)
         .service(get_read_requests)
+        .service(get_read_request)
         .service(get_read_request_by_id)
         .service(post_read_request)
         .service(put_read_request_approval)
         .service(get_write_requests)
+        .service(get_write_request)
         .service(get_write_request_by_id)
         .service(post_write_request)
         .service(put_write_request_approval)

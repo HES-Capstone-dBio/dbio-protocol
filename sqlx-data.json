@@ -568,6 +568,51 @@
     },
     "query": "DELETE FROM resource_escrow\n             WHERE\n               creator_eth_address = $1\n               AND fhir_resource_id = $2\n             RETURNING *"
   },
+  "69778e665ee5b942be880a2791d6bf2177480f89278dd6910543ff7f9e14523c": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM write_requests\n             WHERE\n               requestee_eth_address = $1\n               AND requestor_eth_address = $2"
+  },
   "7028462b3f14c871a8c9bb24b256d1f3e467fbd8171625c772bc9b94efe96817": {
     "describe": {
       "columns": [
@@ -855,6 +900,51 @@
       }
     },
     "query": "INSERT INTO write_requests (\n               requestor_eth_address,\n               requestee_eth_address\n             )\n             VALUES ($1, $2) RETURNING *"
+  },
+  "db6e826641959b71603dd0dcfc9df9b2a54e475b9880846dc097bc18e362dc8c": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 3,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM read_requests\n             WHERE\n               requestee_eth_address = $1\n               AND requestor_eth_address = $2"
   },
   "e0fb901d560930309dcfe342091d26c502b4d3a633fdda29db8709a790f84830": {
     "describe": {
