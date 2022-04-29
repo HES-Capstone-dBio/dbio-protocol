@@ -41,12 +41,19 @@ pub struct ResourceStoreData {
 pub struct AccessRequest {
     pub id: i64,
     pub requestor_eth_address: String,
+    pub requestor_details: String,
     pub requestee_eth_address: String,
     pub request_approved: bool,
     pub request_open: bool,
 }
 
 /* Specialized return types */
+
+#[derive(FromRow)]
+pub struct RequestStatus {
+    pub request_approved: bool,
+    pub request_open: bool,
+}
 
 #[derive(Serialize, FromRow)]
 pub struct ResourceData {
@@ -79,6 +86,7 @@ pub struct EscrowedMetadata {
 #[derive(Debug, Deserialize)]
 pub struct AccessRequestPayload {
     pub requestor_eth_address: String,
+    pub requestor_details: String,
     pub requestee_eth_address: String,
 }
 
@@ -90,6 +98,11 @@ pub struct ResourceDataPayload {
     pub fhir_resource_id: String,
     pub ironcore_document_id: String,
     pub ciphertext: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReadAuthPayload {
+    pub requestor_eth_address: String,
 }
 
 /* Route query parameters */

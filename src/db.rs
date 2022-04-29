@@ -89,6 +89,39 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
+    pub fn select_read_request(
+        &'_ self,
+        requestee_eth_address: String,
+        requestor_eth_address: String,
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "SELECT *
+             FROM read_requests
+             WHERE
+               requestee_eth_address = $1
+               AND requestor_eth_address = $2",
+            requestee_eth_address,
+            requestor_eth_address,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn select_read_request_by_id(
+        &'_ self,
+        id: i64,
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "SELECT *
+             FROM read_requests
+             WHERE
+               id = $1",
+            id,
+        )
+        .fetch_one(&self.pool)
+    }
+
     pub fn insert_read_request(
         &'_ self,
         access_request_payload: AccessRequestPayload,
@@ -97,10 +130,12 @@ impl Db {
             AccessRequest,
             "INSERT INTO read_requests (
                requestor_eth_address,
+               requestor_details,
                requestee_eth_address
              )
-             VALUES ($1, $2) RETURNING *",
+             VALUES ($1, $2, $3) RETURNING *",
             access_request_payload.requestor_eth_address,
+            access_request_payload.requestor_details,
             access_request_payload.requestee_eth_address,
         )
         .fetch_one(&self.pool)
@@ -154,6 +189,39 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
+    pub fn select_write_request(
+        &'_ self,
+        requestee_eth_address: String,
+        requestor_eth_address: String,
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "SELECT *
+             FROM write_requests
+             WHERE
+               requestee_eth_address = $1
+               AND requestor_eth_address = $2",
+            requestee_eth_address,
+            requestor_eth_address,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn select_write_request_by_id(
+        &'_ self,
+        id: i64,
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "SELECT *
+             FROM write_requests
+             WHERE
+               id = $1",
+            id,
+        )
+        .fetch_one(&self.pool)
+    }
+
     pub fn insert_write_request(
         &'_ self,
         access_request_payload: AccessRequestPayload,
@@ -162,10 +230,12 @@ impl Db {
             AccessRequest,
             "INSERT INTO write_requests (
                requestor_eth_address,
+               requestor_details,
                requestee_eth_address
              )
-             VALUES ($1, $2) RETURNING *",
+             VALUES ($1, $2, $3) RETURNING *",
             access_request_payload.requestor_eth_address,
+            access_request_payload.requestor_details,
             access_request_payload.requestee_eth_address,
         )
         .fetch_one(&self.pool)
@@ -361,6 +431,42 @@ impl Db {
              RETURNING *",
             creator_eth_address,
             fhir_resource_id,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn check_read_access(
+        &'_ self,
+        reader_eth_address: String,
+        subject_eth_address: String,
+    ) -> impl Future<Output = Result<RequestStatus, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            RequestStatus,
+            "SELECT request_approved, request_open
+                FROM read_requests
+                WHERE
+                requestor_eth_address = $1
+                AND requestee_eth_address = $2",
+            reader_eth_address,
+            subject_eth_address,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn check_write_access(
+        &'_ self,
+        writer_eth_address: String,
+        subject_eth_address: String,
+    ) -> impl Future<Output = Result<RequestStatus, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            RequestStatus,
+            "SELECT request_approved, request_open
+                FROM write_requests
+                WHERE
+                requestor_eth_address = $1
+                AND requestee_eth_address = $2",
+            writer_eth_address,
+            subject_eth_address,
         )
         .fetch_one(&self.pool)
     }
