@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS read_requests (
   requestor_details CHAR(128) NOT NULL,
   requestee_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   request_approved BOOL NOT NULL DEFAULT false,
-  request_open BOOL NOT NULL DEFAULT true
+  request_open BOOL NOT NULL DEFAULT true,
+  CONSTRAINT read_request_pair UNIQUE(requestee_eth_address, requestor_eth_address)
 );
 
 CREATE INDEX IF NOT EXISTS read_requests_requestee ON read_requests (requestee_eth_address);
@@ -53,7 +54,8 @@ CREATE TABLE IF NOT EXISTS write_requests (
   requestor_details CHAR(128) NOT NULL,
   requestee_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   request_approved BOOL NOT NULL DEFAULT false,
-  request_open BOOL NOT NULL DEFAULT true
+  request_open BOOL NOT NULL DEFAULT true,
+  CONSTRAINT write_request_pair UNIQUE(requestee_eth_address, requestor_eth_address)
 );
 
 CREATE INDEX IF NOT EXISTS write_requests_requestee ON write_requests (requestee_eth_address);
