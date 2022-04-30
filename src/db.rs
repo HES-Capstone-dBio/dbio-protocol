@@ -1,6 +1,7 @@
 use crate::models::*;
 use sqlx::{postgres::*, Pool, Postgres};
 use std::future::Future;
+use chrono::{Utc, DateTime};
 
 /**
  * Module for interacting with PostgreSQL
@@ -125,18 +126,23 @@ impl Db {
     pub fn insert_read_request(
         &'_ self,
         access_request_payload: AccessRequestPayload,
+        now: DateTime<Utc>,
     ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
             "INSERT INTO read_requests (
                requestor_eth_address,
                requestor_details,
-               requestee_eth_address
+               requestee_eth_address,
+               created_time,
+               last_updated_time
              )
-             VALUES ($1, $2, $3) RETURNING *",
+             VALUES ($1, $2, $3, $4, $5) RETURNING *",
             access_request_payload.requestor_eth_address,
             access_request_payload.requestor_details,
             access_request_payload.requestee_eth_address,
+            now,
+            now,
         )
         .fetch_one(&self.pool)
     }
@@ -225,18 +231,23 @@ impl Db {
     pub fn insert_write_request(
         &'_ self,
         access_request_payload: AccessRequestPayload,
+        now: DateTime<Utc>,
     ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
             "INSERT INTO write_requests (
                requestor_eth_address,
                requestor_details,
-               requestee_eth_address
+               requestee_eth_address,
+               created_time,
+               last_updated_time
              )
-             VALUES ($1, $2, $3) RETURNING *",
+             VALUES ($1, $2, $3, $4, $5) RETURNING *",
             access_request_payload.requestor_eth_address,
             access_request_payload.requestor_details,
             access_request_payload.requestee_eth_address,
+            now,
+            now,
         )
         .fetch_one(&self.pool)
     }

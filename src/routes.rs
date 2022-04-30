@@ -13,6 +13,7 @@ use std::hash::Hasher;
 
 use crate::db::Db;
 use crate::models::*;
+use chrono::offset::Utc;
 
 
 fn adapt_db_error(e: sqlx::Error) -> HttpError {
@@ -88,7 +89,7 @@ async fn post_read_request(
     db: Data<Db>,
     access_request_payload: Json<AccessRequestPayload>,
 ) -> Result<Json<AccessRequest>, HttpError> {
-    db.insert_read_request(access_request_payload.into_inner())
+    db.insert_read_request(access_request_payload.into_inner(), Utc::now())
         .await
         .map(Json)
         .map_err(adapt_db_error)
@@ -167,7 +168,7 @@ async fn post_write_request(
     db: Data<Db>,
     access_request_payload: Json<AccessRequestPayload>,
 ) -> Result<Json<AccessRequest>, HttpError> {
-    db.insert_write_request(access_request_payload.into_inner())
+    db.insert_write_request(access_request_payload.into_inner(), Utc::now())
         .await
         .map(Json)
         .map_err(adapt_db_error)
@@ -338,7 +339,7 @@ async fn post_claimed_resource(
                 creator_eth_address: in_data.creator_eth_address,
                 fhir_resource_type: in_data.fhir_resource_type,
                 ipfs_cid: cid,
-                timestamp: chrono::offset::Utc::now(),   
+                timestamp: Utc::now(),   
             })
         })
     })
@@ -391,7 +392,7 @@ async fn post_unclaimed_resource(
         creator_eth_address: in_data.creator_eth_address,
         fhir_resource_type: in_data.fhir_resource_type,
         ciphertext: in_data.ciphertext,
-        timestamp: chrono::offset::Utc::now(),
+        timestamp: Utc::now(),
     })
     .await
     .map(Json)

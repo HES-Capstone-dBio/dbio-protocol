@@ -140,9 +140,21 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,
@@ -190,9 +202,21 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,
@@ -235,6 +259,138 @@
     },
     "query": "SELECT request_approved, request_open\n                FROM write_requests\n                WHERE\n                requestor_eth_address = $1\n                AND requestee_eth_address = $2"
   },
+  "16bf25c70752641178d4abbab7589df75e77c7b07705e035b1576958aada3c22": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestor_details",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 5,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar",
+          "Bpchar",
+          "Timestamptz",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "INSERT INTO write_requests (\n               requestor_eth_address,\n               requestor_details,\n               requestee_eth_address,\n               created_time,\n               last_updated_time\n             )\n             VALUES ($1, $2, $3, $4, $5) RETURNING *"
+  },
+  "178c54c9accc2339c5133f23a1274e3bbc2d27c1c474f1cc54d89a8b6b9383d7": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestor_details",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 5,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar",
+          "Bpchar",
+          "Timestamptz",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "INSERT INTO read_requests (\n               requestor_eth_address,\n               requestor_details,\n               requestee_eth_address,\n               created_time,\n               last_updated_time\n             )\n             VALUES ($1, $2, $3, $4, $5) RETURNING *"
+  },
   "1d64b66ad8f6ed923aba5434c228a8497e807cff68142efec39f9f50d0812502": {
     "describe": {
       "columns": [
@@ -267,9 +423,21 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,
@@ -317,9 +485,21 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,
@@ -418,58 +598,6 @@
     },
     "query": "SELECT request_approved, request_open\n                FROM read_requests\n                WHERE\n                requestor_eth_address = $1\n                AND requestee_eth_address = $2"
   },
-  "522a5335d4e8ec7432727ff109483794fb085d657fe80ef68637040087fd1a96": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        },
-        {
-          "name": "requestor_eth_address",
-          "ordinal": 1,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "requestor_details",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "requestee_eth_address",
-          "ordinal": 3,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "request_approved",
-          "ordinal": 4,
-          "type_info": "Bool"
-        },
-        {
-          "name": "request_open",
-          "ordinal": 5,
-          "type_info": "Bool"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Bpchar",
-          "Bpchar"
-        ]
-      }
-    },
-    "query": "INSERT INTO write_requests (\n               requestor_eth_address,\n               requestor_details,\n               requestee_eth_address\n             )\n             VALUES ($1, $2, $3) RETURNING *"
-  },
   "53de15a506616f6cbe37a7f69426b41c56daf9f0e4fce716e312d5c35dc79243": {
     "describe": {
       "columns": [
@@ -502,9 +630,21 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,
@@ -637,9 +777,21 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,
@@ -696,58 +848,6 @@
     },
     "query": "SELECT\n               ciphertext,\n               ironcore_document_id,\n               fhir_resource_id,\n               fhir_resource_type\n             FROM\n               resource_escrow\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_type = $2\n               AND fhir_resource_id = $3"
   },
-  "7a7bd58dbac14107c0ce88cb8485769e99a41887e2fd23fbb6d9c2a144119d50": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        },
-        {
-          "name": "requestor_eth_address",
-          "ordinal": 1,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "requestor_details",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "requestee_eth_address",
-          "ordinal": 3,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "request_approved",
-          "ordinal": 4,
-          "type_info": "Bool"
-        },
-        {
-          "name": "request_open",
-          "ordinal": 5,
-          "type_info": "Bool"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Bpchar",
-          "Bpchar"
-        ]
-      }
-    },
-    "query": "INSERT INTO read_requests (\n               requestor_eth_address,\n               requestor_details,\n               requestee_eth_address\n             )\n             VALUES ($1, $2, $3) RETURNING *"
-  },
   "823dd791729e49d1601534d96b07d6af2d16511e5e24f6cbed801b8ca9747a9f": {
     "describe": {
       "columns": [
@@ -780,9 +880,21 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,
@@ -918,9 +1030,21 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,
@@ -995,9 +1119,21 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,
@@ -1046,9 +1182,21 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
+        false,
         false,
         false,
         false,

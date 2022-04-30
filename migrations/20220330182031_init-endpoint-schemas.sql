@@ -43,6 +43,8 @@ CREATE TABLE IF NOT EXISTS read_requests (
   requestee_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   request_approved BOOL NOT NULL DEFAULT false,
   request_open BOOL NOT NULL DEFAULT true,
+  created_time TIMESTAMPTZ NOT NULL,
+  last_updated_time TIMESTAMPTZ NOT NULL,
   CONSTRAINT read_request_pair UNIQUE(requestee_eth_address, requestor_eth_address)
 );
 
@@ -55,6 +57,8 @@ CREATE TABLE IF NOT EXISTS write_requests (
   requestee_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   request_approved BOOL NOT NULL DEFAULT false,
   request_open BOOL NOT NULL DEFAULT true,
+  created_time TIMESTAMPTZ NOT NULL,
+  last_updated_time TIMESTAMPTZ NOT NULL,
   CONSTRAINT write_request_pair UNIQUE(requestee_eth_address, requestor_eth_address)
 );
 

@@ -45,6 +45,8 @@ pub struct AccessRequest {
     pub requestee_eth_address: String,
     pub request_approved: bool,
     pub request_open: bool,
+    pub created_time: DateTime<Utc>,
+    pub last_updated_time: DateTime<Utc>,
 }
 
 /* Specialized return types */
