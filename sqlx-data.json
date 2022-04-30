@@ -78,7 +78,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Varchar"
+          "type_info": "Bpchar"
         },
         {
           "name": "requestee_eth_address",
@@ -140,7 +140,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Varchar"
+          "type_info": "Bpchar"
         },
         {
           "name": "requestee_eth_address",
@@ -229,7 +229,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Varchar"
+          "type_info": "Bpchar"
         },
         {
           "name": "requestee_eth_address",
@@ -389,6 +389,63 @@
         false,
         false,
         false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT *\n             FROM write_requests\n             WHERE\n               requestee_eth_address = $1"
+  },
+  "3adde3fdff0ec14721ffb16118a9dfa8513fb584a78024f232a10c5be0dde1fb": {
+    "describe": {
+      "columns": [
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ironcore_document_id",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "subject_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_eth_address",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "fhir_resource_type",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ipfs_cid",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "timestamp",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
         false
       ],
       "parameters": {
@@ -456,88 +513,6 @@
       }
     },
     "query": "SELECT *\n             FROM resources\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_type = $2\n               AND fhir_resource_id = $3"
-  },
-  "4690a54ef235e9fdae33016a66276f860786aca8200a085f7fd464a6f287d8d6": {
-    "describe": {
-      "columns": [
-        {
-          "name": "request_approved",
-          "ordinal": 0,
-          "type_info": "Bool"
-        },
-        {
-          "name": "request_open",
-          "ordinal": 1,
-          "type_info": "Bool"
-        }
-      ],
-      "nullable": [
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar"
-        ]
-      }
-    },
-    "query": "SELECT *\n             FROM write_requests\n             WHERE\n               requestee_eth_address = $1"
-  },
-  "3adde3fdff0ec14721ffb16118a9dfa8513fb584a78024f232a10c5be0dde1fb": {
-    "describe": {
-      "columns": [
-        {
-          "name": "fhir_resource_id",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ironcore_document_id",
-          "ordinal": 1,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "subject_eth_address",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "creator_eth_address",
-          "ordinal": 3,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "fhir_resource_type",
-          "ordinal": 4,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ipfs_cid",
-          "ordinal": 5,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "timestamp",
-          "ordinal": 6,
-          "type_info": "Timestamptz"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar"
-        ]
-      }
-    },
-    "query": "SELECT *\n             FROM resources\n             WHERE subject_eth_address = $1"
   },
   "4690a54ef235e9fdae33016a66276f860786aca8200a085f7fd464a6f287d8d6": {
     "describe": {
@@ -742,7 +717,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Varchar"
+          "type_info": "Bpchar"
         },
         {
           "name": "requestee_eth_address",
@@ -758,48 +733,6 @@
           "name": "request_open",
           "ordinal": 5,
           "type_info": "Bool"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Varchar",
-          "Bpchar"
-        ]
-      }
-    },
-    "query": "INSERT INTO read_requests (\n               requestor_eth_address,\n               requestor_details,\n               requestee_eth_address\n             )\n             VALUES ($1, $2, $3) RETURNING *"
-  },
-  "823dd791729e49d1601534d96b07d6af2d16511e5e24f6cbed801b8ca9747a9f": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        },
-        {
-          "name": "requestor_eth_address",
-          "ordinal": 1,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "requestor_details",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "requestee_eth_address",
-          "ordinal": 3,
-          "type_info": "Bpchar"
         },
         {
           "name": "created_time",
@@ -1150,7 +1083,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Varchar"
+          "type_info": "Bpchar"
         },
         {
           "name": "requestee_eth_address",
@@ -1214,7 +1147,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Varchar"
+          "type_info": "Bpchar"
         },
         {
           "name": "requestee_eth_address",
