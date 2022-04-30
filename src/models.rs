@@ -49,6 +49,11 @@ pub struct AccessRequest {
 
 /* Specialized return types */
 
+#[derive(Deserialize, Debug)]
+pub struct IpfsResponse {
+    pub cid: String,
+}
+
 #[derive(FromRow)]
 pub struct RequestStatus {
     pub request_approved: bool,

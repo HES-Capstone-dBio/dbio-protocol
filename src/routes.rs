@@ -1,3 +1,5 @@
+extern crate reqwest;
+
 use actix_web::dev::HttpServiceFactory;
 use actix_web::error::Error as HttpError;
 use actix_web::error::{
@@ -7,13 +9,38 @@ use actix_web::error::{
 };
 use actix_web::web::*;
 use futures::prelude::*;
+use reqwest::Error;
 use sqlx::Error::RowNotFound;
-use std::collections::hash_map::DefaultHasher;
-use std::hash::Hasher;
 
 use crate::db::Db;
 use crate::models::*;
 
+
+async fn ipfs_add(text: String) -> Result<String, Error> {
+    let ipfs_api_key = std::env::var("IPFS_API_KEY")
+        .expect("IPFS_API_KEY env var not found");
+        
+    let resp = reqwest::Client::new()
+        .post("https://api.web3.storage/upload")
+        .bearer_auth(ipfs_api_key)
+        .body(text)
+        .send()
+        .await?
+        .json::<IpfsResponse>()
+        .await?;
+    
+    Ok(resp.cid)
+}
+
+async fn ipfs_get(cid: String) -> Result<String, Error> {
+    let s = std::format!("https://ipfs.io/ipfs/{}", cid);
+    let resp = reqwest::get(s)
+        .await?
+        .text()
+        .await?;
+    
+    Ok(resp)
+}
 
 fn adapt_db_error(e: sqlx::Error) -> HttpError {
     match e {
@@ -223,14 +250,31 @@ async fn get_claimed_resource(
         }
     }
 
-    db.select_claimed_resource_data(
+    let resource = match db.select_claimed_resource_data(
         subject_eth_address,
         fhir_resource_type,
         fhir_resource_id
     )
-    .await
+    .await {
+        Ok(r) => r,
+        Err(e) => return Err(adapt_db_error(e)),
+    };
+
+    let ciphertext = match ipfs_get(resource.ipfs_cid.clone()).await {
+        Ok(c) => c,
+        Err(e) => return Err(ErrorInternalServerError(e)),
+    };
+
+    Ok(
+        ResourceData {
+            cid: resource.ipfs_cid,
+            ciphertext,
+            ironcore_document_id: resource.ironcore_document_id,
+            fhir_resource_id: resource.fhir_resource_id,
+            fhir_resource_type: resource.fhir_resource_type,
+        }
+    )
     .map(Json)
-    .map_err(adapt_db_error)
 }
 
 #[actix_web::get("/resources/unclaimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
@@ -286,11 +330,7 @@ async fn post_claimed_resource(
     payload: Json<ResourceDataPayload>,
 ) -> Result<Json<Resource>, HttpError> {
     let in_data = payload.into_inner();
-    let cid: String = {
-        let mut hasher = DefaultHasher::new();
-        hasher.write(in_data.ciphertext.as_bytes());
-        hasher.finish().to_string()
-    };
+
     let subject = match db.select_user_by_email(in_data.email).await {
         Ok(user) => user,
         Err(e) => return Err(adapt_db_error(e)),
@@ -321,25 +361,24 @@ async fn post_claimed_resource(
         ),
     };
 
-    db.insert_resource_store_data(ResourceStoreData {
-        cid: cid.clone(),
-        ciphertext: in_data.ciphertext,
-    })
+    let cid = match ipfs_add(in_data.ciphertext).await {
+        Ok(s) => s,
+        Err(e) => return Err(ErrorInternalServerError(e)),
+    };
+    
+    db.remove_from_escrow(
+        in_data.creator_eth_address.clone(),
+        in_data.fhir_resource_id.clone(),
+    )
     .and_then(|_| {
-        db.remove_from_escrow(
-            in_data.creator_eth_address.clone(),
-            in_data.fhir_resource_id.clone(),
-        )
-        .and_then(|_| {
-            db.insert_claimed_resource(Resource {
-                fhir_resource_id: in_data.fhir_resource_id,
-                ironcore_document_id: in_data.ironcore_document_id,
-                subject_eth_address: subject.eth_public_address,
-                creator_eth_address: in_data.creator_eth_address,
-                fhir_resource_type: in_data.fhir_resource_type,
-                ipfs_cid: cid,
-                timestamp: chrono::offset::Utc::now(),   
-            })
+        db.insert_claimed_resource(Resource {
+            fhir_resource_id: in_data.fhir_resource_id,
+            ironcore_document_id: in_data.ironcore_document_id,
+            subject_eth_address: subject.eth_public_address,
+            creator_eth_address: in_data.creator_eth_address,
+            fhir_resource_type: in_data.fhir_resource_type,
+            ipfs_cid: cid,
+            timestamp: chrono::offset::Utc::now(),   
         })
     })
     .await

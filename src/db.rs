@@ -258,20 +258,6 @@ impl Db {
         .fetch_one(&self.pool)
     }
 
-    pub fn insert_resource_store_data(
-        &'_ self,
-        data: ResourceStoreData,
-    ) -> impl Future<Output = Result<ResourceStoreData, sqlx::Error>> + '_ {
-        sqlx::query_as!(
-            ResourceStoreData,
-            "INSERT INTO resource_store (cid, ciphertext)
-             VALUES ($1, $2) RETURNING *",
-            data.cid,
-            data.ciphertext,
-        )
-        .fetch_one(&self.pool)
-    }
-
     pub fn insert_claimed_resource(
         &'_ self,
         data: Resource,
@@ -333,19 +319,11 @@ impl Db {
         subject_eth_address: String,
         fhir_resource_type: String,
         resource_id: String,
-    ) -> impl Future<Output = Result<ResourceData, sqlx::Error>> + '_ {
+    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
         sqlx::query_as!(
-            ResourceData,
-            "SELECT
-               cid,
-               ciphertext,
-               ironcore_document_id,
-               fhir_resource_id,
-               fhir_resource_type
-             FROM
-               resource_store
-               INNER JOIN resources
-               ON resource_store.cid = resources.ipfs_cid
+            Resource,
+            "SELECT *
+             FROM resources
              WHERE
                subject_eth_address = $1
                AND fhir_resource_type = $2
