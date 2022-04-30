@@ -155,7 +155,7 @@ impl Db {
         sqlx::query_as!(
             AccessRequest,
             "UPDATE read_requests
-             SET request_approved = $1, request_open = false
+             SET request_approved = $1, request_open = false, last_updated_time = NOW()
              WHERE id = $2
              RETURNING *",
             approval,
@@ -260,7 +260,7 @@ impl Db {
         sqlx::query_as!(
             AccessRequest,
             "UPDATE write_requests
-             SET request_approved = $1, request_open = false
+             SET request_approved = $1, request_open = false, last_updated_time = NOW()
              WHERE id = $2
              RETURNING *",
             approval,
