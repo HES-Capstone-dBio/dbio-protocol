@@ -89,7 +89,7 @@ async fn post_read_request(
     db: Data<Db>,
     access_request_payload: Json<AccessRequestPayload>,
 ) -> Result<Json<AccessRequest>, HttpError> {
-    db.insert_read_request(access_request_payload.into_inner(), Utc::now())
+    db.insert_read_request(access_request_payload.into_inner())
         .await
         .map(Json)
         .map_err(adapt_db_error)
@@ -168,7 +168,7 @@ async fn post_write_request(
     db: Data<Db>,
     access_request_payload: Json<AccessRequestPayload>,
 ) -> Result<Json<AccessRequest>, HttpError> {
-    db.insert_write_request(access_request_payload.into_inner(), Utc::now())
+    db.insert_write_request(access_request_payload.into_inner())
         .await
         .map(Json)
         .map_err(adapt_db_error)
