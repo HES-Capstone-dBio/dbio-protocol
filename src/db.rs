@@ -131,9 +131,11 @@ impl Db {
             "INSERT INTO read_requests (
                requestor_eth_address,
                requestor_details,
-               requestee_eth_address
+               requestee_eth_address,
+               created_time,
+               last_updated_time
              )
-             VALUES ($1, $2, $3) RETURNING *",
+             VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *",
             access_request_payload.requestor_eth_address,
             access_request_payload.requestor_details,
             access_request_payload.requestee_eth_address,
@@ -149,7 +151,7 @@ impl Db {
         sqlx::query_as!(
             AccessRequest,
             "UPDATE read_requests
-             SET request_approved = $1, request_open = false
+             SET request_approved = $1, request_open = false, last_updated_time = NOW()
              WHERE id = $2
              RETURNING *",
             approval,
@@ -231,9 +233,11 @@ impl Db {
             "INSERT INTO write_requests (
                requestor_eth_address,
                requestor_details,
-               requestee_eth_address
+               requestee_eth_address,
+               created_time,
+               last_updated_time
              )
-             VALUES ($1, $2, $3) RETURNING *",
+             VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *",
             access_request_payload.requestor_eth_address,
             access_request_payload.requestor_details,
             access_request_payload.requestee_eth_address,
@@ -249,7 +253,7 @@ impl Db {
         sqlx::query_as!(
             AccessRequest,
             "UPDATE write_requests
-             SET request_approved = $1, request_open = false
+             SET request_approved = $1, request_open = false, last_updated_time = NOW()
              WHERE id = $2
              RETURNING *",
             approval,

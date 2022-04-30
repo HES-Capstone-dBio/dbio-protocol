@@ -450,6 +450,8 @@ In the case of `200 Ok`, JSON is returned:
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
+    "created_time" "2022-04-30 20:57:51.733801+00",
+    "last_updated_time" "2022-04-30 20:57:51.733801+00"
 }
 ```
 The JSON returned is an object that represents the created read request, containing the following information:
@@ -459,6 +461,8 @@ The JSON returned is an object that represents the created read request, contain
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the read request.
 - `request_approved: Boolean` - Represents whether the read request has been approved.
 - `request_open: Boolean` - Represents whether the read request is still open.
+- `created_time: DateTime<Utc>` - Time when the read request was submitted.
+- `last_updated_time: DateTime<Utc>` - Time when the read request was updated (approved or denied).
 
 #### `GET /dbio/read_requests/{requestee-eth-address}?filter=(open|all)`
 
@@ -482,6 +486,8 @@ In the case of `200 Ok`, the body of the response contains JSON.
         "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
         "request_approved": false,
         "request_open": true,
+        "created_time" "2022-04-30 20:57:51.733801+00",
+        "last_updated_time" "2022-04-30 20:57:51.733801+00"
     },
     {
         // ...
@@ -517,6 +523,8 @@ In the case of `200 Ok`, the body of the response contains JSON.
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
+    "created_time" "2022-04-30 20:57:51.733801+00",
+    "last_updated_time" "2022-04-30 20:57:51.733801+00"
 }
 ```
 The JSON returned is an object containing the following information:
@@ -546,6 +554,8 @@ In the case of `200 Ok`, the body of the response contains JSON.
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
+    "created_time" "2022-04-30 20:57:51.733801+00",
+    "last_updated_time" "2022-04-30 20:57:51.733801+00"
 }
 ```
 The JSON returned is an object containing the following information:
@@ -577,6 +587,8 @@ In the case of `200 Ok`, JSON is returned:
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
+    "created_time" "2022-04-30 20:57:51.733801+00",
+    "last_updated_time" "2022-04-30 20:57:51.733801+00"
 }
 ```
 The JSON returned is an object that represents the updated read request, containing the following information:
@@ -623,6 +635,8 @@ In the case of `200 Ok`, JSON is returned:
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
+    "created_time" "2022-04-30 20:57:51.733801+00",
+    "last_updated_time" "2022-04-30 20:57:51.733801+00"
 }
 ```
 The JSON returned is an object that represents the created write request, containing the following information:
@@ -632,6 +646,8 @@ The JSON returned is an object that represents the created write request, contai
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the write request.
 - `request_approved: Boolean` - Represents whether the write request has been approved.
 - `request_open: Boolean` - Represents whether the write request is still open.
+- `created_time: DateTime<Utc>` - Time when the write request was submitted.
+- `last_updated_time: DateTime<Utc>` - Time when the write request was last updated (approved or denied).
 
 #### `GET /dbio/write_requests/{requestee-eth-address}?filter=(open|all)`
 
@@ -655,6 +671,8 @@ In the case of `200 Ok`, the body of the response contains JSON.
         "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
         "request_approved": false,
         "request_open": true,
+        "created_time" "2022-04-30 20:57:51.733801+00",
+        "last_updated_time" "2022-04-30 20:57:51.733801+00"
     },
     {
         // ...
@@ -691,6 +709,8 @@ In the case of `200 Ok`, the body of the response contains JSON.
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
+    "created_time" "2022-04-30 20:57:51.733801+00",
+    "last_updated_time" "2022-04-30 20:57:51.733801+00"
 }
 ```
 The JSON returned is an object containing the following information:
@@ -720,6 +740,8 @@ In the case of `200 Ok`, the body of the response contains JSON.
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
+    "created_time" "2022-04-30 20:57:51.733801+00",
+    "last_updated_time" "2022-04-30 20:57:51.733801+00"
 }
 ```
 The JSON returned is an object containing the following information:
@@ -751,6 +773,8 @@ In the case of `200 Ok`, JSON is returned:
     "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
     "request_approved": false,
     "request_open": true,
+    "created_time" "2022-04-30 20:57:51.733801+00",
+    "last_updated_time" "2022-04-30 20:57:51.733801+00"
 }
 ```
 The JSON returned is an object that represents the updated write request, containing the following information:

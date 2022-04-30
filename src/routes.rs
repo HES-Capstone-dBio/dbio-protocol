@@ -10,6 +10,7 @@ use sqlx::Error::RowNotFound;
 
 use crate::db::Db;
 use crate::models::*;
+use chrono::offset::Utc;
 
 async fn ipfs_add(text: String) -> Result<String, Error> {
     let ipfs_api_key = std::env::var("IPFS_API_KEY").expect("IPFS_API_KEY env var not found");
@@ -390,7 +391,7 @@ async fn post_unclaimed_resource(
         creator_eth_address: in_data.creator_eth_address,
         fhir_resource_type: in_data.fhir_resource_type,
         ciphertext: in_data.ciphertext,
-        timestamp: chrono::offset::Utc::now(),
+        timestamp: Utc::now(),
     })
     .await
     .map(Json)
