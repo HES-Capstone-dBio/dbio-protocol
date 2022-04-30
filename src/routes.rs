@@ -2,11 +2,7 @@ extern crate reqwest;
 
 use actix_web::dev::HttpServiceFactory;
 use actix_web::error::Error as HttpError;
-use actix_web::error::{
-    ErrorInternalServerError,
-    ErrorNotFound,
-    ErrorForbidden,
-};
+use actix_web::error::{ErrorForbidden, ErrorInternalServerError, ErrorNotFound};
 use actix_web::web::*;
 use futures::prelude::*;
 use reqwest::Error;
@@ -15,11 +11,9 @@ use sqlx::Error::RowNotFound;
 use crate::db::Db;
 use crate::models::*;
 
-
 async fn ipfs_add(text: String) -> Result<String, Error> {
-    let ipfs_api_key = std::env::var("IPFS_API_KEY")
-        .expect("IPFS_API_KEY env var not found");
-        
+    let ipfs_api_key = std::env::var("IPFS_API_KEY").expect("IPFS_API_KEY env var not found");
+
     let resp = reqwest::Client::new()
         .post("https://api.web3.storage/upload")
         .bearer_auth(ipfs_api_key)
@@ -28,17 +22,14 @@ async fn ipfs_add(text: String) -> Result<String, Error> {
         .await?
         .json::<IpfsResponse>()
         .await?;
-    
+
     Ok(resp.cid)
 }
 
 async fn ipfs_get(cid: String) -> Result<String, Error> {
     let s = std::format!("https://ipfs.io/ipfs/{}", cid);
-    let resp = reqwest::get(s)
-        .await?
-        .text()
-        .await?;
-    
+    let resp = reqwest::get(s).await?.text().await?;
+
     Ok(resp)
 }
 
@@ -50,10 +41,7 @@ fn adapt_db_error(e: sqlx::Error) -> HttpError {
 }
 
 #[actix_web::post("/users")]
-async fn post_user(
-    db: Data<Db>,
-    user: Json<User>,
-) -> Result<Json<User>, HttpError> {
+async fn post_user(db: Data<Db>, user: Json<User>) -> Result<Json<User>, HttpError> {
     db.insert_user(user.into_inner())
         .await
         .map(Json)
@@ -213,25 +201,23 @@ async fn put_write_request_approval(
         .map_err(adapt_db_error)
 }
 
-#[actix_web::get("/resources/claimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
+#[actix_web::get(
+    "/resources/claimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}"
+)]
 async fn get_claimed_resource(
     db: Data<Db>,
     requestor: Json<ReadAuthPayload>,
     path: Path<(String, String, String)>,
 ) -> Result<Json<ResourceData>, HttpError> {
-    let (subject_eth_address,
-         fhir_resource_type,
-         fhir_resource_id
-    ) = path.into_inner();
+    let (subject_eth_address, fhir_resource_type, fhir_resource_id) = path.into_inner();
 
     let reader_eth_address = requestor.into_inner().requestor_eth_address;
 
     if reader_eth_address != subject_eth_address {
-        match db.check_read_access(
-            reader_eth_address,
-            subject_eth_address.clone(),
-        )
-        .await {
+        match db
+            .check_read_access(reader_eth_address, subject_eth_address.clone())
+            .await
+        {
             Ok(request_status) => {
                 if !request_status.request_approved {
                     let msg = if request_status.request_open {
@@ -239,63 +225,49 @@ async fn get_claimed_resource(
                     } else {
                         "your read request has been denied"
                     };
-                    return Err(
-                        ErrorForbidden(msg)
-                    );
+                    return Err(ErrorForbidden(msg));
                 }
-            },
-            Err(_) => return Err(
-                ErrorForbidden("please submit a read access request")
-            ),
+            }
+            Err(_) => return Err(ErrorForbidden("please submit a read access request")),
         }
     }
 
-    let resource = match db.select_claimed_resource_data(
-        subject_eth_address,
-        fhir_resource_type,
-        fhir_resource_id
-    )
-    .await {
-        Ok(r) => r,
-        Err(e) => return Err(adapt_db_error(e)),
-    };
+    let resource = db
+        .select_claimed_resource_data(subject_eth_address, fhir_resource_type, fhir_resource_id)
+        .await
+        .map_err(adapt_db_error)?;
 
-    let ciphertext = match ipfs_get(resource.ipfs_cid.clone()).await {
-        Ok(c) => c,
-        Err(e) => return Err(ErrorInternalServerError(e)),
-    };
+    let ciphertext = ipfs_get(resource.ipfs_cid.clone())
+        .await
+        .map_err(ErrorInternalServerError)?;
 
-    Ok(
-        ResourceData {
-            cid: resource.ipfs_cid,
-            ciphertext,
-            ironcore_document_id: resource.ironcore_document_id,
-            fhir_resource_id: resource.fhir_resource_id,
-            fhir_resource_type: resource.fhir_resource_type,
-        }
-    )
+    Ok(ResourceData {
+        cid: resource.ipfs_cid,
+        ciphertext,
+        ironcore_document_id: resource.ironcore_document_id,
+        fhir_resource_id: resource.fhir_resource_id,
+        fhir_resource_type: resource.fhir_resource_type,
+    })
     .map(Json)
 }
 
-#[actix_web::get("/resources/unclaimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}")]
+#[actix_web::get(
+    "/resources/unclaimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}"
+)]
 async fn get_unclaimed_resource(
     db: Data<Db>,
     requestor: Json<ReadAuthPayload>,
     path: Path<(String, String, String)>,
 ) -> Result<Json<EscrowedResourceData>, HttpError> {
-    let (subject_eth_address,
-         fhir_resource_type,
-         fhir_resource_id
-    ) = path.into_inner();
+    let (subject_eth_address, fhir_resource_type, fhir_resource_id) = path.into_inner();
 
     let reader_eth_address = requestor.into_inner().requestor_eth_address;
 
     if reader_eth_address != subject_eth_address {
-        match db.check_read_access(
-            reader_eth_address,
-            subject_eth_address.clone(),
-        )
-        .await {
+        match db
+            .check_read_access(reader_eth_address, subject_eth_address.clone())
+            .await
+        {
             Ok(request_status) => {
                 if !request_status.request_approved {
                     let msg = if request_status.request_open {
@@ -303,25 +275,17 @@ async fn get_unclaimed_resource(
                     } else {
                         "your read request has been denied"
                     };
-                    return Err(
-                        ErrorForbidden(msg)
-                    );
+                    return Err(ErrorForbidden(msg));
                 }
-            },
-            Err(_) => return Err(
-                ErrorForbidden("please submit a read access request")
-            ),
+            }
+            Err(_) => return Err(ErrorForbidden("please submit a read access request")),
         }
     }
 
-    db.select_unclaimed_resource_data(
-        subject_eth_address,
-        fhir_resource_type,
-        fhir_resource_id
-    )
-    .await
-    .map(Json)
-    .map_err(adapt_db_error)
+    db.select_unclaimed_resource_data(subject_eth_address, fhir_resource_type, fhir_resource_id)
+        .await
+        .map(Json)
+        .map_err(adapt_db_error)
 }
 
 #[actix_web::post("/resources/claimed")]
@@ -339,11 +303,13 @@ async fn post_claimed_resource(
     if in_data.creator_eth_address == subject.eth_public_address {
         return Err(ErrorForbidden("users can not write their own records"));
     }
-    match db.check_write_access(
-        in_data.creator_eth_address.clone(),
-        subject.eth_public_address.clone(),
-    )
-    .await {
+    match db
+        .check_write_access(
+            in_data.creator_eth_address.clone(),
+            subject.eth_public_address.clone(),
+        )
+        .await
+    {
         Ok(request_status) => {
             if !request_status.request_approved {
                 let msg = if request_status.request_open {
@@ -351,21 +317,17 @@ async fn post_claimed_resource(
                 } else {
                     "your write request has been denied"
                 };
-                return Err(
-                    ErrorForbidden(msg)
-                );
+                return Err(ErrorForbidden(msg));
             }
-        },
-        Err(_) => return Err(
-            ErrorForbidden("please submit a write access request")
-        ),
+        }
+        Err(_) => return Err(ErrorForbidden("please submit a write access request")),
     };
 
     let cid = match ipfs_add(in_data.ciphertext).await {
         Ok(s) => s,
         Err(e) => return Err(ErrorInternalServerError(e)),
     };
-    
+
     db.remove_from_escrow(
         in_data.creator_eth_address.clone(),
         in_data.fhir_resource_id.clone(),
@@ -378,7 +340,7 @@ async fn post_claimed_resource(
             creator_eth_address: in_data.creator_eth_address,
             fhir_resource_type: in_data.fhir_resource_type,
             ipfs_cid: cid,
-            timestamp: chrono::offset::Utc::now(),   
+            timestamp: chrono::offset::Utc::now(),
         })
     })
     .await
@@ -401,11 +363,13 @@ async fn post_unclaimed_resource(
     if in_data.creator_eth_address == subject.eth_public_address {
         return Err(ErrorForbidden("users can not write their own records"));
     }
-    match db.check_write_access(
-        in_data.creator_eth_address.clone(),
-        subject.eth_public_address.clone(),
-    )
-    .await {
+    match db
+        .check_write_access(
+            in_data.creator_eth_address.clone(),
+            subject.eth_public_address.clone(),
+        )
+        .await
+    {
         Ok(request_status) => {
             if !request_status.request_approved {
                 let msg = if request_status.request_open {
@@ -413,14 +377,10 @@ async fn post_unclaimed_resource(
                 } else {
                     "your write request has been denied"
                 };
-                return Err(
-                    ErrorForbidden(msg)
-                );
+                return Err(ErrorForbidden(msg));
             }
-        },
-        Err(_) => return Err(
-            ErrorForbidden("please submit a write access request")
-        ),
+        }
+        Err(_) => return Err(ErrorForbidden("please submit a write access request")),
     };
 
     db.insert_unclaimed_resource(EscrowedResource {
@@ -447,11 +407,10 @@ async fn get_claimed_resource_metadata(
     let reader_eth_address = requestor.into_inner().requestor_eth_address;
 
     if reader_eth_address != subject_eth_address {
-        match db.check_read_access(
-            reader_eth_address,
-            subject_eth_address.clone(),
-        )
-        .await {
+        match db
+            .check_read_access(reader_eth_address, subject_eth_address.clone())
+            .await
+        {
             Ok(request_status) => {
                 if !request_status.request_approved {
                     let msg = if request_status.request_open {
@@ -459,14 +418,10 @@ async fn get_claimed_resource_metadata(
                     } else {
                         "your read request has been denied"
                     };
-                    return Err(
-                        ErrorForbidden(msg)
-                    );
+                    return Err(ErrorForbidden(msg));
                 }
-            },
-            Err(_) => return Err(
-                ErrorForbidden("please submit a read access request")
-            ),
+            }
+            Err(_) => return Err(ErrorForbidden("please submit a read access request")),
         }
     }
 
@@ -486,11 +441,10 @@ async fn get_unclaimed_resource_metadata(
     let reader_eth_address = requestor.into_inner().requestor_eth_address;
 
     if reader_eth_address != subject_eth_address {
-        match db.check_read_access(
-            reader_eth_address,
-            subject_eth_address.clone(),
-        )
-        .await {
+        match db
+            .check_read_access(reader_eth_address, subject_eth_address.clone())
+            .await
+        {
             Ok(request_status) => {
                 if !request_status.request_approved {
                     let msg = if request_status.request_open {
@@ -498,14 +452,10 @@ async fn get_unclaimed_resource_metadata(
                     } else {
                         "your read request has been denied"
                     };
-                    return Err(
-                        ErrorForbidden(msg)
-                    );
+                    return Err(ErrorForbidden(msg));
                 }
-            },
-            Err(_) => return Err(
-                ErrorForbidden("please submit a read access request")
-            ),
+            }
+            Err(_) => return Err(ErrorForbidden("please submit a read access request")),
         }
     }
 
