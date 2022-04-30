@@ -2,6 +2,11 @@
 
 # Setup Instructions
 
+## Prerequisites
+
+You should have an account at https://web3.storage. Get an API token from Web3.Storage and export it in your
+environment as `IPFS_API_KEY="Web3.Storage API Token Here"`.
+
 ## Setup for Demo, Testing, and Experimentation
 
 If you simply wish to run the `dbio-protocol` server locally for API testing,
