@@ -78,11 +78,11 @@ async fn get_read_requests(
         "open" => {
             db.select_open_read_requests(requestee_eth_address.into_inner())
                 .await
-        }
+        },
         _ => {
             db.select_all_read_requests(requestee_eth_address.into_inner())
                 .await
-        }
+        },
     }
     .map(Json)
     .map_err(adapt_db_error)
@@ -129,10 +129,18 @@ async fn put_read_request_approval(
     approval: Query<ApproveParam>,
 ) -> Result<Json<AccessRequest>, HttpError> {
     let approve = matches!(approval.approve.as_str(), "true");
-    db.update_read_request(id.into_inner(), approve)
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
+    match approve {
+        true => {
+            db.update_read_request(id.into_inner())
+                .await
+        },
+        false => {
+            db.delete_read_request(id.into_inner())
+                .await
+        },
+    }
+    .map(Json)
+    .map_err(adapt_db_error) 
 }
 
 #[actix_web::get("/write_requests/{requestee_eth_address}")]
@@ -145,11 +153,11 @@ async fn get_write_requests(
         "open" => {
             db.select_open_write_requests(requestee_eth_address.into_inner())
                 .await
-        }
+        },
         _ => {
             db.select_all_write_requests(requestee_eth_address.into_inner())
                 .await
-        }
+        },
     }
     .map(Json)
     .map_err(adapt_db_error)
@@ -196,10 +204,19 @@ async fn put_write_request_approval(
     approval: Query<ApproveParam>,
 ) -> Result<Json<AccessRequest>, HttpError> {
     let approve = matches!(approval.approve.as_str(), "true");
-    db.update_write_request(id.into_inner(), approve)
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
+
+    match approve {
+        true => {
+            db.update_write_request(id.into_inner())
+                .await
+        },
+        false => {
+            db.delete_write_request(id.into_inner())
+                .await
+        }
+    }
+    .map(Json)
+    .map_err(adapt_db_error)
 }
 
 #[actix_web::get(
