@@ -78,7 +78,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",
@@ -140,7 +140,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",
@@ -229,7 +229,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",
@@ -275,7 +275,7 @@
     },
     "query": "SELECT *\n             FROM read_requests\n             WHERE\n               requestee_eth_address = $1\n               AND request_open"
   },
-  "341e0734ded292537997057b91d7275d6da5ac51f676de0c7c9a6d909af7aca3": {
+  "20c8617b8cfe18a486a8a7c5949f907df17107940361fb2bd585c3c77d24ecd8": {
     "describe": {
       "columns": [
         {
@@ -291,7 +291,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",
@@ -331,12 +331,73 @@
       ],
       "parameters": {
         "Left": [
-          "Bool",
           "Int8"
         ]
       }
     },
-    "query": "UPDATE write_requests\n             SET request_approved = $1, request_open = false, last_updated_time = NOW()\n             WHERE id = $2\n             RETURNING *"
+    "query": "DELETE FROM write_requests\n             WHERE id = $1\n             RETURNING *"
+  },
+  "2c4d6d97e237cb4a19aeb88d3178d80f61b6c947176622a476f79d21e5d6eeda": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestor_details",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 5,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      }
+    },
+    "query": "DELETE FROM read_requests\n             WHERE id = $1\n             RETURNING *"
   },
   "39709820edafc596177de773679408707feb1930d3f9cd321e50286fd967afc2": {
     "describe": {
@@ -354,7 +415,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",
@@ -614,7 +675,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",
@@ -701,6 +762,68 @@
     },
     "query": "SELECT\n               ciphertext,\n               ironcore_document_id,\n               fhir_resource_id,\n               fhir_resource_type\n             FROM\n               resource_escrow\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_type = $2\n               AND fhir_resource_id = $3"
   },
+  "7934128c109ad20d4af55a5bfecd80fae1fb115b75567d8daf484b99815ecab0": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestor_details",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 5,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      }
+    },
+    "query": "UPDATE read_requests\n             SET\n               request_approved = true,\n               request_open = false,\n               last_updated_time = NOW()\n             WHERE id = $1\n             RETURNING *"
+  },
   "823dd791729e49d1601534d96b07d6af2d16511e5e24f6cbed801b8ca9747a9f": {
     "describe": {
       "columns": [
@@ -717,7 +840,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",
@@ -867,7 +990,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",
@@ -908,7 +1031,7 @@
       "parameters": {
         "Left": [
           "Bpchar",
-          "Bpchar",
+          "Varchar",
           "Bpchar"
         ]
       }
@@ -931,7 +1054,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",
@@ -1004,69 +1127,6 @@
     },
     "query": "INSERT INTO users (eth_public_address, email)\n             VALUES ($1, $2) RETURNING *"
   },
-  "c1d4cc9d50855876b82a208f2a641c493b6b8f8a8573ae564b1fc35f438cbf05": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        },
-        {
-          "name": "requestor_eth_address",
-          "ordinal": 1,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "requestor_details",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "requestee_eth_address",
-          "ordinal": 3,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "request_approved",
-          "ordinal": 4,
-          "type_info": "Bool"
-        },
-        {
-          "name": "request_open",
-          "ordinal": 5,
-          "type_info": "Bool"
-        },
-        {
-          "name": "created_time",
-          "ordinal": 6,
-          "type_info": "Timestamptz"
-        },
-        {
-          "name": "last_updated_time",
-          "ordinal": 7,
-          "type_info": "Timestamptz"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bool",
-          "Int8"
-        ]
-      }
-    },
-    "query": "UPDATE read_requests\n             SET request_approved = $1, request_open = false, last_updated_time = NOW()\n             WHERE id = $2\n             RETURNING *"
-  },
   "ced61c7bc9506d9f68af6e0d510d67780dad1e0c745b0534d0cabf734d0e955d": {
     "describe": {
       "columns": [
@@ -1083,7 +1143,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",
@@ -1124,12 +1184,74 @@
       "parameters": {
         "Left": [
           "Bpchar",
-          "Bpchar",
+          "Varchar",
           "Bpchar"
         ]
       }
     },
     "query": "INSERT INTO read_requests (\n               requestor_eth_address,\n               requestor_details,\n               requestee_eth_address,\n               created_time,\n               last_updated_time\n             )\n             VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *"
+  },
+  "d0b77f39d9321aabd6c6db33301f84d91c9e1738c83c85c9a119606d78682adb": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "requestor_eth_address",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "requestor_details",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "requestee_eth_address",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "request_approved",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 5,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_time",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "last_updated_time",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      }
+    },
+    "query": "UPDATE write_requests\n             SET\n               request_approved = true,\n               request_open = false,\n               last_updated_time = NOW()\n             WHERE id = $1\n             RETURNING *"
   },
   "db6e826641959b71603dd0dcfc9df9b2a54e475b9880846dc097bc18e362dc8c": {
     "describe": {
@@ -1147,7 +1269,7 @@
         {
           "name": "requestor_details",
           "ordinal": 2,
-          "type_info": "Bpchar"
+          "type_info": "Varchar"
         },
         {
           "name": "requestee_eth_address",

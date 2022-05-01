@@ -146,15 +146,30 @@ impl Db {
     pub fn update_read_request(
         &'_ self,
         id: i64,
-        approval: bool,
     ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
             "UPDATE read_requests
-             SET request_approved = $1, request_open = false, last_updated_time = NOW()
-             WHERE id = $2
+             SET
+               request_approved = true,
+               request_open = false,
+               last_updated_time = NOW()
+             WHERE id = $1
              RETURNING *",
-            approval,
+            id,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn delete_read_request(
+        &'_ self,
+        id: i64,
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "DELETE FROM read_requests
+             WHERE id = $1
+             RETURNING *",
             id,
         )
         .fetch_one(&self.pool)
@@ -248,15 +263,30 @@ impl Db {
     pub fn update_write_request(
         &'_ self,
         id: i64,
-        approval: bool,
     ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
         sqlx::query_as!(
             AccessRequest,
             "UPDATE write_requests
-             SET request_approved = $1, request_open = false, last_updated_time = NOW()
-             WHERE id = $2
+             SET
+               request_approved = true,
+               request_open = false,
+               last_updated_time = NOW()
+             WHERE id = $1
              RETURNING *",
-            approval,
+            id,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn delete_write_request(
+        &'_ self,
+        id: i64,
+    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            AccessRequest,
+            "DELETE FROM write_requests
+             WHERE id = $1
+             RETURNING *",
             id,
         )
         .fetch_one(&self.pool)
