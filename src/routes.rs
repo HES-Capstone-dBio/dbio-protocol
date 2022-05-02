@@ -110,18 +110,6 @@ async fn post_read_request(
         .map_err(adapt_db_error)
 }
 
-#[deprecated(since="0.1.0", note="use dbio/read_requests/id/ route instead")]
-async fn get_read_request(
-    db: Data<Db>,
-    path: Path<(String, String)>,
-) -> Result<Json<AccessRequest>, HttpError> {
-    let (requestee_eth_address, requestor_eth_address) = path.into_inner();
-    db.select_read_request(requestee_eth_address, requestor_eth_address)
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
-}
-
 #[actix_web::put("/read_requests/{id}")]
 async fn put_read_request_approval(
     db: Data<Db>,
@@ -153,18 +141,6 @@ async fn get_write_requests(
     }
     .map(Json)
     .map_err(adapt_db_error)
-}
-
-#[deprecated(since="0.1.0", note="use dbio/write_requests/id/ route instead")]
-async fn get_write_request(
-    db: Data<Db>,
-    path: Path<(String, String)>,
-) -> Result<Json<AccessRequest>, HttpError> {
-    let (requestee_eth_address, requestor_eth_address) = path.into_inner();
-    db.select_write_request(requestee_eth_address, requestor_eth_address)
-        .await
-        .map(Json)
-        .map_err(adapt_db_error)
 }
 
 #[actix_web::get("/write_requests/id/{id}")]

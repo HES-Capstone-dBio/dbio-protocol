@@ -89,25 +89,6 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
-    #[deprecated(since="0.1.0")]
-    pub fn select_read_request(
-        &'_ self,
-        requestee_eth_address: String,
-        requestor_eth_address: String,
-    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
-        sqlx::query_as!(
-            AccessRequest,
-            "SELECT *
-             FROM read_requests
-             WHERE
-               requestee_eth_address = $1
-               AND requestor_eth_address = $2",
-            requestee_eth_address,
-            requestor_eth_address,
-        )
-        .fetch_one(&self.pool)
-    }
-
     pub fn select_read_request_by_id(
         &'_ self,
         id: i64,
@@ -190,25 +171,6 @@ impl Db {
             requestee_eth_address,
         )
         .fetch_all(&self.pool)
-    }
-
-    #[deprecated(since="0.1.0")]
-    pub fn select_write_request(
-        &'_ self,
-        requestee_eth_address: String,
-        requestor_eth_address: String,
-    ) -> impl Future<Output = Result<AccessRequest, sqlx::Error>> + '_ {
-        sqlx::query_as!(
-            AccessRequest,
-            "SELECT *
-             FROM write_requests
-             WHERE
-               requestee_eth_address = $1
-               AND requestor_eth_address = $2",
-            requestee_eth_address,
-            requestor_eth_address,
-        )
-        .fetch_one(&self.pool)
     }
 
     pub fn select_write_request_by_id(
