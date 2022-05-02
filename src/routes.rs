@@ -110,7 +110,7 @@ async fn post_read_request(
         .map_err(adapt_db_error)
 }
 
-#[deprecated(since="0.1.0", note="use /read_requests/id/ route instead")]
+#[deprecated(since="0.1.0", note="use dbio/read_requests/id/ route instead")]
 #[actix_web::get("/read_requests/{requestee_eth_address}/{requestor_eth_address}")]
 async fn get_read_request(
     db: Data<Db>,
@@ -156,7 +156,7 @@ async fn get_write_requests(
     .map_err(adapt_db_error)
 }
 
-#[deprecated(since="0.1.0", note="use /read_requests/id/ route instead")]
+#[deprecated(since="0.1.0", note="use dbio/write_requests/id/ route instead")]
 #[actix_web::get("/write_requests/{requestee_eth_address}/{requestor_eth_address}")]
 async fn get_write_request(
     db: Data<Db>,
