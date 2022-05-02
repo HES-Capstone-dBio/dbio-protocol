@@ -505,6 +505,8 @@ The JSON returned is a list of JSON objects containing the following information
 
 #### `GET /dbio/read_requests/{requestee-eth-address}/{requestor-eth-address}`
 
+**Note:** This route has been deprecated in favor of [GET /dbio/read_requests/id/\{id\}](#get-dbioread_requestsidid).
+
 The get request to `/dbio/read_requests/{requestee-eth-address}/{requestor-eth-address}` takes as path parameters the following items:
 - `requestor_eth_address` - The Ethereum public address of the entity making the read request.
 - `requestee_eth_address` - The Ethereum public address of the entity receiving the read request.
@@ -690,6 +692,8 @@ The JSON returned is a list of JSON objects containing the following information
 - `request_open: Boolean` - Represents whether the write request is still open.
 
 #### `GET /dbio/write_requests/{requestee-eth-address}/{requestor-eth-address}`
+
+**Note:** This route has been deprecated in favor of [GET /dbio/write_requests/id/\{id\}](#get-dbiowrite_requestsidid).
 
 The get request to `/dbio/read_requests/{requestee-eth-address}/{requestor-eth-address}` takes as path parameters the following items:
 - `requestor_eth_address` - The Ethereum public address of the entity making the write request.

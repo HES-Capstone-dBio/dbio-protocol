@@ -110,6 +110,7 @@ async fn post_read_request(
         .map_err(adapt_db_error)
 }
 
+#[deprecated(since="0.1.0", note="use /read_requests/id/ route instead")]
 #[actix_web::get("/read_requests/{requestee_eth_address}/{requestor_eth_address}")]
 async fn get_read_request(
     db: Data<Db>,
@@ -155,6 +156,7 @@ async fn get_write_requests(
     .map_err(adapt_db_error)
 }
 
+#[deprecated(since="0.1.0", note="use /read_requests/id/ route instead")]
 #[actix_web::get("/write_requests/{requestee_eth_address}/{requestor_eth_address}")]
 async fn get_write_request(
     db: Data<Db>,
@@ -478,12 +480,10 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(get_user_by_eth)
         .service(get_user_by_email)
         .service(get_read_requests)
-        .service(get_read_request)
         .service(get_read_request_by_id)
         .service(post_read_request)
         .service(put_read_request_approval)
         .service(get_write_requests)
-        .service(get_write_request)
         .service(get_write_request_by_id)
         .service(post_write_request)
         .service(put_write_request_approval)
