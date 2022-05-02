@@ -89,6 +89,7 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
+    #[deprecated(since="0.1.0")]
     pub fn select_read_request(
         &'_ self,
         requestee_eth_address: String,
@@ -191,6 +192,7 @@ impl Db {
         .fetch_all(&self.pool)
     }
 
+    #[deprecated(since="0.1.0")]
     pub fn select_write_request(
         &'_ self,
         requestee_eth_address: String,
