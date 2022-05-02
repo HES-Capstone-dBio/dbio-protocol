@@ -2,6 +2,7 @@ mod db;
 mod logger;
 mod models;
 mod routes;
+mod contract;
 
 use actix_cors::Cors;
 use actix_web::body::BoxBody;
