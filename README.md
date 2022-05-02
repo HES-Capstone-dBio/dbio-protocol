@@ -67,14 +67,12 @@ The build will fail without completing this step.
 [Read Requests](#read-requests): Access requests that are made when third parties request access to read a user's resources. Users can either approve or deny read requests.
 - [POST /dbio/read_requests](#post-dbioread_requests)
 - [GET /dbio/read_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbioread_requestsrequestee-eth-addressfilteropenall)
-- [GET /dbio/read_requests/\{requestee-eth-address\}/\{requestor-eth-address\}](#get-dbioread_requestsrequestee-eth-addressrequestor-eth-address)
 - [GET /dbio/read_requests/id/\{id\}](#get-dbioread_requestsidid)
 - [PUT /dbio/read_requests/\{id\}?approve=\(true|false\)](#put-dbioread_requestsidapprovetruefalse)
 
 [Write Requests](#write-requests): Access requests that are made when third parties request access to write to a user's resources. Users can either approve or deny write requests.
 - [POST /dbio/write_requests](#post-dbiowrite_requests)
 - [GET /dbio/write_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbiowrite_requestsrequestee-eth-addressfilteropenall)
-- [GET /dbio/write_requests/\{requestee-eth-address\}/\{requestor-eth-address\}](#get-dbiowrite_requestsrequestee-eth-addressrequestor-eth-address)
 - [GET /dbio/write_requests/id/\{id\}](#get-dbiowrite_requestsidid)
 - [PUT /dbio/write_requests/\{id\}?approve=\(true|false\)](#put-dbiowrite_requestsidapprovetruefalse)
 
