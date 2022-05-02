@@ -67,14 +67,12 @@ The build will fail without completing this step.
 [Read Requests](#read-requests): Access requests that are made when third parties request access to read a user's resources. Users can either approve or deny read requests.
 - [POST /dbio/read_requests](#post-dbioread_requests)
 - [GET /dbio/read_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbioread_requestsrequestee-eth-addressfilteropenall)
-- [GET /dbio/read_requests/\{requestee-eth-address\}/\{requestor-eth-address\}](#get-dbioread_requestsrequestee-eth-addressrequestor-eth-address)
 - [GET /dbio/read_requests/id/\{id\}](#get-dbioread_requestsidid)
 - [PUT /dbio/read_requests/\{id\}?approve=\(true|false\)](#put-dbioread_requestsidapprovetruefalse)
 
 [Write Requests](#write-requests): Access requests that are made when third parties request access to write to a user's resources. Users can either approve or deny write requests.
 - [POST /dbio/write_requests](#post-dbiowrite_requests)
 - [GET /dbio/write_requests/\{requestee-eth-address\}?filter=\(open|all\)](#get-dbiowrite_requestsrequestee-eth-addressfilteropenall)
-- [GET /dbio/write_requests/\{requestee-eth-address\}/\{requestor-eth-address\}](#get-dbiowrite_requestsrequestee-eth-addressrequestor-eth-address)
 - [GET /dbio/write_requests/id/\{id\}](#get-dbiowrite_requestsidid)
 - [PUT /dbio/write_requests/\{id\}?approve=\(true|false\)](#put-dbiowrite_requestsidapprovetruefalse)
 
@@ -503,38 +501,6 @@ The JSON returned is a list of JSON objects containing the following information
 - `request_approved: Boolean` - Represents whether the read request has been approved.
 - `request_open: Boolean` - Represents whether the read request is still open.
 
-#### `GET /dbio/read_requests/{requestee-eth-address}/{requestor-eth-address}`
-
-The get request to `/dbio/read_requests/{requestee-eth-address}/{requestor-eth-address}` takes as path parameters the following items:
-- `requestor_eth_address` - The Ethereum public address of the entity making the read request.
-- `requestee_eth_address` - The Ethereum public address of the entity receiving the read request.
-
-The response returned is one of the following:
-- `200 Ok` - The read request with the associated Ethereum addresses was found.
-- `404 Not Found` - No read requests were found.
-
-In the case of `200 Ok`, the body of the response contains JSON.
-
-```json
-{
-    "id": 10,
-    "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
-    "requestor_details": "Web3 Hospital of Decentralized Healthcare",
-    "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
-    "request_approved": false,
-    "request_open": true,
-    "created_time" "2022-04-30 20:57:51.733801+00",
-    "last_updated_time" "2022-04-30 20:57:51.733801+00"
-}
-```
-The JSON returned is an object containing the following information:
-- `id: Integer` - the ID of the read request.
-- `requestor_eth_address: String` - The Ethereum public address of the entity making the read request.
-- `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
-- `requestee_eth_address: String` - The Ethereum public address of the entity receiving the read request.
-- `request_approved: Boolean` - Represents whether the read request has been approved.
-- `request_open: Boolean` - Represents whether the read request is still open.
-
 #### `GET /dbio/read_requests/id/{id}`
 
 The get request to `/dbio/read_requests/id/{id}` takes as path parameters the following items:
@@ -682,38 +648,6 @@ In the case of `200 Ok`, the body of the response contains JSON.
 
 ```
 The JSON returned is a list of JSON objects containing the following information:
-- `id: Integer` - the ID of the write request.
-- `requestor_eth_address: String` - The Ethereum public address of the entity making the write request.
-- `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
-- `requestee_eth_address: String` - The Ethereum public address of the entity receiving the write request.
-- `request_approved: Boolean` - Represents whether the write request has been approved.
-- `request_open: Boolean` - Represents whether the write request is still open.
-
-#### `GET /dbio/write_requests/{requestee-eth-address}/{requestor-eth-address}`
-
-The get request to `/dbio/read_requests/{requestee-eth-address}/{requestor-eth-address}` takes as path parameters the following items:
-- `requestor_eth_address` - The Ethereum public address of the entity making the write request.
-- `requestee_eth_address` - The Ethereum public address of the entity receiving the write request.
-
-The response returned is one of the following:
-- `200 Ok` - The write request with the associated Ethereum addresses was found.
-- `404 Not Found` - No write requests were found.
-
-In the case of `200 Ok`, the body of the response contains JSON.
-
-```json
-{
-    "id": 10,
-    "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
-    "requestor_details": "Web3 Hospital of Decentralized Healthcare",
-    "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
-    "request_approved": false,
-    "request_open": true,
-    "created_time" "2022-04-30 20:57:51.733801+00",
-    "last_updated_time" "2022-04-30 20:57:51.733801+00"
-}
-```
-The JSON returned is an object containing the following information:
 - `id: Integer` - the ID of the write request.
 - `requestor_eth_address: String` - The Ethereum public address of the entity making the write request.
 - `requestor_details: String` - Information that identifies the requestor as a real world entity (e.g. name of an organization).
