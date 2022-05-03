@@ -59,10 +59,10 @@ The build will fail without completing this step.
 
 - [POST /dbio/resources/claimed](#post-dbioresourcesclaimed)
 - [POST /dbio/resources/unclaimed](#post-dbioresourcesunclaimed)
-- [GET /dbio/resources/claimed/\{subject-eth-address\}](#get-dbioresourcesclaimedsubject-eth-address)
-- [GET /dbio/resources/unclaimed/\{subject-eth-address\}](#get-dbioresourcesunclaimedsubject-eth-address)
-- [GET /dbio/resources/claimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}](#get-dbioresourcesclaimedsubject-eth-addressfhir-resource-typefhir-resource-id)
-- [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}](#get-dbioresourcesunclaimedsubject-eth-addressfhir-resource-typefhir-resource-id)
+- [GET /dbio/resources/claimed/\{subject-eth-address\}/\{reader-eth-address\}](#get-dbioresourcesclaimedsubject-eth-addressreader-eth-address)
+- [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{reader-eth-address\}}](#get-dbioresourcesunclaimedsubject-eth-addressreader-eth-address)
+- [GET /dbio/resources/claimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}/\{reader-eth-address\}](#get-dbioresourcesclaimedsubject-eth-addressfhir-resource-typefhir-resource-idreader-eth-address)
+- [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}/\{reader-eth-address\}](#get-dbioresourcesunclaimedsubject-eth-addressfhir-resource-typefhir-resource-idreader-eth-address)
 
 [Read Requests](#read-requests): Access requests that are made when third parties request access to read a user's resources. Users can either approve or deny read requests.
 - [POST /dbio/read_requests](#post-dbioread_requests)
@@ -247,19 +247,11 @@ The JSON returned represents the created escrowed resource and contains the foll
 - `ciphertext: String` - the ciphertext generated after encrypting the resource.
 - `timestamp: String` - the timestamp at which the resource was created, formatted as per ISO 8601 standards.
 
-#### `GET /dbio/resources/claimed/{subject-eth-address}`
+#### `GET /dbio/resources/claimed/{subject-eth-address}/{reader-eth-address}`
 
 The get request to `/dbio/users/resources/claimed/{subject-eth-address}` takes as path parameters the following items:
 - `subject-eth-address` - The Ethereum public address of the subject of the queried resources.
-
-Additionally, it takes as input a JSON payload.
-```json
-{
-    "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584"
-}
-```
-The parameters in the JSON payload are:
-- `requestor_eth_address`: The Ethereum public address of the entity make the request to this route.
+- `reader-eth-address` - The Ethereum public address of the entity made the request to get the resource.
 
 The response returned is one of the following:
 - `200 Ok` - Resources were found for the subject.
@@ -293,19 +285,11 @@ The JSON returned is a list of JSON objects containing the following information
 - `ipfs_cid: String` - the content ID of the resource in IPFS storage.
 - `timestamp: String` - the timestamp at which the resource was created, formatted as per ISO 8601 standards.
 
-#### `GET /dbio/resources/unclaimed/{subject-eth-address}`
+#### `GET /dbio/resources/unclaimed/{subject-eth-address}/{reader-eth-address}`
 
 The get request to `/dbio/users/resources/unclaimed/{subject-eth-address}` takes as path parameters the following items:
 - `subject-eth-address` - The Ethereum public address of the subject of the queried resources.
-
-Additionally, it takes as input a JSON payload.
-```json
-{
-    "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584"
-}
-```
-The parameters in the JSON payload are:
-- `requestor_eth_address`: The Ethereum public address of the entity make the request to this route.
+- `reader-eth-address` - The Ethereum public address of the entity made the request to get the resource.
 
 The response returned is one of the following:
 - `200 Ok` - Resources were found for the subject.
@@ -338,21 +322,13 @@ The JSON returned is a list of JSON objects containing the following information
 - `ciphertext: String` - the ciphertext of the unclaimed resource.
 - `timestamp: String` - the timestamp at which the resource was created, formatted as per ISO 8601 standards.
 
-#### `GET /dbio/resources/claimed/{subject-eth-address}/{fhir-resource-type}/{fhir-resource-id}`
+#### `GET /dbio/resources/claimed/{subject-eth-address}/{fhir-resource-type}/{fhir-resource-id}/{reader-eth-address}`
 
 The get request to `/dbio/users/resources/claimed/{subject-eth-address}/{fhir-resource-type}/{resource-id}` takes as path parameters the following items:
 - `subject-eth-address` - The Ethereum public address of the subject of the queried resource.
 - `fhir-resource-type` - The type of the resource (correlates with a FHIR resource type).
 - `fhir-resource-id` - The FHIR resource ID of the resource for which to retrieve ciphertext for.
-
-Additionally, it takes as input a JSON payload.
-```json
-{
-    "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584"
-}
-```
-The parameters in the JSON payload are:
-- `requestor_eth_address`: The Ethereum public address of the entity make the request to this route.
+- `reader-eth-address` - The Ethereum public address of the entity made the request to get the resource.
 
 The response returned is one of the following:
 - `200 Ok` - A resource was found for the subject.
@@ -376,21 +352,13 @@ The JSON returned is a JSON object containing the following information:
 - `fhir_resource_type: String` - the type of the resource (should correlate with a FHIR resource type).
 - `fhir_resource_id: String` - the ID of the resource in the submitter's system.
 
-#### `GET /dbio/resources/unclaimed/{subject-eth-address}/{fhir-resource-type}/{fhir-resource-id}`
+#### `GET /dbio/resources/unclaimed/{subject-eth-address}/{fhir-resource-type}/{fhir-resource-id}/{reader-eth-address}`
 
 The get request to `/dbio/users/resources/unclaimed/{subject-eth-address}/{fhir-resource-type}/{resource-id}` takes as path parameters the following items:
 - `subject-eth-address` - The Ethereum public address of the subject of the queried resource.
 - `fhir-resource-type` - The type of the resource (correlates with a FHIR resource type).
 - `fhir-resource-id` - The FHIR resource ID of the resource for which to retrieve ciphertext for.
-
-Additionally, it takes as input a JSON payload.
-```json
-{
-    "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584"
-}
-```
-The parameters in the JSON payload are:
-- `requestor_eth_address`: The Ethereum public address of the entity make the request to this route.
+- `reader-eth-address` - The Ethereum public address of the entity made the request to get the resource.
 
 The response returned is one of the following:
 - `200 Ok` - A resource was found for the subject.
