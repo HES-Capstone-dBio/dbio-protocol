@@ -60,7 +60,7 @@ The build will fail without completing this step.
 - [POST /dbio/resources/claimed](#post-dbioresourcesclaimed)
 - [POST /dbio/resources/unclaimed](#post-dbioresourcesunclaimed)
 - [GET /dbio/resources/claimed/\{subject-eth-address\}/\{reader-eth-address\}](#get-dbioresourcesclaimedsubject-eth-addressreader-eth-address)
-- [GET /dbio/resources/unclaimed/\{subject-eth-address\/\{reader-eth-address\}}](#get-dbioresourcesunclaimedsubject-eth-addressreader-eth-address)
+- [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{reader-eth-address\}}](#get-dbioresourcesunclaimedsubject-eth-addressreader-eth-address)
 - [GET /dbio/resources/claimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}/\{reader-eth-address\}](#get-dbioresourcesclaimedsubject-eth-addressfhir-resource-typefhir-resource-idreader-eth-address)
 - [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}/\{reader-eth-address\}](#get-dbioresourcesunclaimedsubject-eth-addressfhir-resource-typefhir-resource-idreader-eth-address)
 
