@@ -196,20 +196,24 @@ async fn put_write_request_approval(
 }
 
 #[actix_web::get(
-    "/resources/claimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}"
+    "/resources/claimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}/{reader_eth_address}"
 )]
 async fn get_claimed_resource(
     db: Data<Db>,
-    requestor: Json<ReadAuthPayload>,
-    path: Path<(String, String, String)>,
+    path: Path<(String, String, String, String)>,
 ) -> Result<Json<ResourceData>, HttpError> {
-    let (subject_eth_address, fhir_resource_type, fhir_resource_id) = path.into_inner();
-
-    let reader_eth_address = requestor.into_inner().requestor_eth_address;
+    let (subject_eth_address,
+         fhir_resource_type,
+         fhir_resource_id,
+         reader_eth_address,
+    ) = path.into_inner();
 
     if reader_eth_address != subject_eth_address {
         match db
-            .check_read_access(reader_eth_address, subject_eth_address.clone())
+            .check_read_access(
+                reader_eth_address,
+                subject_eth_address.clone(),
+            )
             .await
         {
             Ok(request_status) => {
@@ -227,7 +231,11 @@ async fn get_claimed_resource(
     }
 
     let resource = db
-        .select_claimed_resource_data(subject_eth_address, fhir_resource_type, fhir_resource_id)
+        .select_claimed_resource_data(
+            subject_eth_address,
+            fhir_resource_type,
+            fhir_resource_id,
+        )
         .await
         .map_err(adapt_db_error)?;
 
@@ -246,16 +254,17 @@ async fn get_claimed_resource(
 }
 
 #[actix_web::get(
-    "/resources/unclaimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}"
+    "/resources/unclaimed/{subject_eth_address}/{fhir_resource_type}/{fhir_resource_id}/{reader_eth_address}"
 )]
 async fn get_unclaimed_resource(
     db: Data<Db>,
-    requestor: Json<ReadAuthPayload>,
-    path: Path<(String, String, String)>,
+    path: Path<(String, String, String, String)>,
 ) -> Result<Json<EscrowedResourceData>, HttpError> {
-    let (subject_eth_address, fhir_resource_type, fhir_resource_id) = path.into_inner();
-
-    let reader_eth_address = requestor.into_inner().requestor_eth_address;
+    let (subject_eth_address,
+        fhir_resource_type,
+        fhir_resource_id,
+        reader_eth_address,
+    ) = path.into_inner();
 
     if reader_eth_address != subject_eth_address {
         match db
@@ -391,14 +400,12 @@ async fn post_unclaimed_resource(
     .map_err(adapt_db_error)
 }
 
-#[actix_web::get("/resources/claimed/{subject_eth_address}")]
+#[actix_web::get("/resources/claimed/{subject_eth_address}/{reader_eth_address}")]
 async fn get_claimed_resource_metadata(
     db: Data<Db>,
-    requestor: Json<ReadAuthPayload>,
-    path: Path<String>,
+    path: Path<(String, String)>,
 ) -> Result<Json<Vec<Resource>>, HttpError> {
-    let subject_eth_address = path.into_inner();
-    let reader_eth_address = requestor.into_inner().requestor_eth_address;
+    let (subject_eth_address, reader_eth_address) = path.into_inner();
 
     if reader_eth_address != subject_eth_address {
         match db
@@ -425,14 +432,12 @@ async fn get_claimed_resource_metadata(
         .map_err(adapt_db_error)
 }
 
-#[actix_web::get("/resources/unclaimed/{subject_eth_address}")]
+#[actix_web::get("/resources/unclaimed/{subject_eth_address}/{reader_eth_address}")]
 async fn get_unclaimed_resource_metadata(
     db: Data<Db>,
-    requestor: Json<ReadAuthPayload>,
-    path: Path<String>,
+    path: Path<(String, String)>,
 ) -> Result<Json<Vec<EscrowedMetadata>>, HttpError> {
-    let subject_eth_address = path.into_inner();
-    let reader_eth_address = requestor.into_inner().requestor_eth_address;
+    let (subject_eth_address, reader_eth_address) = path.into_inner();
 
     if reader_eth_address != subject_eth_address {
         match db
