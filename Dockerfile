@@ -2,6 +2,8 @@ FROM rust:1.59.0
 
 ARG IPFS_KEY
 ENV IPFS_API_KEY ${IPFS_KEY}
+ARG ETH_PRIVATE_KEY
+ENV ETH_PRIVATE_KEY ${ETH_PRIVATE_KEY
 
 RUN apt update && apt install lld clang -y
 
