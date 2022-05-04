@@ -4,8 +4,9 @@
 
 ## Prerequisites
 
-You should have an account at https://web3.storage. Get an API token from Web3.Storage and export it in your
-environment as `IPFS_API_KEY="Web3.Storage API Token Here"`.
+You should have an account at https://web3.storage. Get an API token from Web3.Storage. This will
+be exported it in your environment as `IPFS_API_KEY="Web3.Storage API Token Here"`. Web3.Storage
+is used as an API to submit data to IPFS.
 
 ## Setup for Demo, Testing, and Experimentation
 
@@ -25,10 +26,10 @@ Once running, the protocol server will bind to `localhost:8080` and the UI at `l
    [LSP](https://microsoft.github.io/language-server-protocol/), install the `rust-analyzer`
    binary to greatly improve the development experience. The easiest version of
    this is in VSCode, where you can simply install `rust-analyzer` as an extension.
-2. Run `rustup toolchain stable` to install the most recent stable version of Rust.
+2. Run `rustup toolchain install stable` to install the most recent stable version of Rust.
 3. Install [Docker](https://www.docker.com/products/docker-desktop/).
-4. This project uses `sqlx`, a library which optionally validates code against
-   a running SQL database. To have the "full" development experience, it is
+4. This project uses [`sqlx`](https://github.com/launchbadge/sqlx#install), a library which optionally validates
+   code against a running SQL database. To have the "full" development experience, it is
    recommended to follow the rest of the instructions. To work in offline mode,
    `export SQLX_OFFLINE=true` then compile and run with `cargo run`.
 5. To start *only* the Postgres Docker container, run `docker compose -f ./docker-compose-dev.yml up`.
@@ -38,7 +39,8 @@ Once running, the protocol server will bind to `localhost:8080` and the UI at `l
 When developing actual code in this repository and any `sqlx` queries or database schemas are changed,
 you must run `cargo sqlx prepare`. This command regenerates the `sqlx-data.json` file, which should then
 be checked in and committed, as it is used when compiling offline and building the project's Docker image.
-The build will fail without completing this step.
+The build will fail without completing this step. In order to run this command, the `sqlx-cli` must be
+installed, for which instructions can be found [here](https://crates.io/crates/sqlx-cli).
 
 <br>
 
