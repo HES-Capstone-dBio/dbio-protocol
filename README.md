@@ -20,9 +20,10 @@ Once running, the protocol server will bind to `localhost:8080` and the UI at `l
 
 ## Setup for Development
 
-1. Install `cargo` and `rustup` from your favorite package manager. If
-   developing in a text editor which supports [LSP](https://microsoft.github.io/language-server-protocol/),
-   install the `rust-analyzer` binary to greatly improve the development experience. The easiest version of
+1. Install `cargo` and `rustup` from your favorite package manager, or with the instructions at
+   [Rustup](https://rustup.rs/) (recommended). If developing in a text editor which supports
+   [LSP](https://microsoft.github.io/language-server-protocol/), install the `rust-analyzer`
+   binary to greatly improve the development experience. The easiest version of
    this is in VSCode, where you can simply install `rust-analyzer` as an extension.
 2. Run `rustup toolchain stable` to install the most recent stable version of Rust.
 3. Install [Docker](https://www.docker.com/products/docker-desktop/).
