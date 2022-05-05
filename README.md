@@ -4,40 +4,99 @@
 
 ## Prerequisites
 
-You should have an account at https://web3.storage. Get an API token from Web3.Storage and export it in your
-environment as `IPFS_API_KEY="Web3.Storage API Token Here"`.
+### `Rustup`, `Cargo`, and Rust
 
-## Setup for Demo, Testing, and Experimentation
+You should have an installation of `cargo` and `rustup`. This can be done via your package manager
+of choice, or it can be done by following the instructions at https://rustup.rs/.
+Additionally, you need to install Rust, which can be done via the command `rustup toolchain install stable`.
+
+### `SQLX`
+
+`SQLX` is a library that optionally validates code against a running SQL database.
+More information about `SQLX` and its installation can be found at https://github.com/launchbadge/sqlx#install.
+Additionally, it is highly recommended to install the `sqlx-cli`, for which installation
+instructions can be found at https://crates.io/crates/sqlx-cli. Installation of the `sqlx-cli` is
+necessary to run some commands for migrations if either SQL schemas or SQL queries in the codebase are changed.
+
+### Docker
+
+Docker is used to containerize the application. Installation instructions can be found
+at https://www.docker.com/products/docker-desktop/.
+
+### Web3.Storage
+
+The server requires an `https://web3.storage` account to write to IPFS. Get an API token from Web3.Storage. This key must be exported it in your environment as `IPFS_API_KEY="Web3.Storage API Token Here"`. Web3.Storage is used as an API to submit data to IPFS.
+
+## Setup
+
+### Setup for Production and Demos
+
+#### With Docker
 
 If you simply wish to run the `dbio-protocol` server locally for API testing,
 the `docker-compose.yml` file in this repository composes together the most recent
-protocol server code, the most recent `dbio-client` UI image, and a Postgres database.
+protocol server code, the most recent `dbio-client` UI image, the most recent `dbio-fhir-proxy`
+image, and a Postgres database.
+If you do not wish to run either the client or the FHIR proxy, you can comment out the
+corresponding parts in `docker-compose.yml` in the `services` section.
+Note: the `dbio-protocol` server depends on a running instance of the Postgres database.
+Commenting out the `dbio-postgres` section of `docker-compose.yml` will result in failure
+of the `dbio-protocol` server to start up.
 
 You can run `docker compose up` or `docker compose up --detach` from this
 directory to spin up the entire dBio application as a set of connected containers.
 The whole setup should take about 5 minutes to build and run on a modern Macbook.
-Once running, the protocol server will bind to `localhost:8080` and the UI at `localhost:3000`.
+Once running, the protocol server will bind to `localhost:8080`, the DHIR proxy
+to `localhost:8081`, and the UI to `localhost:3000`. At this point, you can interact
+with running instances of all of the components of the dBio application.
 
-## Setup for Development
+#### Locally
 
-1. Install `cargo` and `rustup` from your favorite package manager. If
-   developing in a text editor which supports [LSP](https://microsoft.github.io/language-server-protocol/),
-   install the `rust-analyzer` binary to greatly improve the development experience. The easiest version of
-   this is in VSCode, where you can simply install `rust-analyzer` as an extension.
-2. Run `rustup toolchain stable` to install the most recent stable version of Rust.
-3. Install [Docker](https://www.docker.com/products/docker-desktop/).
-4. This project uses `sqlx`, a library which optionally validates code against
-   a running SQL database. To have the "full" development experience, it is
-   recommended to follow the rest of the instructions. To work in offline mode,
-   `export SQLX_OFFLINE=true` then compile and run with `cargo run`.
-5. To start *only* the Postgres Docker container, run `docker compose -f ./docker-compose-dev.yml up`.
-6. You can now compile the project with `cargo check`, or run with `cargo run`.
+If you wish to run the `dbio-protocol` server outside of a Docker container, do the following
+steps:
 
-**Important:**
+1. Start *only* the Postgres Docker container with `docker compose -f ./docker-compose-dev.yml up`.
+   This will start up the necessary Postgres database.
+2. Additionally, export the environmental variables:
+   - `export IPFS_API_KEY={Web3.Storage API Key here}`, using the API key from Web3.Storage.
+   - `export DATABASE_URL=postgres://postgres:password@localhost/dbio-protocol-db`.
+     Alternatively, you can uncomment the line with `DATABASE_URL` in the `.env` file.
+3. Run the command `SQLX_OFFLINE=true cargo build --release`. This will build the application.
+4. Run the command `./target/release/dbio-protocol`. This will run the application.
+
+### Setup for Development
+
+#### Local Build for Testing and Development
+
+Follow these steps:
+
+1. Start *only* the Postgres Docker container with `docker compose -f ./docker-compose-dev.yml up`.
+   This will start up the necessary Postgres database.
+2. Additionally, export the environmental variables:
+   - `export IPFS_API_KEY={Web3.Storage API Key here}`, using the API key from Web3.Storage.
+   - `export DATABASE_URL=postgres://postgres:password@localhost/dbio-protocol-db`.
+     Alternatively, you can uncomment the line with `DATABASE_URL` in the `.env` file.
+3. Run the command `SQLX_OFFLINE=true cargo build`. This will build the application.
+   Alternatively, you can run directly with the command `SQLX_OFFLINE=true cargo run`, and
+   skip step 4.
+4. Run the command `./target/debug/dbio-protocol`. This will run the application (applicable
+   only if you ran the `cargo build` command in step 3).
+
+### Development Information
+
+#### **SQLX Offline Mode & Migrations**
 When developing actual code in this repository and any `sqlx` queries or database schemas are changed,
 you must run `cargo sqlx prepare`. This command regenerates the `sqlx-data.json` file, which should then
 be checked in and committed, as it is used when compiling offline and building the project's Docker image.
 The build will fail without completing this step.
+
+#### Compiling and Running Rust Programs
+To check Rust code for errors (as well as errors in dependencies), run `cargo check`.
+To build a Rust program, run `cargo build`. The generated executable is at `./target/debug/dbio-protocol`.
+To build a more optimized version for production, run `cargo build --release`. The generated executable is
+at `./target/release/dbio-protocol`.
+To compile and run directly, run `cargo run`.
+To clean up the `target` directory, run `cargo clean`.
 
 <br>
 
@@ -60,7 +119,7 @@ The build will fail without completing this step.
 - [POST /dbio/resources/claimed](#post-dbioresourcesclaimed)
 - [POST /dbio/resources/unclaimed](#post-dbioresourcesunclaimed)
 - [GET /dbio/resources/claimed/\{subject-eth-address\}/\{reader-eth-address\}](#get-dbioresourcesclaimedsubject-eth-addressreader-eth-address)
-- [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{reader-eth-address\}}](#get-dbioresourcesunclaimedsubject-eth-addressreader-eth-address)
+- [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{reader-eth-address\}](#get-dbioresourcesunclaimedsubject-eth-addressreader-eth-address)
 - [GET /dbio/resources/claimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}/\{reader-eth-address\}](#get-dbioresourcesclaimedsubject-eth-addressfhir-resource-typefhir-resource-idreader-eth-address)
 - [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}/\{reader-eth-address\}](#get-dbioresourcesunclaimedsubject-eth-addressfhir-resource-typefhir-resource-idreader-eth-address)
 
