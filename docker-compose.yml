@@ -12,7 +12,8 @@ services:
 
   dbio-protocol:
     container_name: dbio-protocol
-    image: ssheldharv/dbio-protocol:latest
+    #image: ssheldharv/dbio-protocol:latest
+    build: .
     environment:
       DATABASE_URL: postgres://postgres:password@dbio-postgres/dbio-protocol-db
     ports:
