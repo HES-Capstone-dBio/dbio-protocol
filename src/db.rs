@@ -269,9 +269,11 @@ impl Db {
                creator_eth_address,
                fhir_resource_type,
                ipfs_cid,
+               eth_nft_voucher,
+               nft_minted,
                timestamp
              )
-             VALUES ($1, $2, $3, $4, $5, $6, $7)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
              RETURNING *",
             data.fhir_resource_id,
             data.ironcore_document_id,
@@ -279,6 +281,8 @@ impl Db {
             data.creator_eth_address,
             data.fhir_resource_type,
             data.ipfs_cid,
+            data.eth_nft_voucher,
+            data.nft_minted,
             data.timestamp,
         )
         .fetch_one(&self.pool)

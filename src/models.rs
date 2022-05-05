@@ -17,6 +17,8 @@ pub struct Resource {
     pub creator_eth_address: String,
     pub fhir_resource_type: String,
     pub ipfs_cid: String,
+    pub eth_nft_voucher: String,
+    pub nft_minted: bool,
     pub timestamp: DateTime<Utc>,
 }
 
@@ -69,6 +71,8 @@ pub struct ResourceData {
     pub ironcore_document_id: String,
     pub fhir_resource_id: String,
     pub fhir_resource_type: String,
+    pub eth_nft_voucher: String,
+    pub nft_minted: bool,
 }
 
 #[derive(Serialize, FromRow)]

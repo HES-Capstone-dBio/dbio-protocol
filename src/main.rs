@@ -2,7 +2,8 @@ mod db;
 mod logger;
 mod models;
 mod routes;
-mod contract;
+mod nft;
+mod ipfs;
 
 use actix_cors::Cors;
 use actix_web::body::BoxBody;
