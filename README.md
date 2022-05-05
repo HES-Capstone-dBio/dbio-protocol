@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-### `Rustup`, `Cargo`, and Rust
+### Rust
 
 You should have an installation of `cargo` and `rustup`. This can be done via your package manager
 of choice, or it can be done by following the instructions at https://rustup.rs/.
