@@ -1,0 +1,1255 @@
+{
+	"info": {
+		"_postman_id": "5e99d3c8-0712-4f50-841a-7f62bc37b9ba",
+		"name": "dBio Protocol",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Post User 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser1@dbio.com\",\n    \"eth_public_address\": \"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post User 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser2@dbio.com\",\n    \"eth_public_address\": \"0xaf33F683b7191D5D87922413894aC408f1036FD0\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post User 3",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser3@dbio.com\",\n    \"eth_public_address\": \"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by Eth Address",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/users/eth/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"users",
+						"eth",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by Email",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/users/email/testuser1@dbio.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"users",
+						"email",
+						"testuser1@dbio.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Write Request 1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"requestor_eth_address\": \"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f\",\n\t\"requestor_details\": \"Entity B\",\n\t\"requestee_eth_address\": \"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Write Request List 1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Write Request 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"requestor_eth_address\": \"0xaf33F683b7191D5D87922413894aC408f1036FD0\",\n\t\"requestor_details\": \"Entity C\",\n\t\"requestee_eth_address\": \"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Write Request List 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Write Request 1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/id/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"id",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Write Request 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/id/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"id",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Open Write Request List 1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=open",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "open"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Accept Write Request 1",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/1?approve=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"1"
+					],
+					"query": [
+						{
+							"key": "approve",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Open Write Request List 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deny Write Request 2",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/2?approve=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"2"
+					],
+					"query": [
+						{
+							"key": "approve",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Open Write Request List 3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Write Request List 3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Read Request 1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"requestor_eth_address\": \"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f\",\n\t\"requestor_details\": \"Entity B\",\n\t\"requestee_eth_address\": \"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/read_requests",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"read_requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Read Request List 1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/read_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"read_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Read Request 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"requestor_eth_address\": \"0xaf33F683b7191D5D87922413894aC408f1036FD0\",\n\t\"requestor_details\": \"Entity C\",\n\t\"requestee_eth_address\": \"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/read_requests",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"read_requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Read Request List 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/read_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"read_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Read Request 1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/read_requests/id/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"read_requests",
+						"id",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Read Request 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/read_requests/id/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"read_requests",
+						"id",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Open Read Request List 1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=open",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "open"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Accept Read Request 1",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/read_requests/1?approve=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"read_requests",
+						"1"
+					],
+					"query": [
+						{
+							"key": "approve",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Open Read Request List 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=open",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "open"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deny Read Request 2",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/read_requests/2?approve=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"read_requests",
+						"2"
+					],
+					"query": [
+						{
+							"key": "approve",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Open Read Request List 3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/write_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=open",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"write_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "open"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Read Request List 3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/read_requests/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78?filter=all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"read_requests",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Unclaimed Resource 1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser1@dbio.com\",\n    \"creator_eth_address\": \"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f\",\n    \"fhir_resource_type\": \"patient\",\n    \"fhir_resource_id\": \"pt-23\",\n\t\"ironcore_document_id\": \"2b544876c9ec9fa56c800c3a2235fdbd\",\n    \"ciphertext\": \"patienttest1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/unclaimed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"unclaimed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Unclaimed Resource 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser1@dbio.com\",\n    \"creator_eth_address\": \"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f\",\n    \"fhir_resource_type\": \"doctore\",\n    \"fhir_resource_id\": \"pt-24\",\n\t\"ironcore_document_id\": \"1c282139a1fb7a452a942b2f4390a2da\",\n    \"ciphertext\": \"patienttest2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/unclaimed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"unclaimed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Unclaimed Resource Without Permission",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser1@dbio.com\",\n    \"creator_eth_address\": \"0xaf33F683b7191D5D87922413894aC408f1036FD0\",\n    \"fhir_resource_type\": \"patient\",\n    \"fhir_resource_id\": \"pt-25\",\n\t\"ironcore_document_id\": \"2b544876c9ec9fa56c800c3a2235fdbd\",\n    \"ciphertext\": \"patienttest3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/unclaimed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"unclaimed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Unclaimed Resource Metadata",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/unclaimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"unclaimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Self Unclaimed Resource Metadata",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/unclaimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"unclaimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Unclaimed Resource Metadata Without Permission",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/unclaimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/0xaf33F683b7191D5D87922413894aC408f1036FD0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"unclaimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"0xaf33F683b7191D5D87922413894aC408f1036FD0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Unclaimed Resource",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/unclaimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/patient/pt-23/0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"unclaimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"patient",
+						"pt-23",
+						"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Self Unclaimed Resource",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/unclaimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/patient/pt-23/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"unclaimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"patient",
+						"pt-23",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Unclaimed Resource Without Permission",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/unclaimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/patient/pt-23/0xaf33F683b7191D5D87922413894aC408f1036FD0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"unclaimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"patient",
+						"pt-23",
+						"0xaf33F683b7191D5D87922413894aC408f1036FD0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Claimed Resource 1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser1@dbio.com\",\n    \"creator_eth_address\": \"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f\",\n    \"fhir_resource_type\": \"patient\",\n    \"fhir_resource_id\": \"pt-23\",\n\t\"ironcore_document_id\": \"2b544876c9ec9fa56c800c3a2235fdbd\",\n    \"ciphertext\": \"patienttest1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/claimed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"claimed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Claimed Resource 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser1@dbio.com\",\n    \"creator_eth_address\": \"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f\",\n    \"fhir_resource_type\": \"doctore\",\n    \"fhir_resource_id\": \"pt-24\",\n\t\"ironcore_document_id\": \"1c282139a1fb7a452a942b2f4390a2da\",\n    \"ciphertext\": \"patienttest2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/claimed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"claimed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Claimed Resource Without Permission",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser1@dbio.com\",\n    \"creator_eth_address\": \"0xaf33F683b7191D5D87922413894aC408f1036FD0\",\n    \"fhir_resource_type\": \"patient\",\n    \"fhir_resource_id\": \"pt-25\",\n\t\"ironcore_document_id\": \"2b544876c9ec9fa56c800c3a2235fdbd\",\n    \"ciphertext\": \"patienttest3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/claimed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"claimed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Claimed Resource Metadata",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/claimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"claimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Self Claimed Resource Metadata",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/claimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"claimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Claimed Resource Metadata Without Permission",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/claimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/0xaf33F683b7191D5D87922413894aC408f1036FD0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"claimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"0xaf33F683b7191D5D87922413894aC408f1036FD0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Claimed Resource",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/claimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/patient/pt-23/0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"claimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"patient",
+						"pt-23",
+						"0xcd109b4Fe805495b8b35C50B906bbbA55c64f69f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Self Claimed Resource",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/claimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/patient/pt-23/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"claimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"patient",
+						"pt-23",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Claimed Resource Without Permission",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dbio/resources/claimed/0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78/patient/pt-23/0xaf33F683b7191D5D87922413894aC408f1036FD0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dbio",
+						"resources",
+						"claimed",
+						"0x3Ca9dBA293Fa5f29Ea8C8BCf7E6Fa93e7387ed78",
+						"patient",
+						"pt-23",
+						"0xaf33F683b7191D5D87922413894aC408f1036FD0"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
