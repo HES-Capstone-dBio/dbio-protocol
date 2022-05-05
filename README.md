@@ -4,12 +4,6 @@
 
 ## Prerequisites
 
-### Web3.Storage
-
-You should have an account at https://web3.storage. Get an API token from Web3.Storage. This will
-be exported it in your environment as `IPFS_API_KEY="Web3.Storage API Token Here"`. Web3.Storage
-is used as an API to submit data to IPFS.
-
 ### `Rustup`, `Cargo`, and Rust
 
 You should have an installation of `cargo` and `rustup`. This can be done via your package manager
@@ -28,6 +22,10 @@ necessary to run some commands for migrations if either SQL schemas or SQL queri
 
 Docker is used to containerize the application. Installation instructions can be found
 at https://www.docker.com/products/docker-desktop/.
+
+### Web3.Storage
+
+The server requires an `https://web3.storage` account to write to IPFS. Get an API token from Web3.Storage. This key must be exported it in your environment as `IPFS_API_KEY="Web3.Storage API Token Here"`. Web3.Storage is used as an API to submit data to IPFS.
 
 ## Setup
 
