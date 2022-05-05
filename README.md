@@ -55,7 +55,6 @@ of the `dbio-protocol` server to start up.
 You can run `docker compose up` or `docker compose up --detach` from this
 directory to spin up the entire dBio application as a set of connected containers.
 The whole setup should take about 5 minutes to build and run on a modern Macbook.
-<<<<<<< HEAD
 Once running, the protocol server will bind to `localhost:8080`, the DHIR proxy
 to `localhost:8081`, and the UI to `localhost:3000`. At this point, you can interact
 with running instances of all of the components of the dBio application.
@@ -95,32 +94,18 @@ Follow these steps:
 ### Development Information
 
 #### **SQLX Offline Mode & Migrations**
-=======
-Once running, the protocol server will bind to `localhost:8080` and the UI at `localhost:3000`.
-
-## Setup for Development
-
-1. Install `cargo` and `rustup` from your favorite package manager, or with the instructions at
-   [Rustup](https://rustup.rs/) (recommended). If developing in a text editor which supports
-   [LSP](https://microsoft.github.io/language-server-protocol/), install the `rust-analyzer`
-   binary to greatly improve the development experience. The easiest version of
-   this is in VSCode, where you can simply install `rust-analyzer` as an extension.
-2. Run `rustup toolchain install stable` to install the most recent stable version of Rust.
-3. Install [Docker](https://www.docker.com/products/docker-desktop/).
-4. This project uses [`sqlx`](https://github.com/launchbadge/sqlx#install), a library which optionally validates
-   code against a running SQL database. To have the "full" development experience, it is
-   recommended to follow the rest of the instructions. To work in offline mode,
-   `export SQLX_OFFLINE=true` then compile and run with `cargo run`.
-5. To start *only* the Postgres Docker container, run `docker compose -f ./docker-compose-dev.yml up`.
-6. You can now compile the project with `cargo check`, or run with `cargo run`.
-
-**Important:**
->>>>>>> 610bee6 (more build and dependency details)
 When developing actual code in this repository and any `sqlx` queries or database schemas are changed,
 you must run `cargo sqlx prepare`. This command regenerates the `sqlx-data.json` file, which should then
 be checked in and committed, as it is used when compiling offline and building the project's Docker image.
-The build will fail without completing this step. In order to run this command, the `sqlx-cli` must be
-installed, for which instructions can be found [here](https://crates.io/crates/sqlx-cli).
+The build will fail without completing this step.
+
+#### Compiling and Running Rust Programs
+To check Rust code for errors (as well as errors in dependencies), run `cargo check`.
+To build a Rust program, run `cargo build`. The generated executable is at `./target/debug/dbio-protocol`.
+To build a more optimized version for production, run `cargo build --release`. The generated executable is
+at `./target/release/dbio-protocol`.
+To compile and run directly, run `cargo run`.
+To clean up the `target` directory, run `cargo clean`.
 
 #### Compiling and Running Rust Programs
 To check Rust code for errors (as well as errors in dependencies), run `cargo check`.
