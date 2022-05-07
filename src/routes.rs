@@ -288,7 +288,9 @@ async fn post_claimed_resource(
         Err(_) => return Err(ErrorForbidden("please submit a write access request")),
     };
 
-    let cid = ipfs_add(in_data.ciphertext).await.map_err(ErrorInternalServerError)?;
+    let cid = ipfs_add(in_data.ciphertext)
+        .await
+        .map_err(ErrorInternalServerError)?;
 
     let voucher_payload = create_nft_voucher(cid.clone())
         .await
@@ -431,6 +433,22 @@ async fn get_unclaimed_resource_metadata(
         .map_err(adapt_db_error)
 }
 
+#[actix_web::get("/resources/claimed/mint/{creator_eth_address}/{fhir_resource_id}")]
+async fn put_nft_status(
+    db: Data<Db>,
+    creator_eth_address: Path<String>,
+    fhir_resource_id: Path<String>,
+) -> Result<Json<Resource>, HttpError> {
+    db.update_nft_status(
+        true,
+        creator_eth_address.into_inner(),
+        fhir_resource_id.into_inner(),
+    )
+    .await
+    .map(Json)
+    .map_err(adapt_db_error)
+}
+
 pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/dbio")
         .service(post_user)
@@ -450,4 +468,5 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(get_write_request_by_id)
         .service(post_write_request)
         .service(put_write_request_approval)
+        .service(put_nft_status)
 }
