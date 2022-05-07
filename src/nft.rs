@@ -1,11 +1,11 @@
 use crate::ipfs::to_ipfs_uri;
 use ethers::contract::{Eip712, EthAbiType};
 use ethers::core::k256::elliptic_curve;
+use ethers::signers::LocalWallet;
 use ethers::signers::*;
 use ethers::types::transaction::eip712::*;
 use serde::Serialize;
 use std::env;
-use std::string::FromUtf8Error;
 use std::fmt::Display;
 
 #[derive(Debug, Serialize)]
@@ -14,6 +14,7 @@ pub enum NFTError {
     Conversion(String),
     SecretKey(String),
     Wallet(String),
+    EnvVar(String),
 }
 
 impl Display for NFTError {
@@ -22,15 +23,9 @@ impl Display for NFTError {
     }
 }
 
-impl From<Eip712Error> for NFTError {
-    fn from(e: Eip712Error) -> Self {
-        NFTError::Encoding(e.to_string())
-    }
-}
-
-impl From<FromUtf8Error> for NFTError {
-    fn from(e: FromUtf8Error) -> Self {
-        NFTError::Conversion(e.to_string())
+impl From<std::env::VarError> for NFTError {
+    fn from(e: std::env::VarError) -> Self {
+        NFTError::EnvVar(e.to_string())
     }
 }
 
@@ -66,7 +61,7 @@ pub struct NFTVoucherPayload {
 
 /** Constructs a local wallet from private key in the environment */
 fn build_wallet() -> Result<LocalWallet, NFTError> {
-    let key = env::var("ETH_PRIVATE_KEY").expect("Did not find ETH_PRIVATE_KEY in environment");
+    let key = env::var("ETH_PRIVATE_KEY")?;
     let wallet: LocalWallet = key.parse()?;
     Ok(wallet)
 }

@@ -7,10 +7,10 @@ use actix_web::web::*;
 use futures::prelude::*;
 use sqlx::Error::RowNotFound;
 
-use crate::ipfs::*;
-use crate::nft::*;
 use crate::db::Db;
+use crate::ipfs::*;
 use crate::models::*;
+use crate::nft::*;
 use chrono::offset::Utc;
 
 impl From<NFTError> for HttpError {
@@ -175,18 +175,12 @@ async fn get_claimed_resource(
     db: Data<Db>,
     path: Path<(String, String, String, String)>,
 ) -> Result<Json<ResourceData>, HttpError> {
-    let (subject_eth_address,
-         fhir_resource_type,
-         fhir_resource_id,
-         reader_eth_address,
-    ) = path.into_inner();
+    let (subject_eth_address, fhir_resource_type, fhir_resource_id, reader_eth_address) =
+        path.into_inner();
 
     if reader_eth_address != subject_eth_address {
         match db
-            .check_read_access(
-                reader_eth_address,
-                subject_eth_address.clone(),
-            )
+            .check_read_access(reader_eth_address, subject_eth_address.clone())
             .await
         {
             Ok(request_status) => {
@@ -204,11 +198,7 @@ async fn get_claimed_resource(
     }
 
     let resource = db
-        .select_claimed_resource_data(
-            subject_eth_address,
-            fhir_resource_type,
-            fhir_resource_id,
-        )
+        .select_claimed_resource_data(subject_eth_address, fhir_resource_type, fhir_resource_id)
         .await
         .map_err(adapt_db_error)?;
 
@@ -235,11 +225,8 @@ async fn get_unclaimed_resource(
     db: Data<Db>,
     path: Path<(String, String, String, String)>,
 ) -> Result<Json<EscrowedResourceData>, HttpError> {
-    let (subject_eth_address,
-        fhir_resource_type,
-        fhir_resource_id,
-        reader_eth_address,
-    ) = path.into_inner();
+    let (subject_eth_address, fhir_resource_type, fhir_resource_id, reader_eth_address) =
+        path.into_inner();
 
     if reader_eth_address != subject_eth_address {
         match db
@@ -273,10 +260,10 @@ async fn post_claimed_resource(
 ) -> Result<Json<Resource>, HttpError> {
     let in_data = payload.into_inner();
 
-    let subject = match db.select_user_by_email(in_data.email).await {
-        Ok(user) => user,
-        Err(e) => return Err(adapt_db_error(e)),
-    };
+    let subject = db
+        .select_user_by_email(in_data.email)
+        .await
+        .map_err(adapt_db_error)?;
 
     if in_data.creator_eth_address == subject.eth_public_address {
         return Err(ErrorForbidden("users can not write their own records"));
@@ -301,16 +288,13 @@ async fn post_claimed_resource(
         Err(_) => return Err(ErrorForbidden("please submit a write access request")),
     };
 
-    let cid = ipfs_add(in_data.ciphertext)
+    let cid = ipfs_add(in_data.ciphertext).await.map_err(ErrorInternalServerError)?;
+
+    let voucher_payload = create_nft_voucher(cid.clone())
         .await
         .map_err(ErrorInternalServerError)?;
 
-    let eth_nft_voucher = {
-        let voucher_payload = create_nft_voucher(cid.clone())
-            .await
-            .map_err(|e| ErrorInternalServerError(e.to_string()))?;
-        serde_json::to_string(&voucher_payload)?
-    };
+    let eth_nft_voucher = serde_json::to_string(&voucher_payload)?;
 
     db.remove_from_escrow(
         in_data.creator_eth_address.clone(),
