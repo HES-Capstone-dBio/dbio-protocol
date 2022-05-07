@@ -63,6 +63,7 @@ The build will fail without completing this step.
 - [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{reader-eth-address\}}](#get-dbioresourcesunclaimedsubject-eth-addressreader-eth-address)
 - [GET /dbio/resources/claimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}/\{reader-eth-address\}](#get-dbioresourcesclaimedsubject-eth-addressfhir-resource-typefhir-resource-idreader-eth-address)
 - [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}/\{reader-eth-address\}](#get-dbioresourcesunclaimedsubject-eth-addressfhir-resource-typefhir-resource-idreader-eth-address)
+- [PUT dbio/resources/claimed/mint/\{creator\_eth\_address\}/{fhir\_resource\_id\}\?minted\=\(true\|false\)](#put-dbioresourcesclaimedmintcreator-eth-addressfhir-resource-idmintedtruefalse)
 
 [Read Requests](#read-requests): Access requests that are made when third parties request access to read a user's resources. Users can either approve or deny read requests.
 - [POST /dbio/read_requests](#post-dbioread_requests)
@@ -391,6 +392,29 @@ The JSON returned is a JSON object containing the following information:
 - `fhir_resource_type: String` - the type of the resource (should correlate with a FHIR resource type).
 - `fhir_resource_id: String` - the ID of the resource in the submitter's system.
 
+#### `PUT dbio/resources/claimed/mint/{creator_eth_address}/{fhir_resource_id}?minted=(true|false)`
+
+Updates the `nft_minted` status to the value of boolean query parameter `minted`.
+Requires path parameters `creator_eth_address` and `fhir_resource_id`, both of which are strings
+and refer to the resource in question by the primary key on the `resources` table.
+
+Return value is a `Resource` payload with the `nft_minted` field updated to the specified
+value.
+
+```
+{
+    "fhir_resource_id": "insert_fhir_resource_id_here",
+    "ironcore_document_id": "2b544876c9ec9fa56c800c3a2235fdbd",
+    "subject_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
+    "creator_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
+    "fhir_resource_type": "insert_resource_type_here",
+    "ipfs_cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+    "eth_nft_voucher": "{ \"uri\": \"https://ipfs.io/ipfs/bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi\", \"signature\": \"793fe62fb070cfd09869b765fb3b70f5dc85572f68dcada36d6e92d362463bed38671da834cc7dc3f92fa6962afb996de90c6e84fcc8d1b3d08bc4fd7518c2b31b\" }",
+    "nft_minted": true,
+    "timestamp": "2022-04-16T16:22:20.949607Z"
+}
+```
+
 <br>
 
 ---
@@ -683,9 +707,7 @@ In the case of `200 Ok`, JSON is returned:
     "id": 10,
     "requestor_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
     "requestor_details": "Web3 Hospital of Decentralized Healthcare",
-    "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240",
-    "request_approved": false,
-    "request_open": true,
+    "requestee_eth_address": "0xE2b01f344355A01331470417711b1Dca1982A240", "request_approved": false, "request_open": true,
     "created_time" "2022-04-30 20:57:51.733801+00",
     "last_updated_time" "2022-04-30 20:57:51.733801+00"
 }
@@ -697,3 +719,4 @@ The JSON returned is an object that represents the updated write request, contai
 - `requestee_eth_address: String` - The Ethereum public address of the entity receiving the write request.
 - `request_approved: Boolean` - Represents whether the write request has been approved.
 - `request_open: Boolean` - Represents whether the write request is still open.
+

@@ -436,11 +436,12 @@ async fn get_unclaimed_resource_metadata(
 #[actix_web::get("/resources/claimed/mint/{creator_eth_address}/{fhir_resource_id}")]
 async fn put_nft_status(
     db: Data<Db>,
+    minted: Query<bool>,
     creator_eth_address: Path<String>,
     fhir_resource_id: Path<String>,
 ) -> Result<Json<Resource>, HttpError> {
     db.update_nft_status(
-        true,
+        minted.into_inner(),
         creator_eth_address.into_inner(),
         fhir_resource_id.into_inner(),
     )
