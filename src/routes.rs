@@ -450,6 +450,16 @@ async fn put_nft_status(
     .map_err(adapt_db_error)
 }
 
+#[actix_web::get("/voucher/{cid}")]
+async fn get_voucher(
+    cid: String,
+) -> Result<Json<NFTVoucherPayload>, HttpError> {
+    create_nft_voucher(cid)
+        .await
+        .map(Json)
+        .map_err(ErrorInternalServerError)
+}
+
 pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/dbio")
         .service(post_user)
@@ -470,4 +480,5 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(post_write_request)
         .service(put_write_request_approval)
         .service(put_nft_status)
+        .service(get_voucher)
 }
