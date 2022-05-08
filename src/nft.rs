@@ -41,12 +41,12 @@ impl From<WalletError> for NFTError {
     }
 }
 
-#[derive(Clone, Eip712, EthAbiType)]
+#[derive(Debug, Clone, Eip712, EthAbiType)]
 #[eip712(
     name = "DBio",
     version = "1",
     chain_id = 4, // Rinkeby testnet
-    verifying_contract = "0xEdd57d64f68D11cEF21bAacBfbcDE308DC1bF828" // dBio smart contract
+    verifying_contract = "0x3F59dA0e73De96ebF276C7CD5ad15F41eD474070" // dBio smart contract
 )]
 struct NFTVoucher {
     uri: String,
