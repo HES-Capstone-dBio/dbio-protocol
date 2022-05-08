@@ -1,6 +1,12 @@
 ![dbio-logo](./readme-assets/dbio-logo.png)
 
-# dBio Protocol Server
+# About
+
+The dBio protocol server is a part of the overall [dBio application / protocol](https://github.com/HES-Capstone-dBio).
+It contains the server logic to store and retrieve metadata, as well as the logic to store encrypted texts to
+IPFS and sign vouchers for minting NFTs. Both the [dBio Client](https://github.com/HES-Capstone-dBio/dbio-client)
+and the [dbio FHIR Proxy](https://github.com/HES-Capstone-dBio/dbio-fhir-proxy) depend on the
+protocol server via API calls. The dBio protocol server persists data with a Postgres database.
 
 <br>
 
@@ -107,6 +113,7 @@ at `./target/release/dbio-protocol`.
 To compile and run directly, run `cargo run`.
 To clean up the `target` directory, run `cargo clean`.
 
+<<<<<<< HEAD
 #### Compiling and Running Rust Programs
 To check Rust code for errors (as well as errors in dependencies), run `cargo check`.
 To build a Rust program, run `cargo build`. The generated executable is at `./target/debug/dbio-protocol`.
@@ -114,6 +121,23 @@ To build a more optimized version for production, run `cargo build --release`. T
 at `./target/release/dbio-protocol`.
 To compile and run directly, run `cargo run`.
 To clean up the `target` directory, run `cargo clean`.
+=======
+#### Testing
+Included in this repository is a file called `dbio-protocol.postman_collection.json` that contains
+[Postman](https://www.postman.com/) API calls that were used in the testing of this protocol server.
+Installation instructions for Postman are at https://www.postman.com/downloads/.
+Instructions to import the collection can be found at https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#contents.
+Once the collection is imported, these API calls can be run once there is a running instance of the
+protocol server and the Postgres database.
+
+#### Editing Code
+Edits made to the codebase of the protocol server can affect the [dBio Client](https://github.com/HES-Capstone-dBio/dbio-client)
+and the [dbio FHIR Proxy](https://github.com/HES-Capstone-dBio/dbio-fhir-proxy). This applies
+especially to any edits made to database operations or routes, as the dBio Client and FHIR proxy
+depend on the dBio protocol API as part of their functionality. If edits are made to the dBio
+protocol server, these changes will likely affect the other parts of the dBio application, and they
+should be changed accordingly.
+>>>>>>> a4d65dc (testing readme, about section, edits section)
 
 <br>
 
