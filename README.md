@@ -188,7 +188,7 @@ In the case of `200 Ok`, JSON is returned:
     "creator_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
     "fhir_resource_type": "insert_resource_type_here",
     "ipfs_cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-    "eth_nft_voucher": "{ \"uri\": \"https://ipfs.io/ipfs/bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi\", \"signature\": \"793fe62fb070cfd09869b765fb3b70f5dc85572f68dcada36d6e92d362463bed38671da834cc7dc3f92fa6962afb996de90c6e84fcc8d1b3d08bc4fd7518c2b31b\" }",
+    "eth_nft_voucher": "{ \"uri\": \"https://ipfs.io/ipfs/bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi\", \"signature\": \"0x793fe62fb070cfd09869b765fb3b70f5dc85572f68dcada36d6e92d362463bed38671da834cc7dc3f92fa6962afb996de90c6e84fcc8d1b3d08bc4fd7518c2b31b\" }",
     "nft_minted": false,
     "timestamp": "2022-04-16T16:22:20.949607Z"
 }
@@ -200,11 +200,9 @@ The JSON returned represents the created resource and contains the following inf
 - `creator_eth_address: String` - the Ethereum public address of the creator of the resource.
 - `fhir_resource_type: String` - the type of the resource (should correlate with a FHIR resource type).
 - `ipfs_cid: String` - the content ID of the resource in IPFS storage.
-- `eth_nft_voucher: String` - serialized JSON of an Ethereum NFT voucher with
-- `nft_minted: Boolean` - a boolean representing whether or not the user has
-  minted an NFT for this resource yet. Defaults to false.
+- `eth_nft_voucher`: an IPFS URI accompanied by an EIP-712 signature, as JSON string
+- `nft_minted`: status of minting to be updated by client side (default is false)
 - `timestamp: String` - the timestamp at which the resource was created, formatted as per ISO 8601 standards.
-  two fields: an IPFS URI, and an EIP-712 signature.
 
 #### `POST /dbio/resources/unclaimed`
 
@@ -275,7 +273,7 @@ In the case of `200 Ok`, the body of the response contains JSON.
         "creator_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
         "fhir_resource_type": "insert_resource_type_here",
         "ipfs_cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-        "eth_nft_voucher": "{ \"uri\": \"https://ipfs.io/ipfs/bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi\", \"signature\": \"793fe62fb070cfd09869b765fb3b70f5dc85572f68dcada36d6e92d362463bed38671da834cc7dc3f92fa6962afb996de90c6e84fcc8d1b3d08bc4fd7518c2b31b\" }",
+        "eth_nft_voucher": "{ \"uri\": \"https://ipfs.io/ipfs/bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi\", \"signature\": \"0x793fe62fb070cfd09869b765fb3b70f5dc85572f68dcada36d6e92d362463bed38671da834cc7dc3f92fa6962afb996de90c6e84fcc8d1b3d08bc4fd7518c2b31b\" }",
         "nft_minted": false,
         "timestamp": "2022-04-16T16:22:20.949607Z"
     },
@@ -409,7 +407,7 @@ value.
     "creator_eth_address": "0xA6f03f794286C60392450438406b3Ebf2878F584",
     "fhir_resource_type": "insert_resource_type_here",
     "ipfs_cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-    "eth_nft_voucher": "{ \"uri\": \"https://ipfs.io/ipfs/bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi\", \"signature\": \"793fe62fb070cfd09869b765fb3b70f5dc85572f68dcada36d6e92d362463bed38671da834cc7dc3f92fa6962afb996de90c6e84fcc8d1b3d08bc4fd7518c2b31b\" }",
+    "eth_nft_voucher": "{ \"uri\": \"https://ipfs.io/ipfs/bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi\", \"signature\": \"0x793fe62fb070cfd09869b765fb3b70f5dc85572f68dcada36d6e92d362463bed38671da834cc7dc3f92fa6962afb996de90c6e84fcc8d1b3d08bc4fd7518c2b31b\" }",
     "nft_minted": true,
     "timestamp": "2022-04-16T16:22:20.949607Z"
 }

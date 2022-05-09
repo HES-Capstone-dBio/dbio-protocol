@@ -74,7 +74,7 @@ pub async fn create_nft_voucher(cid: String) -> Result<NFTVoucherPayload, NFTErr
     let sig = wallet.sign_typed_data(&data).await?;
     Ok(NFTVoucherPayload {
         uri,
-        signature: sig.to_string(),
+        signature: format!("0x{}", sig.to_string()),
     })
 }
 
