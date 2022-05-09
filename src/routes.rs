@@ -452,9 +452,9 @@ async fn put_nft_status(
 
 #[actix_web::get("/voucher/{cid}")]
 async fn get_voucher(
-    cid: String,
+    cid: Path<String>,
 ) -> Result<Json<NFTVoucherPayload>, HttpError> {
-    create_nft_voucher(cid)
+    create_nft_voucher(cid.into_inner())
         .await
         .map(Json)
         .map_err(ErrorInternalServerError)
