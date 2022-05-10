@@ -121,3 +121,8 @@ pub struct FilterParam {
 pub struct ApproveParam {
     pub approve: String,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct MintParam {
+    pub mint: String,
+}
