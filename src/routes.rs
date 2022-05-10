@@ -437,13 +437,13 @@ async fn get_unclaimed_resource_metadata(
 async fn put_nft_status(
     db: Data<Db>,
     minted: Query<MintParam>,
-    creator_eth_address: Path<String>,
-    fhir_resource_id: Path<String>,
+    path: Path<(String, String)>,
 ) -> Result<Json<Resource>, HttpError> {
+    let (creator_eth_address, fhir_resource_id) = path.into_inner();
     db.update_nft_status(
         matches!(minted.minted.as_str(), "true"),
-        creator_eth_address.into_inner(),
-        fhir_resource_id.into_inner(),
+        creator_eth_address,
+        fhir_resource_id,
     )
     .await
     .map(Json)
