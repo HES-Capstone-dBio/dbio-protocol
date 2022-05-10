@@ -7,6 +7,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   DATABASE_URL: postgres://postgres:password@localhost/dbio-protocol-db
+  ETH_PRIVATE_KEY: ${{ secrets.PROTOCOL_ETH_PRIVATE_KEY }}
 
 jobs:
   build:
