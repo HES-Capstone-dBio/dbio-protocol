@@ -433,7 +433,7 @@ async fn get_unclaimed_resource_metadata(
         .map_err(adapt_db_error)
 }
 
-#[actix_web::get("/resources/claimed/mint/{creator_eth_address}/{fhir_resource_id}")]
+#[actix_web::put("/resources/claimed/mint/{creator_eth_address}/{fhir_resource_id}")]
 async fn put_nft_status(
     db: Data<Db>,
     minted: Query<bool>,
