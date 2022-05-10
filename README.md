@@ -1,5 +1,14 @@
 ![dbio-logo](./readme-assets/dbio-logo.png)
 
+# dBio Protocol Server
+
+<br>
+
+---
+
+<br>
+
+
 # Setup Instructions
 
 ## Prerequisites
