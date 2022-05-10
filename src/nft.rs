@@ -46,7 +46,7 @@ impl From<WalletError> for NFTError {
     name = "DBio",
     version = "1",
     chain_id = 4, // Rinkeby testnet
-    verifying_contract = "0x3F59dA0e73De96ebF276C7CD5ad15F41eD474070" // dBio smart contract
+    verifying_contract = "0xb14d54e354971Dd1Cf39D8b65ABEeED115D20a3c" // dBio smart contract
 )]
 struct NFTVoucher {
     uri: String,
