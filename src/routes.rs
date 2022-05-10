@@ -462,6 +462,8 @@ async fn get_voucher(
 
 pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/dbio")
+        .service(get_voucher)
+        .service(put_nft_status)
         .service(post_user)
         .service(post_claimed_resource)
         .service(post_unclaimed_resource)
@@ -478,7 +480,5 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(get_write_requests)
         .service(get_write_request_by_id)
         .service(post_write_request)
-        .service(put_write_request_approval)
-        .service(put_nft_status)
-        .service(get_voucher)
+        .service(put_write_request_approval)       
 }
