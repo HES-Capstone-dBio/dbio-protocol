@@ -19,6 +19,12 @@ protocol server via API calls. The dBio protocol server persists data with a Pos
 
 ## Prerequisites
 
+### Web3.Storage
+
+You should have an account at https://web3.storage. Get an API token from Web3.Storage. This will
+be exported it in your environment as `IPFS_API_KEY="Web3.Storage API Token Here"`. Web3.Storage
+is used as an API to submit data to IPFS.
+
 ### Rust
 
 You should have an installation of `cargo` and `rustup`. This can be done via your package manager
@@ -37,10 +43,6 @@ necessary to run some commands for migrations if either SQL schemas or SQL queri
 
 Docker is used to containerize the application. Installation instructions can be found
 at https://www.docker.com/products/docker-desktop/.
-
-### Web3.Storage
-
-The server requires an `https://web3.storage` account to write to IPFS. Get an API token from Web3.Storage. This key must be exported it in your environment as `IPFS_API_KEY="Web3.Storage API Token Here"`. Web3.Storage is used as an API to submit data to IPFS.
 
 ## Setup
 
@@ -114,6 +116,7 @@ To compile and run directly, run `cargo run`.
 To clean up the `target` directory, run `cargo clean`.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #### Compiling and Running Rust Programs
 To check Rust code for errors (as well as errors in dependencies), run `cargo check`.
 To build a Rust program, run `cargo build`. The generated executable is at `./target/debug/dbio-protocol`.
@@ -122,6 +125,8 @@ at `./target/release/dbio-protocol`.
 To compile and run directly, run `cargo run`.
 To clean up the `target` directory, run `cargo clean`.
 =======
+=======
+>>>>>>> 2eec800c1a7c9c61b95a96bafe658f184fd4603e
 #### Testing
 Included in this repository is a file called `dbio-protocol.postman_collection.json` that contains
 [Postman](https://www.postman.com/) API calls that were used in the testing of this protocol server.
@@ -137,7 +142,10 @@ especially to any edits made to database operations or routes, as the dBio Clien
 depend on the dBio protocol API as part of their functionality. If edits are made to the dBio
 protocol server, these changes will likely affect the other parts of the dBio application, and they
 should be changed accordingly.
+<<<<<<< HEAD
 >>>>>>> a4d65dc (testing readme, about section, edits section)
+=======
+>>>>>>> 2eec800c1a7c9c61b95a96bafe658f184fd4603e
 
 <br>
 
