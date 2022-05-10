@@ -124,5 +124,5 @@ pub struct ApproveParam {
 
 #[derive(Debug, Deserialize)]
 pub struct MintParam {
-    pub mint: String,
+    pub minted: String,
 }

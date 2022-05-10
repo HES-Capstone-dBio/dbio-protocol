@@ -441,7 +441,7 @@ async fn put_nft_status(
     fhir_resource_id: Path<String>,
 ) -> Result<Json<Resource>, HttpError> {
     db.update_nft_status(
-        matches!(minted.mint.as_str(), "true"),
+        matches!(minted.minted.as_str(), "true"),
         creator_eth_address.into_inner(),
         fhir_resource_id.into_inner(),
     )
