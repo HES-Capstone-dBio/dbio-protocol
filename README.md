@@ -63,7 +63,7 @@ The build will fail without completing this step.
 - [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{reader-eth-address\}}](#get-dbioresourcesunclaimedsubject-eth-addressreader-eth-address)
 - [GET /dbio/resources/claimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}/\{reader-eth-address\}](#get-dbioresourcesclaimedsubject-eth-addressfhir-resource-typefhir-resource-idreader-eth-address)
 - [GET /dbio/resources/unclaimed/\{subject-eth-address\}/\{fhir-resource-type\}/\{fhir-resource-id\}/\{reader-eth-address\}](#get-dbioresourcesunclaimedsubject-eth-addressfhir-resource-typefhir-resource-idreader-eth-address)
-- [PUT dbio/resources/claimed/mint/\{creator\_eth\_address\}/{fhir\_resource\_id\}\?minted\=\(true\|false\)](#put-dbioresourcesclaimedmintcreator-eth-addressfhir-resource-idmintedtruefalse)
+- [PUT dbio/resources/claimed/mint/\{creator\_eth\_address\}/{fhir\_resource\_id\}\?minted\=\(true\|false\)](#put-dbioresourcesclaimedmintcreator_eth_addressfhir_resource_idmintedtruefalse)
 
 [Read Requests](#read-requests): Access requests that are made when third parties request access to read a user's resources. Users can either approve or deny read requests.
 - [POST /dbio/read_requests](#post-dbioread_requests)
