@@ -2,6 +2,12 @@
 
 # dBio Protocol Server
 
+The dBio protocol server is a part of the overall [dBio application / protocol](https://github.com/HES-Capstone-dBio).
+It contains the server logic to store and retrieve metadata, as well as the logic to store encrypted texts to
+IPFS and sign vouchers for minting NFTs. Both the [dBio Client](https://github.com/HES-Capstone-dBio/dbio-client)
+and the [dbio FHIR Proxy](https://github.com/HES-Capstone-dBio/dbio-fhir-proxy) depend on the
+protocol server via API calls. The dBio protocol server persists data with a Postgres database.
+
 <br>
 
 ---
