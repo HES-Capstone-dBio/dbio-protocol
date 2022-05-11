@@ -2,6 +2,8 @@ mod db;
 mod logger;
 mod models;
 mod routes;
+mod nft;
+mod ipfs;
 
 use actix_cors::Cors;
 use actix_web::body::BoxBody;
@@ -18,7 +20,6 @@ async fn health_check() -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> Result<(), StdErr> {
-    dotenv::dotenv().expect(".env file not found");
     logger::init()?;
 
     let db = actix_web::web::Data::new(db::Db::connect().await?);

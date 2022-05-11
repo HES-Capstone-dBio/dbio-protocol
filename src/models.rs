@@ -17,6 +17,8 @@ pub struct Resource {
     pub creator_eth_address: String,
     pub fhir_resource_type: String,
     pub ipfs_cid: String,
+    pub eth_nft_voucher: String,
+    pub nft_minted: bool,
     pub timestamp: DateTime<Utc>,
 }
 
@@ -69,6 +71,8 @@ pub struct ResourceData {
     pub ironcore_document_id: String,
     pub fhir_resource_id: String,
     pub fhir_resource_type: String,
+    pub eth_nft_voucher: String,
+    pub nft_minted: bool,
 }
 
 #[derive(Serialize, FromRow)]
@@ -116,4 +120,9 @@ pub struct FilterParam {
 #[derive(Debug, Deserialize)]
 pub struct ApproveParam {
     pub approve: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct MintParam {
+    pub minted: String,
 }

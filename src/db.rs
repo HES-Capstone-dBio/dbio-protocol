@@ -12,8 +12,7 @@ pub struct Db {
 
 impl Db {
     pub async fn connect() -> Result<Self, sqlx::Error> {
-        let db_url = std::env::var("DATABASE_URL")
-            .expect("DATABASE_URL env var not found");
+        let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL env var not found");
         PgPoolOptions::new()
             .connect(&db_url)
             .await
@@ -50,12 +49,7 @@ impl Db {
         &'_ self,
         email: String,
     ) -> impl Future<Output = Result<User, sqlx::Error>> + '_ {
-        sqlx::query_as!(
-            User,
-            "SELECT * FROM users WHERE email = $1",
-            email,
-        )
-        .fetch_one(&self.pool)
+        sqlx::query_as!(User, "SELECT * FROM users WHERE email = $1", email,).fetch_one(&self.pool)
     }
 
     pub fn select_open_read_requests(
@@ -269,9 +263,11 @@ impl Db {
                creator_eth_address,
                fhir_resource_type,
                ipfs_cid,
+               eth_nft_voucher,
+               nft_minted,
                timestamp
              )
-             VALUES ($1, $2, $3, $4, $5, $6, $7)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
              RETURNING *",
             data.fhir_resource_id,
             data.ironcore_document_id,
@@ -279,6 +275,8 @@ impl Db {
             data.creator_eth_address,
             data.fhir_resource_type,
             data.ipfs_cid,
+            data.eth_nft_voucher,
+            data.nft_minted,
             data.timestamp,
         )
         .fetch_one(&self.pool)
@@ -443,6 +441,26 @@ impl Db {
                 AND requestee_eth_address = $2",
             writer_eth_address,
             subject_eth_address,
+        )
+        .fetch_one(&self.pool)
+    }
+
+    pub fn update_nft_status(
+        &'_ self,
+        minted: bool,
+        creator_eth_address: String,
+        fhir_resource_id: String,
+    ) -> impl Future<Output = Result<Resource, sqlx::Error>> + '_ {
+        sqlx::query_as!(
+            Resource,
+            "UPDATE resources
+             SET nft_minted = $1
+             WHERE creator_eth_address = $2
+               AND fhir_resource_id = $3
+             RETURNING *",
+            minted,
+            creator_eth_address,
+            fhir_resource_id
         )
         .fetch_one(&self.pool)
     }

@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS resources (
   creator_eth_address CHAR(42) REFERENCES users(eth_public_address) NOT NULL,
   fhir_resource_type VARCHAR(40) NOT NULL,
   ipfs_cid VARCHAR NOT NULL,
+  eth_nft_voucher VARCHAR NOT NULL,
+  nft_minted BOOL NOT NULL DEFAULT false,
   timestamp TIMESTAMPTZ NOT NULL,
   PRIMARY KEY (creator_eth_address, fhir_resource_id)
 );

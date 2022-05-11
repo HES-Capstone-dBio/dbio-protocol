@@ -5,33 +5,18 @@ use actix_web::error::Error as HttpError;
 use actix_web::error::{ErrorForbidden, ErrorInternalServerError, ErrorNotFound};
 use actix_web::web::*;
 use futures::prelude::*;
-use reqwest::Error;
 use sqlx::Error::RowNotFound;
 
 use crate::db::Db;
+use crate::ipfs::*;
 use crate::models::*;
+use crate::nft::*;
 use chrono::offset::Utc;
 
-async fn ipfs_add(text: String) -> Result<String, Error> {
-    let ipfs_api_key = std::env::var("IPFS_API_KEY").expect("IPFS_API_KEY env var not found");
-
-    let resp = reqwest::Client::new()
-        .post("https://api.web3.storage/upload")
-        .bearer_auth(ipfs_api_key)
-        .body(text)
-        .send()
-        .await?
-        .json::<IpfsResponse>()
-        .await?;
-
-    Ok(resp.cid)
-}
-
-async fn ipfs_get(cid: String) -> Result<String, Error> {
-    let s = std::format!("https://ipfs.io/ipfs/{}", cid);
-    let resp = reqwest::get(s).await?.text().await?;
-
-    Ok(resp)
+impl From<NFTError> for HttpError {
+    fn from(e: NFTError) -> HttpError {
+        ErrorNotFound(e.to_string())
+    }
 }
 
 fn adapt_db_error(e: sqlx::Error) -> HttpError {
@@ -210,23 +195,25 @@ async fn get_claimed_resource(
     } else if !(status.request_approved || status.request_open) {
         Err(ErrorForbidden("Your read request has been denied"))
     } else {
-        let resource = db
-            .select_claimed_resource_data(subject_eth_address, fhir_resource_type, fhir_resource_id)
-            .await
-            .map_err(adapt_db_error)?;
+    let resource = db
+        .select_claimed_resource_data(subject_eth_address, fhir_resource_type, fhir_resource_id)
+        .await
+        .map_err(adapt_db_error)?;
 
-        let ciphertext = ipfs_get(resource.ipfs_cid.clone())
-            .await
-            .map_err(ErrorInternalServerError)?;
+    let ciphertext = ipfs_get(resource.ipfs_cid.clone())
+        .await
+        .map_err(ErrorInternalServerError)?;
 
-        Ok(ResourceData {
-            cid: resource.ipfs_cid,
-            ciphertext,
-            ironcore_document_id: resource.ironcore_document_id,
-            fhir_resource_id: resource.fhir_resource_id,
-            fhir_resource_type: resource.fhir_resource_type,
-        })
-        .map(Json)
+    Ok(ResourceData {
+        cid: resource.ipfs_cid,
+        ciphertext,
+        ironcore_document_id: resource.ironcore_document_id,
+        fhir_resource_id: resource.fhir_resource_id,
+        fhir_resource_type: resource.fhir_resource_type,
+        eth_nft_voucher: resource.eth_nft_voucher,
+        nft_minted: resource.nft_minted,
+    })
+    .map(Json)
     }
 }
 
@@ -296,6 +283,12 @@ async fn post_claimed_resource(
             .await
             .map_err(ErrorInternalServerError)?;
 
+        let voucher_payload = create_nft_voucher(cid.clone())
+            .await
+            .map_err(ErrorInternalServerError)?;
+
+        let eth_nft_voucher = serde_json::to_string(&voucher_payload)?;
+
         db.remove_from_escrow(
             in_data.creator_eth_address.clone(),
             in_data.fhir_resource_id.clone(),
@@ -308,12 +301,15 @@ async fn post_claimed_resource(
                 creator_eth_address: in_data.creator_eth_address,
                 fhir_resource_type: in_data.fhir_resource_type,
                 ipfs_cid: cid,
+                eth_nft_voucher,
+                nft_minted: false,
                 timestamp: chrono::offset::Utc::now(),
             })
         })
         .await
         .map(Json)
         .map_err(adapt_db_error)
+        
     }
 }
 
@@ -421,8 +417,37 @@ async fn get_unclaimed_resource_metadata(
     }
 }
 
+#[actix_web::put("/resources/claimed/mint/{creator_eth_address}/{fhir_resource_id}")]
+async fn put_nft_status(
+    db: Data<Db>,
+    minted: Query<MintParam>,
+    path: Path<(String, String)>,
+) -> Result<Json<Resource>, HttpError> {
+    let (creator_eth_address, fhir_resource_id) = path.into_inner();
+    db.update_nft_status(
+        matches!(minted.minted.as_str(), "true"),
+        creator_eth_address,
+        fhir_resource_id,
+    )
+    .await
+    .map(Json)
+    .map_err(adapt_db_error)
+}
+
+#[actix_web::get("/voucher/{cid}")]
+async fn get_voucher(
+    cid: Path<String>,
+) -> Result<Json<NFTVoucherPayload>, HttpError> {
+    create_nft_voucher(cid.into_inner())
+        .await
+        .map(Json)
+        .map_err(ErrorInternalServerError)
+}
+
 pub fn api() -> impl HttpServiceFactory + 'static {
     actix_web::web::scope("/dbio")
+        .service(get_voucher)
+        .service(put_nft_status)
         .service(post_user)
         .service(post_claimed_resource)
         .service(post_unclaimed_resource)
@@ -439,5 +464,5 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(get_write_requests)
         .service(get_write_request_by_id)
         .service(post_write_request)
-        .service(put_write_request_approval)
+        .service(put_write_request_approval)       
 }
