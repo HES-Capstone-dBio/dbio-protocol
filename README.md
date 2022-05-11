@@ -40,7 +40,9 @@ at https://www.docker.com/products/docker-desktop/.
 
 ### Web3.Storage
 
-The server requires an `https://web3.storage` account to write to IPFS. Get an API token from Web3.Storage. This key must be exported it in your environment as `IPFS_API_KEY="Web3.Storage API Token Here"`. Web3.Storage is used as an API to submit data to IPFS.
+You should have an account at https://web3.storage. Get an API token from Web3.Storage. This will
+be exported it in your environment as `IPFS_API_KEY="Web3.Storage API Token Here"`. Web3.Storage
+is used as an API to submit data to IPFS.
 
 ## Setup
 
@@ -110,6 +112,24 @@ To build a more optimized version for production, run `cargo build --release`. T
 at `./target/release/dbio-protocol`.
 To compile and run directly, run `cargo run`.
 To clean up the `target` directory, run `cargo clean`.
+
+#### Testing
+Included in this repository is a file called `dbio-protocol.postman_collection.json` that contains
+[Postman](https://www.postman.com/) API calls that were used in the testing of this protocol server.
+Installation instructions for Postman are at https://www.postman.com/downloads/.
+Instructions to import the collection can be found at 
+https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#contents.
+Once the collection is imported, these API calls can be run once there is a running instance of the
+protocol server and the Postgres database.
+
+#### Editing Code
+Edits made to the codebase of the protocol server can affect the 
+[dBio Client](https://github.com/HES-Capstone-dBio/dbio-client)
+and the [dbio FHIR Proxy](https://github.com/HES-Capstone-dBio/dbio-fhir-proxy). This applies
+especially to any edits made to database operations or routes, as the dBio Client and FHIR proxy
+depend on the dBio protocol API as part of their functionality. If edits are made to the dBio
+protocol server, these changes will likely affect the other parts of the dBio application, and they
+should be changed accordingly.
 
 <br>
 
