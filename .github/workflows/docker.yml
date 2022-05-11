@@ -2,7 +2,7 @@ name: Docker Image Build & Release
 
 on:
   push:
-    branches: [ trunk ]
+    branches: [ trunk, build-postgres ]
 
 env:
   IMAGE_NAME: dbio-protocol
