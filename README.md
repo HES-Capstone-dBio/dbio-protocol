@@ -69,7 +69,6 @@ steps:
 2. Additionally, export the environmental variables:
    - `export IPFS_API_KEY={Web3.Storage API Key here}`, using the API key from Web3.Storage.
    - `export DATABASE_URL=postgres://postgres:password@localhost/dbio-protocol-db`.
-     Alternatively, you can uncomment the line with `DATABASE_URL` in the `.env` file.
 3. Run the command `SQLX_OFFLINE=true cargo build --release`. This will build the application.
 4. Run the command `./target/release/dbio-protocol`. This will run the application.
 
@@ -84,7 +83,6 @@ Follow these steps:
 2. Additionally, export the environmental variables:
    - `export IPFS_API_KEY={Web3.Storage API Key here}`, using the API key from Web3.Storage.
    - `export DATABASE_URL=postgres://postgres:password@localhost/dbio-protocol-db`.
-     Alternatively, you can uncomment the line with `DATABASE_URL` in the `.env` file.
 3. Run the command `SQLX_OFFLINE=true cargo build`. This will build the application.
    Alternatively, you can run directly with the command `SQLX_OFFLINE=true cargo run`, and
    skip step 4.
