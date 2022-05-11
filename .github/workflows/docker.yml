@@ -52,4 +52,6 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USER }}
         password: ${{ secrets.DOCKERHUB_KEY }}
     - name: Push Docker image
-      run: docker push --all-tags ${{ secrets.DOCKERHUB_USER }}/$IMAGE_NAME
+      run: |
+        docker push --all-tags ${{ secrets.DOCKERHUB_USER }}/dbio-protocol
+        docker push --all-tags ${{ secrets.DOCKERHUB_USER }}/dbio-postgres
