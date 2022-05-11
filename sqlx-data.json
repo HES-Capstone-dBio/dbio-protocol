@@ -124,33 +124,6 @@
     },
     "query": "SELECT *\n             FROM read_requests\n             WHERE\n               requestee_eth_address = $1"
   },
-  "154e0dc54cc95762e7e68fa64889ec868964dcb2c9fe0eb7d957fd698e18dd65": {
-    "describe": {
-      "columns": [
-        {
-          "name": "request_approved",
-          "ordinal": 0,
-          "type_info": "Bool"
-        },
-        {
-          "name": "request_open",
-          "ordinal": 1,
-          "type_info": "Bool"
-        }
-      ],
-      "nullable": [
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Bpchar"
-        ]
-      }
-    },
-    "query": "SELECT request_approved, request_open\n                FROM write_requests\n                WHERE\n                requestor_eth_address = $1\n                AND requestee_eth_address = $2"
-  },
   "1d64b66ad8f6ed923aba5434c228a8497e807cff68142efec39f9f50d0812502": {
     "describe": {
       "columns": [
@@ -337,6 +310,39 @@
     },
     "query": "DELETE FROM read_requests\n             WHERE id = $1\n             RETURNING *"
   },
+  "35db8409bc969d83c83b6971fd8c29a8fe2a57cb763f7cc6ada6417f4308cd47": {
+    "describe": {
+      "columns": [
+        {
+          "name": "request_approved",
+          "ordinal": 0,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 1,
+          "type_info": "Bool"
+        },
+        {
+          "name": "requestor_details",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT request_approved, request_open, requestor_details\n                FROM write_requests\n                WHERE\n                requestor_eth_address = $1\n                AND requestee_eth_address = $2"
+  },
   "39709820edafc596177de773679408707feb1930d3f9cd321e50286fd967afc2": {
     "describe": {
       "columns": [
@@ -423,32 +429,38 @@
           "type_info": "Bpchar"
         },
         {
-          "name": "fhir_resource_type",
+          "name": "creator_details",
           "ordinal": 4,
           "type_info": "Varchar"
         },
         {
-          "name": "ipfs_cid",
+          "name": "fhir_resource_type",
           "ordinal": 5,
           "type_info": "Varchar"
         },
         {
-          "name": "eth_nft_voucher",
+          "name": "ipfs_cid",
           "ordinal": 6,
           "type_info": "Varchar"
         },
         {
-          "name": "nft_minted",
+          "name": "eth_nft_voucher",
           "ordinal": 7,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "nft_minted",
+          "ordinal": 8,
           "type_info": "Bool"
         },
         {
           "name": "timestamp",
-          "ordinal": 8,
+          "ordinal": 9,
           "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
         false,
         false,
         false,
@@ -491,32 +503,38 @@
           "type_info": "Bpchar"
         },
         {
-          "name": "fhir_resource_type",
+          "name": "creator_details",
           "ordinal": 4,
           "type_info": "Varchar"
         },
         {
-          "name": "ipfs_cid",
+          "name": "fhir_resource_type",
           "ordinal": 5,
           "type_info": "Varchar"
         },
         {
-          "name": "eth_nft_voucher",
+          "name": "ipfs_cid",
           "ordinal": 6,
           "type_info": "Varchar"
         },
         {
-          "name": "nft_minted",
+          "name": "eth_nft_voucher",
           "ordinal": 7,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "nft_minted",
+          "ordinal": 8,
           "type_info": "Bool"
         },
         {
           "name": "timestamp",
-          "ordinal": 8,
+          "ordinal": 9,
           "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
         false,
         false,
         false,
@@ -561,32 +579,38 @@
           "type_info": "Bpchar"
         },
         {
-          "name": "fhir_resource_type",
+          "name": "creator_details",
           "ordinal": 4,
           "type_info": "Varchar"
         },
         {
-          "name": "ipfs_cid",
+          "name": "fhir_resource_type",
           "ordinal": 5,
           "type_info": "Varchar"
         },
         {
-          "name": "eth_nft_voucher",
+          "name": "ipfs_cid",
           "ordinal": 6,
           "type_info": "Varchar"
         },
         {
-          "name": "nft_minted",
+          "name": "eth_nft_voucher",
           "ordinal": 7,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "nft_minted",
+          "ordinal": 8,
           "type_info": "Bool"
         },
         {
           "name": "timestamp",
-          "ordinal": 8,
+          "ordinal": 9,
           "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
         false,
         false,
         false,
@@ -607,34 +631,7 @@
     },
     "query": "SELECT *\n             FROM resources\n             WHERE\n               subject_eth_address = $1\n               AND fhir_resource_type = $2\n               AND fhir_resource_id = $3"
   },
-  "4690a54ef235e9fdae33016a66276f860786aca8200a085f7fd464a6f287d8d6": {
-    "describe": {
-      "columns": [
-        {
-          "name": "request_approved",
-          "ordinal": 0,
-          "type_info": "Bool"
-        },
-        {
-          "name": "request_open",
-          "ordinal": 1,
-          "type_info": "Bool"
-        }
-      ],
-      "nullable": [
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar",
-          "Bpchar"
-        ]
-      }
-    },
-    "query": "SELECT request_approved, request_open\n                FROM read_requests\n                WHERE\n                requestor_eth_address = $1\n                AND requestee_eth_address = $2"
-  },
-  "54b65b8a0897d01fd7ee6fbf399345180d30f292ddd36a79c28a8c1f59c22c78": {
+  "53fcb55039f0b0b5a3cd1fb9dd18ba511d88f0b583086fd2d3e59a63ffb020b9": {
     "describe": {
       "columns": [
         {
@@ -658,32 +655,38 @@
           "type_info": "Bpchar"
         },
         {
-          "name": "fhir_resource_type",
+          "name": "creator_details",
           "ordinal": 4,
           "type_info": "Varchar"
         },
         {
-          "name": "ipfs_cid",
+          "name": "fhir_resource_type",
           "ordinal": 5,
           "type_info": "Varchar"
         },
         {
-          "name": "eth_nft_voucher",
+          "name": "ipfs_cid",
           "ordinal": 6,
           "type_info": "Varchar"
         },
         {
-          "name": "nft_minted",
+          "name": "eth_nft_voucher",
           "ordinal": 7,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "nft_minted",
+          "ordinal": 8,
           "type_info": "Bool"
         },
         {
           "name": "timestamp",
-          "ordinal": 8,
+          "ordinal": 9,
           "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
         false,
         false,
         false,
@@ -703,12 +706,13 @@
           "Varchar",
           "Varchar",
           "Varchar",
+          "Varchar",
           "Bool",
           "Timestamptz"
         ]
       }
     },
-    "query": "INSERT INTO resources (\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               fhir_resource_type,\n               ipfs_cid,\n               eth_nft_voucher,\n               nft_minted,\n               timestamp\n             )\n             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\n             RETURNING *"
+    "query": "INSERT INTO resources (\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               creator_details,\n               fhir_resource_type,\n               ipfs_cid,\n               eth_nft_voucher,\n               nft_minted,\n               timestamp\n             )\n             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)\n             RETURNING *"
   },
   "64b48111da07fea2df16e85b7f1eab9434a8ccb4e66636fd6b0554b30ae0cbc1": {
     "describe": {
@@ -734,22 +738,28 @@
           "type_info": "Bpchar"
         },
         {
-          "name": "fhir_resource_type",
+          "name": "creator_details",
           "ordinal": 4,
           "type_info": "Varchar"
         },
         {
-          "name": "ciphertext",
+          "name": "fhir_resource_type",
           "ordinal": 5,
           "type_info": "Varchar"
         },
         {
-          "name": "timestamp",
+          "name": "ciphertext",
           "ordinal": 6,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "timestamp",
+          "ordinal": 7,
           "type_info": "Timestamptz"
         }
       ],
       "nullable": [
+        false,
         false,
         false,
         false,
@@ -957,7 +967,7 @@
     },
     "query": "SELECT * FROM users WHERE eth_public_address = $1"
   },
-  "92965d6002fdbdcf18541864e14d4a19f7bc25142681820c0d0b0174a78c0178": {
+  "8a1eeef0b7da31704f96c083c09b62eaf7d5f3a14239935520b1da31a3cacd78": {
     "describe": {
       "columns": [
         {
@@ -981,12 +991,12 @@
           "type_info": "Bpchar"
         },
         {
-          "name": "fhir_resource_type",
+          "name": "creator_details",
           "ordinal": 4,
           "type_info": "Varchar"
         },
         {
-          "name": "ciphertext",
+          "name": "fhir_resource_type",
           "ordinal": 5,
           "type_info": "Varchar"
         },
@@ -1007,17 +1017,11 @@
       ],
       "parameters": {
         "Left": [
-          "Varchar",
-          "Bpchar",
-          "Bpchar",
-          "Bpchar",
-          "Varchar",
-          "Varchar",
-          "Timestamptz"
+          "Bpchar"
         ]
       }
     },
-    "query": "INSERT INTO resource_escrow (\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               fhir_resource_type,\n               ciphertext,\n               timestamp\n             )\n             VALUES ($1, $2, $3, $4, $5, $6, $7)\n             RETURNING *"
+    "query": "SELECT\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               creator_details,\n               fhir_resource_type,\n               timestamp\n             FROM resource_escrow\n             WHERE subject_eth_address = $1"
   },
   "ae0380b072a29e1597ae0068ad052d74bee2cc2954170682f4b5ee1e5bc79d6c": {
     "describe": {
@@ -1144,6 +1148,75 @@
       }
     },
     "query": "SELECT *\n             FROM write_requests\n             WHERE\n               requestee_eth_address = $1\n               AND request_open"
+  },
+  "b5682298296b3286be1f793989e2adc5fd69921b2d901af0f1e6314cbf5dff29": {
+    "describe": {
+      "columns": [
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ironcore_document_id",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "subject_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_eth_address",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_details",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "fhir_resource_type",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ciphertext",
+          "ordinal": 6,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "timestamp",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Bpchar",
+          "Bpchar",
+          "Bpchar",
+          "Varchar",
+          "Varchar",
+          "Varchar",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "INSERT INTO resource_escrow (\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               creator_details,\n               fhir_resource_type,\n               ciphertext,\n               timestamp\n             )\n             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)\n             RETURNING *"
   },
   "ba31447def327d20314d26497df73dec319e93f5a4ad8942bf5c1568651801ac": {
     "describe": {
@@ -1298,6 +1371,39 @@
     },
     "query": "UPDATE write_requests\n             SET\n               request_approved = true,\n               request_open = false,\n               last_updated_time = NOW()\n             WHERE id = $1\n             RETURNING *"
   },
+  "e80eed160bc1cc92bf3b529024a409339542c8440e921b9e29327a9fcea7258d": {
+    "describe": {
+      "columns": [
+        {
+          "name": "request_approved",
+          "ordinal": 0,
+          "type_info": "Bool"
+        },
+        {
+          "name": "request_open",
+          "ordinal": 1,
+          "type_info": "Bool"
+        },
+        {
+          "name": "requestor_details",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "SELECT request_approved, request_open, requestor_details\n                FROM read_requests\n                WHERE\n                requestor_eth_address = $1\n                AND requestee_eth_address = $2"
+  },
   "f3f58600e971f1be6cbe206bba24f77769f54c6230e28f5b3dc719b869d9cb3f": {
     "describe": {
       "columns": [
@@ -1323,55 +1429,5 @@
       }
     },
     "query": "SELECT * FROM users WHERE email = $1"
-  },
-  "f916d26c676dbc555efe04a25826078ee62de6919c91e2c1189fb6b1305309ea": {
-    "describe": {
-      "columns": [
-        {
-          "name": "fhir_resource_id",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ironcore_document_id",
-          "ordinal": 1,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "subject_eth_address",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "creator_eth_address",
-          "ordinal": 3,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "fhir_resource_type",
-          "ordinal": 4,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "timestamp",
-          "ordinal": 5,
-          "type_info": "Timestamptz"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Bpchar"
-        ]
-      }
-    },
-    "query": "SELECT\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               fhir_resource_type,\n               timestamp\n             FROM resource_escrow\n             WHERE subject_eth_address = $1"
   }
 }
