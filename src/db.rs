@@ -261,18 +261,20 @@ impl Db {
                ironcore_document_id,
                subject_eth_address,
                creator_eth_address,
+               creator_details,
                fhir_resource_type,
                ipfs_cid,
                eth_nft_voucher,
                nft_minted,
                timestamp
              )
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
              RETURNING *",
             data.fhir_resource_id,
             data.ironcore_document_id,
             data.subject_eth_address,
             data.creator_eth_address,
+            data.creator_details,
             data.fhir_resource_type,
             data.ipfs_cid,
             data.eth_nft_voucher,
@@ -416,7 +418,7 @@ impl Db {
     ) -> impl Future<Output = Result<RequestStatus, sqlx::Error>> + '_ {
         sqlx::query_as!(
             RequestStatus,
-            "SELECT request_approved, request_open
+            "SELECT request_approved, request_open, requestor_details
                 FROM read_requests
                 WHERE
                 requestor_eth_address = $1
@@ -434,7 +436,7 @@ impl Db {
     ) -> impl Future<Output = Result<RequestStatus, sqlx::Error>> + '_ {
         sqlx::query_as!(
             RequestStatus,
-            "SELECT request_approved, request_open
+            "SELECT request_approved, request_open, requestor_details
                 FROM write_requests
                 WHERE
                 requestor_eth_address = $1

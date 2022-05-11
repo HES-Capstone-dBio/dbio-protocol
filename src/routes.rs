@@ -181,6 +181,7 @@ async fn get_claimed_resource(
         Ok(RequestStatus {
             request_open: false,
             request_approved: true,
+            requestor_details: "self".into(),
         })
     } else {
         db.check_read_access(reader_eth_address.clone(), subject_eth_address.clone())
@@ -229,6 +230,7 @@ async fn get_unclaimed_resource(
         Ok(RequestStatus {
             request_approved: true,
             request_open: false,
+            requestor_details: "self".into(),
         })
     } else {
         db.check_read_access(reader_eth_address, subject_eth_address.clone())
@@ -299,6 +301,7 @@ async fn post_claimed_resource(
                 ironcore_document_id: in_data.ironcore_document_id,
                 subject_eth_address: subject.eth_public_address,
                 creator_eth_address: in_data.creator_eth_address,
+                creator_details: status.requestor_details,
                 fhir_resource_type: in_data.fhir_resource_type,
                 ipfs_cid: cid,
                 eth_nft_voucher,
@@ -346,6 +349,7 @@ async fn post_unclaimed_resource(
             ironcore_document_id: in_data.ironcore_document_id,
             subject_eth_address: subject.eth_public_address,
             creator_eth_address: in_data.creator_eth_address,
+            creator_details: status.requestor_details,
             fhir_resource_type: in_data.fhir_resource_type,
             ciphertext: in_data.ciphertext,
             timestamp: Utc::now(),
@@ -367,6 +371,7 @@ async fn get_claimed_resource_metadata(
         Ok(RequestStatus {
             request_approved: true,
             request_open: false,
+            requestor_details: "self".into(),
         })
     } else {
         db.check_read_access(reader_eth_address.clone(), subject_eth_address.clone())
@@ -397,6 +402,7 @@ async fn get_unclaimed_resource_metadata(
         Ok(RequestStatus {
             request_open: false,
             request_approved: true,
+            requestor_details: "self".into(),
         })
     } else {
         db.check_read_access(reader_eth_address.clone(), subject_eth_address.clone())

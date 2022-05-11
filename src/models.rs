@@ -15,6 +15,7 @@ pub struct Resource {
     pub ironcore_document_id: String,
     pub subject_eth_address: String,
     pub creator_eth_address: String,
+    pub creator_details: String,
     pub fhir_resource_type: String,
     pub ipfs_cid: String,
     pub eth_nft_voucher: String,
@@ -28,6 +29,7 @@ pub struct EscrowedResource {
     pub ironcore_document_id: String,
     pub subject_eth_address: String,
     pub creator_eth_address: String,
+    pub creator_details: String,
     pub fhir_resource_type: String,
     pub ciphertext: String,
     pub timestamp: DateTime<Utc>,
@@ -62,6 +64,7 @@ pub struct IpfsResponse {
 pub struct RequestStatus {
     pub request_approved: bool,
     pub request_open: bool,
+    pub requestor_details: String,
 }
 
 #[derive(Serialize, FromRow)]
