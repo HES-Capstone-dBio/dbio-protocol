@@ -92,6 +92,7 @@ pub struct EscrowedMetadata {
     pub ironcore_document_id: String,
     pub subject_eth_address: String,
     pub creator_eth_address: String,
+    pub creator_details: String,
     pub fhir_resource_type: String,
     pub timestamp: DateTime<Utc>,
 }

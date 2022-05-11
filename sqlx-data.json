@@ -967,74 +967,6 @@
     },
     "query": "SELECT * FROM users WHERE eth_public_address = $1"
   },
-  "92965d6002fdbdcf18541864e14d4a19f7bc25142681820c0d0b0174a78c0178": {
-    "describe": {
-      "columns": [
-        {
-          "name": "fhir_resource_id",
-          "ordinal": 0,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ironcore_document_id",
-          "ordinal": 1,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "subject_eth_address",
-          "ordinal": 2,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "creator_eth_address",
-          "ordinal": 3,
-          "type_info": "Bpchar"
-        },
-        {
-          "name": "creator_details",
-          "ordinal": 4,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "fhir_resource_type",
-          "ordinal": 5,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "ciphertext",
-          "ordinal": 6,
-          "type_info": "Varchar"
-        },
-        {
-          "name": "timestamp",
-          "ordinal": 7,
-          "type_info": "Timestamptz"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Varchar",
-          "Bpchar",
-          "Bpchar",
-          "Bpchar",
-          "Varchar",
-          "Varchar",
-          "Timestamptz"
-        ]
-      }
-    },
-    "query": "INSERT INTO resource_escrow (\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               fhir_resource_type,\n               ciphertext,\n               timestamp\n             )\n             VALUES ($1, $2, $3, $4, $5, $6, $7)\n             RETURNING *"
-  },
   "ae0380b072a29e1597ae0068ad052d74bee2cc2954170682f4b5ee1e5bc79d6c": {
     "describe": {
       "columns": [
@@ -1160,6 +1092,75 @@
       }
     },
     "query": "SELECT *\n             FROM write_requests\n             WHERE\n               requestee_eth_address = $1\n               AND request_open"
+  },
+  "b5682298296b3286be1f793989e2adc5fd69921b2d901af0f1e6314cbf5dff29": {
+    "describe": {
+      "columns": [
+        {
+          "name": "fhir_resource_id",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ironcore_document_id",
+          "ordinal": 1,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "subject_eth_address",
+          "ordinal": 2,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_eth_address",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "creator_details",
+          "ordinal": 4,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "fhir_resource_type",
+          "ordinal": 5,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "ciphertext",
+          "ordinal": 6,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "timestamp",
+          "ordinal": 7,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Bpchar",
+          "Bpchar",
+          "Bpchar",
+          "Varchar",
+          "Varchar",
+          "Varchar",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "INSERT INTO resource_escrow (\n               fhir_resource_id,\n               ironcore_document_id,\n               subject_eth_address,\n               creator_eth_address,\n               creator_details,\n               fhir_resource_type,\n               ciphertext,\n               timestamp\n             )\n             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)\n             RETURNING *"
   },
   "ba31447def327d20314d26497df73dec319e93f5a4ad8942bf5c1568651801ac": {
     "describe": {

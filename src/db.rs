@@ -295,16 +295,18 @@ impl Db {
                ironcore_document_id,
                subject_eth_address,
                creator_eth_address,
+               creator_details,
                fhir_resource_type,
                ciphertext,
                timestamp
              )
-             VALUES ($1, $2, $3, $4, $5, $6, $7)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
              RETURNING *",
             data.fhir_resource_id,
             data.ironcore_document_id,
             data.subject_eth_address,
             data.creator_eth_address,
+            data.creator_details,
             data.fhir_resource_type,
             data.ciphertext,
             data.timestamp,
@@ -384,6 +386,7 @@ impl Db {
                ironcore_document_id,
                subject_eth_address,
                creator_eth_address,
+               creator_details,
                fhir_resource_type,
                timestamp
              FROM resource_escrow
