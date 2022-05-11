@@ -195,25 +195,25 @@ async fn get_claimed_resource(
     } else if !(status.request_approved || status.request_open) {
         Err(ErrorForbidden("Your read request has been denied"))
     } else {
-    let resource = db
-        .select_claimed_resource_data(subject_eth_address, fhir_resource_type, fhir_resource_id)
-        .await
-        .map_err(adapt_db_error)?;
+        let resource = db
+            .select_claimed_resource_data(subject_eth_address, fhir_resource_type, fhir_resource_id)
+            .await
+            .map_err(adapt_db_error)?;
 
-    let ciphertext = ipfs_get(resource.ipfs_cid.clone())
-        .await
-        .map_err(ErrorInternalServerError)?;
+        let ciphertext = ipfs_get(resource.ipfs_cid.clone())
+            .await
+            .map_err(ErrorInternalServerError)?;
 
-    Ok(ResourceData {
-        cid: resource.ipfs_cid,
-        ciphertext,
-        ironcore_document_id: resource.ironcore_document_id,
-        fhir_resource_id: resource.fhir_resource_id,
-        fhir_resource_type: resource.fhir_resource_type,
-        eth_nft_voucher: resource.eth_nft_voucher,
-        nft_minted: resource.nft_minted,
-    })
-    .map(Json)
+        Ok(ResourceData {
+            cid: resource.ipfs_cid,
+            ciphertext,
+            ironcore_document_id: resource.ironcore_document_id,
+            fhir_resource_id: resource.fhir_resource_id,
+            fhir_resource_type: resource.fhir_resource_type,
+            eth_nft_voucher: resource.eth_nft_voucher,
+            nft_minted: resource.nft_minted,
+        })
+        .map(Json)
     }
 }
 
@@ -309,7 +309,6 @@ async fn post_claimed_resource(
         .await
         .map(Json)
         .map_err(adapt_db_error)
-        
     }
 }
 
@@ -435,9 +434,7 @@ async fn put_nft_status(
 }
 
 #[actix_web::get("/voucher/{cid}")]
-async fn get_voucher(
-    cid: Path<String>,
-) -> Result<Json<NFTVoucherPayload>, HttpError> {
+async fn get_voucher(cid: Path<String>) -> Result<Json<NFTVoucherPayload>, HttpError> {
     create_nft_voucher(cid.into_inner())
         .await
         .map(Json)
@@ -464,5 +461,5 @@ pub fn api() -> impl HttpServiceFactory + 'static {
         .service(get_write_requests)
         .service(get_write_request_by_id)
         .service(post_write_request)
-        .service(put_write_request_approval)       
+        .service(put_write_request_approval)
 }
