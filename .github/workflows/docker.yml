@@ -34,7 +34,12 @@ jobs:
         SKIP_DOCKER=true sqlx database create && sqlx migrate run
     - name: Build Crate Executable
       run: cargo build --release
-    - name: Build Docker Image
+    - name: Build dbio-postgres Docker Image
+      run: |
+        docker build migrations \
+          --tag ${{ secrets.DOCKERHUB_USER }}/dbio-postgres:$GITHUB_SHA \
+          --tag ${{ secrets.DOCKERHUB_USER }}/dbio-postgres:latest
+    - name: Build dbio-protocol Docker Image
       run: |
         docker build . \
           --tag ${{ secrets.DOCKERHUB_USER }}/$IMAGE_NAME:$GITHUB_SHA \
